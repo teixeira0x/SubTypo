@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ThreadUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,6 +24,8 @@ import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.project.ProjectManager;
+import com.teixeira.subtitles.subtitlefile.SubtitleSourceMaker;
+import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
@@ -34,6 +39,9 @@ public class ProjectActivity extends BaseActivity
   private Project project;
   private SubtitleListAdapter adapter;
   private Runnable onEverySecond;
+
+  private SubtitleSourceMaker subtitleSourceMaker;
+  private ActivityResultLauncher<String> subtitleFileSaver;
 
   @Override
   protected View bindView() {
@@ -50,6 +58,17 @@ public class ProjectActivity extends BaseActivity
     binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
     projectManager = ProjectManager.getInstance();
+
+    subtitleSourceMaker = new SubtitleSourceMaker();
+    subtitleFileSaver =
+        registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("text/srt"),
+            uri -> {
+              if (uri != null) {
+                FileUtil.writeFileContent(
+                    uri, subtitleSourceMaker.makeSubRipSource(adapter.getSubtitles()));
+              }
+            });
 
     binding.videoControllerContent.addSubtitle.setOnClickListener(
         v -> {
@@ -71,7 +90,14 @@ public class ProjectActivity extends BaseActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
-    if (item.getItemId() == R.id.menu_save) {}
+    if (item.getItemId() == R.id.menu_export) {
+      if (adapter.getSubtitles().isEmpty()) {
+        ToastUtils.showShort(R.string.error_export);
+        return false;
+      }
+
+      subtitleFileSaver.launch("subtitle.srt");
+    }
 
     return super.onOptionsItemSelected(item);
   }
@@ -145,7 +171,8 @@ public class ProjectActivity extends BaseActivity
 
           @Override
           public void onPrepared(MediaPlayer player) {
-            binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
+            binding.videoControllerContent.seekBar.setMax(
+                binding.videoContent.videoView.getDuration());
             binding.videoControllerContent.allTime.setText(
                 VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
             mainHandler.post(onEverySecond);
@@ -224,7 +251,8 @@ public class ProjectActivity extends BaseActivity
   private void onEverySecond() {
     int currentTime = binding.videoContent.videoView.getCurrentPosition();
     binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(currentTime));
-    binding.videoControllerContent.seekBar.setProgress(binding.videoContent.videoView.getCurrentPosition());
+    binding.videoControllerContent.seekBar.setProgress(
+        binding.videoContent.videoView.getCurrentPosition());
 
     List<Subtitle> subtitles = adapter.getSubtitles();
 

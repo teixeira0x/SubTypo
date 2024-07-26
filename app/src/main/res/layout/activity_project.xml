@@ -17,11 +17,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <FrameLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_below="@id/app_bar"
+        android:orientation="vertical"
         android:id="@+id/video_container">
 
         <include
@@ -31,26 +31,23 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_below="@id/video_container"
-        android:id="@+id/subtitles_container">
+        android:orientation="vertical"
+        android:id="@+id/controller_container">
 
         <include
-            layout="@layout/layout_subtitles_content"
-            android:id="@+id/subtitles_content" />
+            layout="@layout/layout_video_controller_content"
+            android:id="@+id/video_controller_content" />
 
     </FrameLayout>
 
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="25dp"
-        android:src="@drawable/ic_plus"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/fab_new_subtitle" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/controller_container"
+        android:padding="5dp"
+        android:id="@+id/subtitles" />
 
 </RelativeLayout>

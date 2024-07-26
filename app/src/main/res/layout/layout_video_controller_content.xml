@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:padding="2dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_play"
+            android:layout_marginEnd="2dp"
+            android:textSize="14sp"
+            android:id="@+id/current_time" />
+
+        <SeekBar
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/seek_bar" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_play"
+            android:textSize="14sp"
+            android:id="@+id/all_time" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="2dp">
+
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:src="@drawable/ic_skip_backward"
+            android:scaleType="centerCrop"
+            android:layout_toLeftOf="@id/play"
+            android:id="@+id/skip_backward" />
+
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_toEndOf="@id/play"
+            android:src="@drawable/ic_skip_forward"
+            android:scaleType="centerCrop"
+            android:id="@+id/skip_foward" />
+
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_play"
+            android:scaleType="centerCrop"
+            android:id="@+id/play" />
+
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_plus"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/add_subtitle" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="?attr/colorOutlineVariant"
+        android:id="@+id/divider" />
+
+</LinearLayout>

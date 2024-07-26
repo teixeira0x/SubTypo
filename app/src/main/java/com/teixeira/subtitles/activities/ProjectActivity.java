@@ -51,7 +51,7 @@ public class ProjectActivity extends BaseActivity
 
     projectManager = ProjectManager.getInstance();
 
-    binding.fabNewSubtitle.setOnClickListener(
+    binding.videoControllerContent.addSubtitle.setOnClickListener(
         v -> {
           stopVideo();
           SubtitleEditorSheetFragment.newInstance(
@@ -130,8 +130,8 @@ public class ProjectActivity extends BaseActivity
     getSupportActionBar().setTitle(project.getName());
     adapter = new SubtitleListAdapter(project.getSubtitles(), this);
 
-    binding.subtitlesContent.subtitles.setLayoutManager(new LinearLayoutManager(this));
-    binding.subtitlesContent.subtitles.setAdapter(adapter);
+    binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
+    binding.subtitles.setAdapter(adapter);
 
     configureVideoView();
   }
@@ -145,8 +145,8 @@ public class ProjectActivity extends BaseActivity
 
           @Override
           public void onPrepared(MediaPlayer player) {
-            binding.videoContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
-            binding.videoContent.allTime.setText(
+            binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
+            binding.videoControllerContent.allTime.setText(
                 VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
             mainHandler.post(onEverySecond);
           }
@@ -157,18 +157,18 @@ public class ProjectActivity extends BaseActivity
 
           @Override
           public void onCompletion(MediaPlayer player) {
-            binding.videoContent.play.setImageResource(R.drawable.ic_play);
+            binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
             mainHandler.removeCallbacks(onEverySecond);
           }
         });
 
-    binding.videoContent.seekBar.setOnSeekBarChangeListener(
+    binding.videoControllerContent.seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
 
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-              binding.videoContent.currentTime.setText(VideoUtils.getTime(progress));
+              binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
             }
           }
@@ -180,16 +180,15 @@ public class ProjectActivity extends BaseActivity
           public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-    binding.videoContent.play.setOnClickListener(
+    binding.videoControllerContent.play.setOnClickListener(
         v -> {
           if (binding.videoContent.videoView.isPlaying()) {
             stopVideo();
           } else playVideo();
         });
 
-    binding.videoContent.skipBackward.setOnClickListener(v -> back5sec());
-
-    binding.videoContent.skipFoward.setOnClickListener(v -> skip5sec());
+    binding.videoControllerContent.skipBackward.setOnClickListener(v -> back5sec());
+    binding.videoControllerContent.skipFoward.setOnClickListener(v -> skip5sec());
   }
 
   public void back5sec() {
@@ -211,21 +210,21 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void playVideo() {
-    binding.videoContent.play.setImageResource(R.drawable.ic_pause);
+    binding.videoControllerContent.play.setImageResource(R.drawable.ic_pause);
     binding.videoContent.videoView.start();
     mainHandler.post(onEverySecond);
   }
 
   private void stopVideo() {
-    binding.videoContent.play.setImageResource(R.drawable.ic_play);
+    binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
     binding.videoContent.videoView.pause();
     mainHandler.removeCallbacks(onEverySecond);
   }
 
   private void onEverySecond() {
     int currentTime = binding.videoContent.videoView.getCurrentPosition();
-    binding.videoContent.currentTime.setText(VideoUtils.getTime(currentTime));
-    binding.videoContent.seekBar.setProgress(binding.videoContent.videoView.getCurrentPosition());
+    binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(currentTime));
+    binding.videoControllerContent.seekBar.setProgress(binding.videoContent.videoView.getCurrentPosition());
 
     List<Subtitle> subtitles = adapter.getSubtitles();
 

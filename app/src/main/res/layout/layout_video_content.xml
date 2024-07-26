@@ -3,95 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:maxHeight="350dp"
+    android:background="?attr/colorOnSurfaceInverse"
+    android:minHeight="200dp"
+    android:id="@+id/video_content">
 
-    <RelativeLayout
-        android:layout_height="450dp"
-        android:layout_width="match_parent"
-        android:background="?attr/colorOnSurfaceInverse"
-        android:id="@+id/video_content">
-
-        <VideoView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_centerInParent="true"
-            android:id="@+id/video_view" />
-
-        <com.teixeira.subtitles.ui.SubtitleTextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:visibility="gone"
-            android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@id/video_view"
-            android:id="@+id/tv_subtitle" />
-
-    </RelativeLayout>
-
-    <LinearLayout
+    <VideoView
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_below="@id/video_content"
-        android:gravity="center_horizontal"
-        android:padding="2dp"
-        android:orientation="vertical"
-        android:id="@+id/controller_container">
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/video_view" />
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:padding="5dp">
-
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_play"
-                android:layout_marginEnd="2dp"
-                android:textSize="14sp"
-                android:id="@+id/current_time" />
-
-            <SeekBar
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/seek_bar" />
-
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_play"
-                android:textSize="14sp"
-                android:id="@+id/all_time" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-            android:padding="2dp">
-
-            <ImageView
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:src="@drawable/ic_skip_backward"
-                android:id="@+id/skip_backward" />
-
-            <ImageView
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:src="@drawable/ic_play"
-                android:id="@+id/play" />
-
-            <ImageView
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:src="@drawable/ic_skip_forward"
-                android:id="@+id/skip_foward" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <com.teixeira.subtitles.ui.SubtitleTextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/video_view"
+        android:id="@+id/tv_subtitle" />
 
 </RelativeLayout>

@@ -16,6 +16,15 @@ android {
     vectorDrawables { useSupportLibrary = true }
   }
 
+  signingConfigs {
+    create("general") {
+      storeFile = file("test.keystore")
+      keyAlias = "test"
+      keyPassword = "teixeira0x"
+      storePassword = "teixeira0x"
+    }
+  }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -23,7 +32,13 @@ android {
 
   buildTypes {
     release {
-      isMinifyEnabled = true
+      isMinifyEnabled = false
+      signingConfig = signingConfigs.getByName("general")
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    }
+    debug {
+      isMinifyEnabled = false
+      signingConfig = signingConfigs.getByName("general")
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginHorizontal="5dp"
+    android:padding="5dp"
+    android:layout_marginTop="5dp"
+    android:foreground="@drawable/ripple_effect">
+
+    <ImageView
+        android:layout_height="180px"
+        android:layout_width="360px"
+        android:scaleType="center"
+        android:background="@android:color/black"
+        android:id="@+id/video_icon" />
+
+    <TextView
+        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_toEndOf="@id/video_icon"
+        android:gravity="center_vertical"
+        android:ellipsize="marquee"
+        android:layout_toLeftOf="@id/menu"
+        android:textSize="14sp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp"
+        android:id="@+id/name" />
+
+    <ImageView
+        android:layout_height="20dp"
+        android:layout_width="20dp"
+        android:src="@drawable/ic_menu"
+        android:layout_marginHorizontal="2dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="2dp"
+        android:id="@+id/menu" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_margin="8dp"
+        android:textSize="12sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/id" />
+
+</RelativeLayout>

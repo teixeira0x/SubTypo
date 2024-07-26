@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="?attr/dialogPreferredPadding"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:id="@+id/choose_video">
+
+        <ImageView
+            android:layout_height="260px"
+            android:layout_width="480px"
+            android:scaleType="center"
+            android:background="@android:color/black"
+            android:id="@+id/video_icon" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:ellipsize="marquee"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:id="@+id/video_name" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="@string/enter_name"
+        android:layout_marginTop="5dp"
+        android:id="@+id/til_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:singleLine="true"
+            android:id="@+id/tie_name" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:scaleType="center"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:id="@+id/cancel" />
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="12sp"
+            style="@style/Widget.Material3.Button"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:text="@string/save"
+            android:id="@+id/save" />
+
+    </LinearLayout>
+
+</LinearLayout>

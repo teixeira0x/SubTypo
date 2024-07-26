@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Subtitles</string>
+    <string name="delete">Delete</string>
+    <string name="delete_message">Are you sure to delete: %1$s</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+
+    <!-- Project -->
+    <string name="no_projects">No projects</string>
+    <string name="new_project">New Project</string>
+    <string name="enter_name">Enter a name</string>
+
+    <string name="error_choose_a_video">Please choose a video</string>
+    <string name="error_enter_a_name">Please enter a name</string>
+
+    <string name="subtitles">Subtitles</string>
+
+    <string name="enter_caption_start_time">Enter subtitle start time</string>
+    <string name="enter_caption_end_tine">Enter subtitle end time</string>
+    <string name="enter_caption_text">Enter subtitle text</string>
+</resources>

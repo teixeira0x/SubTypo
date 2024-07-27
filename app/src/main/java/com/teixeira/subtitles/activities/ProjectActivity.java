@@ -212,6 +212,9 @@ public class ProjectActivity extends BaseActivity
     }
 
     binding.videoContent.videoView.seekTo(seek);
+    if (onEverySecond != null) {
+      mainHandler.post(onEverySecond);
+    }
   }
 
   public void skip5sec() {
@@ -221,6 +224,9 @@ public class ProjectActivity extends BaseActivity
     }
 
     binding.videoContent.videoView.seekTo(seek);
+    if (onEverySecond != null) {
+      mainHandler.post(onEverySecond);
+    }
   }
 
   private void playVideo() {

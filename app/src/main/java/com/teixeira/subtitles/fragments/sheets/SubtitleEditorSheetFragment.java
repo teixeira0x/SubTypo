@@ -157,16 +157,12 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   }
 
   private int getIndexForNewSubtitle() {
-    long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
-    long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
-
     List<Subtitle> subtitles = adapter.getSubtitles();
     int index = subtitles.size();
     for (int i = 0; i < subtitles.size(); i++) {
       Subtitle sub = subtitles.get(i);
 
       long subStartTime = VideoUtils.getMilliSeconds(sub.getStartTime());
-      long subEndTime = VideoUtils.getMilliSeconds(sub.getStartTime());
 
       if (subStartTime >= currentVideoTime) {
         index = i;

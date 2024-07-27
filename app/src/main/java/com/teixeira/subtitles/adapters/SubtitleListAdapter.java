@@ -152,6 +152,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       super.onSelectedChanged(viewHolder, actionState);
       if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
         adapter.notifyDataSetChanged();
+        adapter.listener.onUpdateSubtitles(adapter.getSubtitles());
       }
     }
   }

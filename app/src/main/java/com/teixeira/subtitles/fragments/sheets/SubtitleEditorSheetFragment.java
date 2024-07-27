@@ -11,11 +11,13 @@ import androidx.annotation.NonNull;
 import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.teixeira.subtitles.callbacks.SubtitleEditorCallbacks;
+import com.teixeira.subtitles.adapters.SubtitleListAdapter;
+import com.teixeira.subtitles.callbacks.GetSubtitleListAdapterCallback;
 import com.teixeira.subtitles.databinding.FragmentSubtitleEditorBinding;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.utils.OnTextChangedListener;
 import com.teixeira.subtitles.utils.VideoUtils;
+import java.util.List;
 
 public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
@@ -23,7 +25,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 
   private FragmentSubtitleEditorBinding binding;
-  private SubtitleEditorCallbacks callbacks;
+  private SubtitleListAdapter adapter;
   private Subtitle subtitle;
   private int index = -1;
   private long currentVideoTime;
@@ -49,8 +51,9 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
   @Override
   public void onAttach(Context context) {
-    if (context instanceof SubtitleEditorCallbacks) {
-      callbacks = (SubtitleEditorCallbacks) context;
+    if (context instanceof GetSubtitleListAdapterCallback) {
+      var callback = (GetSubtitleListAdapterCallback) context;
+      adapter = callback.getSubtitleListAdapter();
     }
     super.onAttach(context);
   }
@@ -96,9 +99,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     binding.deleteSubtitle.setOnClickListener(
         v -> {
           dismiss();
-          if (callbacks != null) {
-            callbacks.removeSubtitle(index);
-          }
+          adapter.removeSubtitle(index);
         });
 
     binding.tieStartTime.setText(subtitle.getStartTime());
@@ -148,13 +149,31 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
   private void saveSubtitle() {
     dismiss();
-    if (callbacks != null) {
-      if (index != -1) {
-        callbacks.updateSubtitle(index, subtitle);
-      } else {
-        callbacks.addSubtitle(subtitle);
+    if (index != -1) {
+      adapter.setSubtitle(index, subtitle);
+    } else {
+      adapter.addSubtitle(getIndexForNewSubtitle(), subtitle);
+    }
+  }
+
+  private int getIndexForNewSubtitle() {
+    long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
+    long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
+
+    List<Subtitle> subtitles = adapter.getSubtitles();
+    int index = subtitles.size();
+    for (int i = 0; i < subtitles.size(); i++) {
+      Subtitle sub = subtitles.get(i);
+
+      long subStartTime = VideoUtils.getMilliSeconds(sub.getStartTime());
+      long subEndTime = VideoUtils.getMilliSeconds(sub.getStartTime());
+
+      if (subStartTime >= currentVideoTime) {
+        index = i;
+        break;
       }
     }
+    return index;
   }
 
   private void updatePreview() {

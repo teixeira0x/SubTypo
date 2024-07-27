@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ThreadUtils;
@@ -18,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
-import com.teixeira.subtitles.callbacks.SubtitleEditorCallbacks;
+import com.teixeira.subtitles.callbacks.GetSubtitleListAdapterCallback;
 import com.teixeira.subtitles.databinding.ActivityProjectBinding;
 import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
 import com.teixeira.subtitles.models.Project;
@@ -30,7 +31,7 @@ import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
 public class ProjectActivity extends BaseActivity
-    implements SubtitleEditorCallbacks, SubtitleListAdapter.SubtitleListener {
+    implements GetSubtitleListAdapterCallback, SubtitleListAdapter.SubtitleListener {
 
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 
@@ -112,18 +113,8 @@ public class ProjectActivity extends BaseActivity
   }
 
   @Override
-  public void addSubtitle(Subtitle subtitle) {
-    adapter.addSubtitle(subtitle);
-  }
-
-  @Override
-  public void updateSubtitle(int index, Subtitle subtitle) {
-    adapter.updateSubtitle(index, subtitle);
-  }
-
-  @Override
-  public void removeSubtitle(int index) {
-    adapter.removeSubtitle(adapter.getSubtitles().get(index));
+  public SubtitleListAdapter getSubtitleListAdapter() {
+    return this.adapter;
   }
 
   @Override
@@ -160,6 +151,10 @@ public class ProjectActivity extends BaseActivity
 
     binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
     binding.subtitles.setAdapter(adapter);
+
+    ItemTouchHelper touchHelper =
+        new ItemTouchHelper(new SubtitleListAdapter.SubtitleTouchHelper(adapter));
+    touchHelper.attachToRecyclerView(binding.subtitles);
 
     configureVideoView();
   }

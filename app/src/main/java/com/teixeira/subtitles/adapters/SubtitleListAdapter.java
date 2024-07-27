@@ -4,10 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.teixeira.subtitles.databinding.LayoutSubtitleItemBinding;
 import com.teixeira.subtitles.models.Subtitle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapter.VH> {
@@ -54,7 +57,11 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
   public void addSubtitle(Subtitle subtitle) {
     int index = subtitles.size();
-    subtitles.add(subtitle);
+    addSubtitle(index, subtitle);
+  }
+
+  public void addSubtitle(int index, Subtitle subtitle) {
+    subtitles.add(index, subtitle);
     notifyItemChanged(index);
 
     if (listener != null) {
@@ -62,7 +69,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     }
   }
 
-  public void updateSubtitle(int index, Subtitle subtitle) {
+  public void setSubtitle(int index, Subtitle subtitle) {
     if (index != -1) {
       subtitles.set(index, subtitle);
       notifyItemChanged(index, subtitle);
@@ -71,6 +78,10 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
         listener.onUpdateSubtitles(subtitles);
       }
     }
+  }
+
+  public void removeSubtitle(int index) {
+    removeSubtitle(subtitles.get(index));
   }
 
   public void removeSubtitle(Subtitle subtitle) {
@@ -103,6 +114,45 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     public VH(LayoutSubtitleItemBinding binding) {
       super(binding.getRoot());
       this.binding = binding;
+    }
+  }
+
+  public static class SubtitleTouchHelper extends ItemTouchHelper.Callback {
+
+    private SubtitleListAdapter adapter;
+
+    public SubtitleTouchHelper(SubtitleListAdapter adapter) {
+      this.adapter = adapter;
+    }
+
+    @Override
+    public boolean isLongPressDragEnabled() {
+      return true;
+    }
+
+    @Override
+    public boolean onMove(RecyclerView recyclerVjew, ViewHolder holder, ViewHolder target) {
+      Collections.swap(
+          adapter.getSubtitles(), holder.getAdapterPosition(), target.getAdapterPosition());
+      adapter.notifyItemMoved(holder.getAdapterPosition(), target.getAdapterPosition());
+      return true;
+    }
+
+    @Override
+    public void onSwiped(ViewHolder arg0, int arg1) {}
+
+    @Override
+    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+      int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+      return makeMovementFlags(dragFlags, 0);
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+      super.onSelectedChanged(viewHolder, actionState);
+      if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+        adapter.notifyDataSetChanged();
+      }
     }
   }
 }

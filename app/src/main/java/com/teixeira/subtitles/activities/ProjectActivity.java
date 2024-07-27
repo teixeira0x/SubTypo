@@ -186,7 +186,7 @@ public class ProjectActivity extends BaseActivity
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-              binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(progress));
+              binding.videoControllerContent.currentVideoTime.setText(VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
               mainHandler.post(onEverySecond);
             }
@@ -241,7 +241,7 @@ public class ProjectActivity extends BaseActivity
 
   private void onVideoPrepared(MediaPlayer player) {
     binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
-    binding.videoControllerContent.allTime.setText(
+    binding.videoControllerContent.allVideoTime.setText(
         VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
     mainHandler.post(onEverySecond);
 
@@ -254,9 +254,9 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void onEverySecond() {
-    int currentTime = binding.videoContent.videoView.getCurrentPosition();
-    binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(currentTime));
-    binding.videoControllerContent.seekBar.setProgress(currentTime);
+    int currentVideoTime = binding.videoContent.videoView.getCurrentPosition();
+    binding.videoControllerContent.currentVideoTime.setText(VideoUtils.getTime(currentVideoTime));
+    binding.videoControllerContent.seekBar.setProgress(currentVideoTime);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
 
@@ -266,7 +266,7 @@ public class ProjectActivity extends BaseActivity
         long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
-        if (currentTime >= startTime && currentTime <= endTime) {
+        if (currentVideoTime >= startTime && currentVideoTime <= endTime) {
           binding.videoContent.tvSubtitle.setText(subtitle.getText());
           binding.videoContent.tvSubtitle.setVisibility(View.VISIBLE);
           subtitleFound = true;

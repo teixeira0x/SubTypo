@@ -26,19 +26,19 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private SubtitleEditorCallbacks callbacks;
   private Subtitle subtitle;
   private int index = -1;
-  private long currentTime;
+  private long currentVideoTime;
 
   private Runnable updatePreviewCallback;
 
-  public static SubtitleEditorSheetFragment newInstance(long currentTime) {
-    return newInstance(currentTime, -1, null);
+  public static SubtitleEditorSheetFragment newInstance(long currentVideoTime) {
+    return newInstance(currentVideoTime, -1, null);
   }
 
   public static SubtitleEditorSheetFragment newInstance(
-      long currentTime, int index, Subtitle subtitle) {
+      long currentVideoTime, int index, Subtitle subtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
     Bundle args = new Bundle();
-    args.putLong("currentTime", currentTime);
+    args.putLong("currentVideoTime", currentVideoTime);
     if (subtitle != null) {
       args.putParcelable("subtitle", subtitle);
       args.putInt("index", index);
@@ -72,15 +72,15 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       throw new IllegalArgumentException("Arguments cannot be null");
     }
 
-    currentTime = args.getLong("currentTime");
+    currentVideoTime = args.getLong("currentVideoTime");
 
     if (args.containsKey("subtitle") && args.containsKey("index")) {
       subtitle = args.getParcelable("subtitle", Subtitle.class).clone();
       index = args.getInt("index");
     } else {
 
-      String start = VideoUtils.getTime(currentTime);
-      String end = VideoUtils.getTime(currentTime + 2000);
+      String start = VideoUtils.getTime(currentVideoTime);
+      String end = VideoUtils.getTime(currentVideoTime + 2000);
 
       subtitle = new Subtitle(start, end, "");
       index = -1;
@@ -90,9 +90,9 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
     updatePreviewCallback = () -> binding.preview.setSubtitle(subtitle);
 
-    binding.currentTime.setText(VideoUtils.getTime(currentTime));
-    binding.currentTime.setOnClickListener(
-        v -> ClipboardUtils.copyText(binding.currentTime.getText().toString()));
+    binding.currentVideoTime.setText(VideoUtils.getTime(currentVideoTime));
+    binding.currentVideoTime.setOnClickListener(
+        v -> ClipboardUtils.copyText(binding.currentVideoTime.getText().toString()));
     binding.deleteSubtitle.setOnClickListener(
         v -> {
           dismiss();

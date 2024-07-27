@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:gravity="center_vertical"
             android:layout_toLeftOf="@id/delete_subtitle"
-            android:id="@+id/current_time" />
+            android:id="@+id/current_video_time" />
 
         <ImageView
             android:layout_height="25dp"

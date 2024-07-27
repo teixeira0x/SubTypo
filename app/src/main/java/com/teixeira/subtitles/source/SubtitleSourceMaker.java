@@ -1,4 +1,4 @@
-package com.teixeira.subtitles.subtitlefile;
+package com.teixeira.subtitles.source;
 
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.utils.VideoUtils;

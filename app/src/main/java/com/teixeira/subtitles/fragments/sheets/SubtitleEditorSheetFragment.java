@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.teixeira.subtitles.callbacks.SubtitleEditorCallbacks;
@@ -25,25 +26,24 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private SubtitleEditorCallbacks callbacks;
   private Subtitle subtitle;
   private int index = -1;
+  private long currentTime;
 
   private Runnable updatePreviewCallback;
 
-  public static SubtitleEditorSheetFragment newInstance(long ms) {
-    SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
-    Bundle args = new Bundle();
-    args.putLong("ms", ms);
-    fragment.setArguments(args);
-    return fragment;
+  public static SubtitleEditorSheetFragment newInstance(long currentTime) {
+    return newInstance(currentTime, -1, null);
   }
 
-  public static SubtitleEditorSheetFragment newInstance(Subtitle subtitle, int index) {
+  public static SubtitleEditorSheetFragment newInstance(
+      long currentTime, int index, Subtitle subtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
+    Bundle args = new Bundle();
+    args.putLong("currentTime", currentTime);
     if (subtitle != null) {
-      Bundle args = new Bundle();
       args.putParcelable("subtitle", subtitle);
       args.putInt("index", index);
-      fragment.setArguments(args);
     }
+    fragment.setArguments(args);
     return fragment;
   }
 
@@ -68,19 +68,38 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
     Bundle args = getArguments();
 
+    if (args == null) {
+      throw new IllegalArgumentException("Arguments cannot be null");
+    }
+
+    currentTime = args.getLong("currentTime");
+
     if (args.containsKey("subtitle") && args.containsKey("index")) {
       subtitle = args.getParcelable("subtitle", Subtitle.class).clone();
       index = args.getInt("index");
-    } else if (args.containsKey("ms")) {
+    } else {
 
-      long ms = args.getLong("ms");
-      String start = VideoUtils.getTime(ms);
-      String end = VideoUtils.getTime(ms + 2000);
+      String start = VideoUtils.getTime(currentTime);
+      String end = VideoUtils.getTime(currentTime + 2000);
 
       subtitle = new Subtitle(start, end, "");
+      index = -1;
+
+      binding.deleteSubtitle.setVisibility(View.GONE);
     }
 
     updatePreviewCallback = () -> binding.preview.setSubtitle(subtitle);
+
+    binding.currentTime.setText(VideoUtils.getTime(currentTime));
+    binding.currentTime.setOnClickListener(
+        v -> ClipboardUtils.copyText(binding.currentTime.getText().toString()));
+    binding.deleteSubtitle.setOnClickListener(
+        v -> {
+          dismiss();
+          if (callbacks != null) {
+            callbacks.removeSubtitle(index);
+          }
+        });
 
     binding.tieStartTime.setText(subtitle.getStartTime());
     binding.tieEndTime.setText(subtitle.getEndTime());

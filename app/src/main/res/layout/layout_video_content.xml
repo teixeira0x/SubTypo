@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:maxHeight="350dp"
-    android:background="?attr/colorOnSurfaceInverse"
-    android:minHeight="200dp"
-    android:id="@+id/video_content">
+    android:background="?attr/colorOnSurfaceInverse">
 
     <VideoView
         android:layout_height="wrap_content"

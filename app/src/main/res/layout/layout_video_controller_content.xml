@@ -46,7 +46,7 @@
             android:layout_height="30dp"
             android:layout_width="30dp"
             android:src="@drawable/ic_skip_backward"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:layout_toLeftOf="@id/play"
             android:id="@+id/skip_backward" />
 
@@ -55,7 +55,7 @@
             android:layout_width="30dp"
             android:layout_toEndOf="@id/play"
             android:src="@drawable/ic_skip_forward"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:id="@+id/skip_foward" />
 
         <ImageView
@@ -69,7 +69,7 @@
         <ImageView
             android:layout_height="30dp"
             android:layout_width="30dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_plus"
             android:layout_alignParentEnd="true"
             android:id="@+id/add_subtitle" />

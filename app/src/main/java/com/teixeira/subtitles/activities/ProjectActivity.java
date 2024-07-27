@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teixeira.subtitles.R;
@@ -24,7 +24,7 @@ import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.project.ProjectManager;
-import com.teixeira.subtitles.subtitlefile.SubtitleSourceMaker;
+import com.teixeira.subtitles.source.SubtitleSourceMaker;
 import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
@@ -122,6 +122,11 @@ public class ProjectActivity extends BaseActivity
   }
 
   @Override
+  public void removeSubtitle(int index) {
+    adapter.removeSubtitle(adapter.getSubtitles().get(index));
+  }
+
+  @Override
   public void onUpdateSubtitles(List<Subtitle> subtitles) {
     String subtitlesJson =
         new Gson().toJson(subtitles, new TypeToken<List<Subtitle>>() {}.getType());
@@ -134,18 +139,15 @@ public class ProjectActivity extends BaseActivity
 
   @Override
   public void onSubtitleClickListener(View view, int index, Subtitle subtitle) {
-    SubtitleEditorSheetFragment.newInstance(subtitle, index)
+    stopVideo();
+    SubtitleEditorSheetFragment.newInstance(
+            binding.videoContent.videoView.getCurrentPosition(), index, subtitle)
         .show(getSupportFragmentManager(), null);
   }
 
   @Override
   public boolean onSubtitleLongClickListener(View view, int index, Subtitle subtitle) {
-    new MaterialAlertDialogBuilder(this)
-        .setTitle(R.string.delete)
-        .setMessage(getString(R.string.delete_message, "\"" + subtitle.getText() + "\""))
-        .setPositiveButton(R.string.yes, (d, w) -> adapter.removeSubtitle(subtitle))
-        .setNegativeButton(R.string.no, null)
-        .show();
+
     return true;
   }
 
@@ -166,18 +168,7 @@ public class ProjectActivity extends BaseActivity
     onEverySecond = () -> onEverySecond();
 
     binding.videoContent.videoView.setVideoPath(project.getVideoPath());
-    binding.videoContent.videoView.setOnPreparedListener(
-        new MediaPlayer.OnPreparedListener() {
-
-          @Override
-          public void onPrepared(MediaPlayer player) {
-            binding.videoControllerContent.seekBar.setMax(
-                binding.videoContent.videoView.getDuration());
-            binding.videoControllerContent.allTime.setText(
-                VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
-            mainHandler.post(onEverySecond);
-          }
-        });
+    binding.videoContent.videoView.setOnPreparedListener(this::onVideoPrepared);
 
     binding.videoContent.videoView.setOnCompletionListener(
         new MediaPlayer.OnCompletionListener() {
@@ -197,6 +188,7 @@ public class ProjectActivity extends BaseActivity
             if (fromUser) {
               binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
+              mainHandler.post(onEverySecond);
             }
           }
 
@@ -245,14 +237,26 @@ public class ProjectActivity extends BaseActivity
   private void stopVideo() {
     binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
     binding.videoContent.videoView.pause();
-    mainHandler.removeCallbacks(onEverySecond);
+  }
+
+  private void onVideoPrepared(MediaPlayer player) {
+    binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
+    binding.videoControllerContent.allTime.setText(
+        VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
+    mainHandler.post(onEverySecond);
+
+    int width = player.getVideoWidth();
+    int height = player.getVideoHeight();
+
+    if (width > height) {
+      binding.videoContent.videoView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+    }
   }
 
   private void onEverySecond() {
     int currentTime = binding.videoContent.videoView.getCurrentPosition();
     binding.videoControllerContent.currentTime.setText(VideoUtils.getTime(currentTime));
-    binding.videoControllerContent.seekBar.setProgress(
-        binding.videoContent.videoView.getCurrentPosition());
+    binding.videoControllerContent.seekBar.setProgress(currentTime);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
 

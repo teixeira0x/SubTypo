@@ -2,6 +2,9 @@ package com.teixeira.subtitles.utils;
 
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.view.ViewGroup;
+import android.widget.VideoView;
 import androidx.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 

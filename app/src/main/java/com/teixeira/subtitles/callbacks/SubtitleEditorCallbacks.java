@@ -7,4 +7,6 @@ public interface SubtitleEditorCallbacks {
   void addSubtitle(Subtitle subtitle);
 
   void updateSubtitle(int index, Subtitle subtitle);
+
+  void removeSubtitle(int index);
 }

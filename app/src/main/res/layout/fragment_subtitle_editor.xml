@@ -7,11 +7,43 @@
     android:padding="?attr/dialogPreferredPadding"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:id="@+id/top_options">
+
+        <TextView
+            android:layout_height="25dp"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_toLeftOf="@id/delete_subtitle"
+            android:id="@+id/current_time" />
+
+        <ImageView
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_delete"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/delete_subtitle" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="?attr/colorOutlineVariant"
+        android:id="@+id/divider" />
+
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:padding="5dp"
+        android:background="@drawable/transparent_background"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="5dp"
         android:id="@+id/preview_container">
 
         <com.teixeira.subtitles.ui.SubtitleTextView

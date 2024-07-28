@@ -40,6 +40,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     Subtitle subtitle = subtitles.get(position);
 
     binding.text.setText(subtitle.getText());
+    binding.inScreen.setVisibility(subtitle.isInScreen() ? View.VISIBLE : View.GONE);
     binding.startAndEnd.setText(subtitle.getStartTime() + " | " + subtitle.getEndTime());
 
     binding
@@ -53,6 +54,20 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   @Override
   public int getItemCount() {
     return subtitles.size();
+  }
+
+  public void setScreenSubtitleIndex(int index) {
+    for (int i = 0; i < subtitles.size(); i++) {
+      Subtitle subtitle = subtitles.get(i);
+
+      boolean inScreen = subtitle.isInScreen();
+      boolean itsInScreen = i == index;
+
+      if (inScreen != itsInScreen) {
+        subtitle.setInScreen(itsInScreen);
+        notifyItemChanged(i);
+      }
+    }
   }
 
   public void addSubtitle(Subtitle subtitle) {
@@ -108,7 +123,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     boolean onSubtitleLongClickListener(View view, int index, Subtitle subtitle);
 
     void onUpdateSubtitles(List<Subtitle> subtitles);
-    
+
     void scrollToPosition(int position);
   }
 

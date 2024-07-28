@@ -267,14 +267,16 @@ public class ProjectActivity extends BaseActivity
     List<Subtitle> subtitles = adapter.getSubtitles();
 
     boolean subtitleFound = false;
-    for (Subtitle subtitle : subtitles) {
+    for (int i = 0; i < subtitles.size(); i++) {
       try {
+        Subtitle subtitle = subtitles.get(i);
         long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
         if (currentVideoTime >= startTime && currentVideoTime <= endTime) {
           binding.videoContent.tvSubtitle.setSubtitle(subtitle);
           binding.videoContent.tvSubtitle.setVisibility(View.VISIBLE);
+          adapter.setScreenSubtitleIndex(i);
           subtitleFound = true;
           break;
         }
@@ -285,6 +287,7 @@ public class ProjectActivity extends BaseActivity
 
     if (!subtitleFound) {
       binding.videoContent.tvSubtitle.setVisibility(View.GONE);
+      adapter.setScreenSubtitleIndex(-1);
     }
 
     if (binding.videoContent.videoView.isPlaying()) {

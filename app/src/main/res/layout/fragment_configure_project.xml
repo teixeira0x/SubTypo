@@ -4,37 +4,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="?attr/dialogPreferredPadding"
+    android:padding="@dimen/dialog_padding"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:id="@+id/choose_video">
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_height="260px"
             android:layout_width="480px"
-            android:scaleType="center"
+            android:scaleType="fitCenter"
             android:background="@android:color/black"
             android:id="@+id/video_icon" />
 
-        <TextView
+        <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:ellipsize="marquee"
-            android:padding="8dp"
-            android:textSize="14sp"
-            android:singleLine="true"
-            android:id="@+id/video_name" />
+            android:layout_marginLeft="5dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="@string/choose_video"
+            android:id="@+id/btn_choose_video" />
 
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
         android:hint="@string/enter_name"
         android:layout_marginTop="5dp"
         android:id="@+id/til_name">
@@ -47,31 +45,8 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:scaleType="center"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_weight="1"
-            android:text="@string/cancel"
-            android:id="@+id/cancel" />
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textSize="12sp"
-            style="@style/Widget.Material3.Button"
-            android:layout_marginStart="5dp"
-            android:layout_weight="1"
-            android:text="@string/save"
-            android:id="@+id/save" />
-
-    </LinearLayout>
+    <include
+        layout="@layout/layout_dialog_buttons"
+        android:id="@+id/dialog_buttons" />
 
 </LinearLayout>

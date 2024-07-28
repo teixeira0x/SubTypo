@@ -81,11 +81,11 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       subtitle = args.getParcelable("subtitle", Subtitle.class).clone();
       index = args.getInt("index");
     } else {
-
-      String start = VideoUtils.getTime(currentVideoTime);
-      String end = VideoUtils.getTime(currentVideoTime + 2000);
-
-      subtitle = new Subtitle(start, end, "");
+      subtitle =
+          new Subtitle(
+              VideoUtils.getTime(currentVideoTime),
+              VideoUtils.getTime(currentVideoTime + 2000),
+              "");
       index = -1;
 
       binding.deleteSubtitle.setVisibility(View.GONE);
@@ -106,8 +106,8 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     binding.tieEndTime.setText(subtitle.getEndTime());
     binding.tieText.setText(subtitle.getText());
     binding.preview.setSubtitle(subtitle);
-    binding.cancel.setOnClickListener(v -> dismiss());
-    binding.save.setOnClickListener(v -> saveSubtitle());
+    binding.dialogButtons.cancel.setOnClickListener(v -> dismiss());
+    binding.dialogButtons.save.setOnClickListener(v -> saveSubtitle());
     configureTextWatchers();
   }
 

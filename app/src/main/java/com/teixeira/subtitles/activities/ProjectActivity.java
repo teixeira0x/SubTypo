@@ -274,7 +274,7 @@ public class ProjectActivity extends BaseActivity
           break;
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        // ignore
       }
     }
 

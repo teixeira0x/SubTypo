@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.UriUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -99,27 +98,24 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     if (uri != null) {
       videoFile = UriUtils.uri2File(uri);
       binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(videoFile.getAbsolutePath()));
-      binding.videoName.setText(videoFile.getName());
     }
   }
 
   private void configureDetails() {
     if (project != null) {
       binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.getVideoPath()));
-      binding.videoName.setText(FileUtils.getFileName(project.getVideoPath()));
       binding.tieName.setText(project.getName());
     } else {
       binding.tieName.setText(R.string.new_project);
     }
+    binding.btnChooseVideo.setClickable(needChooseVideo);
   }
 
   private void setListeners() {
-    binding.chooseVideo.setOnClickListener(
-        v -> {
-          if (needChooseVideo) videoDocumentPicker.launch(new String[] {"video/mp4"});
-        });
-    binding.cancel.setOnClickListener(v -> dismiss());
-    binding.save.setOnClickListener(v -> writeProject());
+    binding.btnChooseVideo.setOnClickListener(
+        v -> videoDocumentPicker.launch(new String[] {"video/mp4"}));
+    binding.dialogButtons.cancel.setOnClickListener(v -> dismiss());
+    binding.dialogButtons.save.setOnClickListener(v -> writeProject());
   }
 
   private void writeProject() {
@@ -135,8 +131,8 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     }
 
     setCancelable(false);
-    binding.cancel.setClickable(false);
-    binding.save.setClickable(false);
+    binding.dialogButtons.cancel.setClickable(false);
+    binding.dialogButtons.save.setClickable(false);
     TaskExecutor.executeAsyncProvideError(
         () -> saveProjectInternal(), (result, throwable) -> dismiss());
   }

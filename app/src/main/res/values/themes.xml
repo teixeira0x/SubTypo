@@ -6,4 +6,12 @@
   </style>
 
   <style name="AppTheme" parent="Base.AppTheme" />
+  
+  <style name="ControllerImageStyle">
+    <item name="android:layout_width">35dp</item>
+    <item name="android:layout_height">35dp</item>
+    <item name="android:padding">5dp</item>
+    <item name="android:scaleType">fitCenter</item>
+    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+  </style>
 </resources>

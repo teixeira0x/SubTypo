@@ -1,8 +1,12 @@
 package com.teixeira.subtitles.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import androidx.fragment.app.Fragment;
+import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.callbacks.UpdateProjectsCallback;
 import com.teixeira.subtitles.databinding.ActivityMainBinding;
 import com.teixeira.subtitles.fragments.ProjectsFragment;
@@ -26,6 +30,22 @@ public class MainActivity extends BaseActivity implements UpdateProjectsCallback
 
     binding.fabNewProject.setOnClickListener(
         v -> CreateProjectSheetFragment.newInstance().show(getSupportFragmentManager(), null));
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.activity_main_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    if (item.getItemId() == R.id.menu_about) {
+      startActivity(new Intent(this, AboutActivity.class));
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

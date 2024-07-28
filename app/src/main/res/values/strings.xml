@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Subtitles</string>
+    <string name="about">About</string>
     <string name="delete">Delete</string>
     <string name="delete_message">Are you sure to delete: %1$s</string>
     <string name="rename">Rename</string>
@@ -9,6 +10,12 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="export">Export</string>
+
+
+    <!-- Preferences -->
+    <string name="version">Version</string>
+    <string name="github">GitHub</string>
+    <string name="github_summary">This app is open source!</string>
 
     <!-- Project -->
     <string name="no_projects">No projects</string>

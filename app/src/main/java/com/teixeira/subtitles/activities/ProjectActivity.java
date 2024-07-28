@@ -124,7 +124,7 @@ public class ProjectActivity extends BaseActivity
     FileIOUtils.writeFileFromString(project.getProjectPath() + "/subtitles.json", subtitlesJson);
 
     if (onEverySecond != null) {
-      mainHandler.post(onEverySecond);
+      callEverySecond();
     }
   }
 
@@ -169,34 +169,32 @@ public class ProjectActivity extends BaseActivity
 
     binding.videoContent.videoView.setVideoPath(project.getVideoPath());
     binding.videoContent.videoView.setOnPreparedListener(this::onVideoPrepared);
-
-    binding.videoContent.videoView.setOnCompletionListener(
-        new MediaPlayer.OnCompletionListener() {
-
-          @Override
-          public void onCompletion(MediaPlayer player) {
-            binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
-            mainHandler.removeCallbacks(onEverySecond);
-          }
-        });
+    binding.videoContent.videoView.setOnCompletionListener(this::onCompletion);
 
     binding.videoControllerContent.seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
+
+          private boolean wasPlaying;
 
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
               binding.videoControllerContent.currentVideoTime.setText(VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
-              mainHandler.post(onEverySecond);
+              callEverySecond();
             }
           }
 
           @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {}
+          public void onStartTrackingTouch(SeekBar seekBar) {
+            wasPlaying = binding.videoContent.videoView.isPlaying();
+            if (wasPlaying) stopVideo();
+          }
 
           @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {}
+          public void onStopTrackingTouch(SeekBar seekBar) {
+            if (wasPlaying) playVideo();
+          }
         });
 
     binding.videoControllerContent.play.setOnClickListener(
@@ -213,12 +211,12 @@ public class ProjectActivity extends BaseActivity
   public void back5sec() {
     int seek = binding.videoContent.videoView.getCurrentPosition() - 5000;
     if (binding.videoContent.videoView.getCurrentPosition() <= 5000) {
-      seek = binding.videoContent.videoView.getCurrentPosition();
+      seek = 0;
     }
 
     binding.videoContent.videoView.seekTo(seek);
-    if (onEverySecond != null) {
-      mainHandler.post(onEverySecond);
+    if (!binding.videoContent.videoView.isPlaying()) {
+      callEverySecond();
     }
   }
 
@@ -229,8 +227,8 @@ public class ProjectActivity extends BaseActivity
     }
 
     binding.videoContent.videoView.seekTo(seek);
-    if (onEverySecond != null) {
-      mainHandler.post(onEverySecond);
+    if (!binding.videoContent.videoView.isPlaying()) {
+      callEverySecond();
     }
   }
 
@@ -259,13 +257,21 @@ public class ProjectActivity extends BaseActivity
     }
   }
 
+  public void onCompletion(MediaPlayer player) {
+    binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
+  }
+
+  private void callEverySecond() {
+    mainHandler.removeCallbacks(onEverySecond);
+    mainHandler.postDelayed(onEverySecond, 1);
+  }
+
   private void onEverySecond() {
     int currentVideoTime = binding.videoContent.videoView.getCurrentPosition();
     binding.videoControllerContent.currentVideoTime.setText(VideoUtils.getTime(currentVideoTime));
     binding.videoControllerContent.seekBar.setProgress(currentVideoTime);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
-
     boolean subtitleFound = false;
     for (int i = 0; i < subtitles.size(); i++) {
       try {
@@ -291,6 +297,7 @@ public class ProjectActivity extends BaseActivity
     }
 
     if (binding.videoContent.videoView.isPlaying()) {
+      mainHandler.removeCallbacks(onEverySecond);
       mainHandler.postDelayed(onEverySecond, 1);
     }
   }

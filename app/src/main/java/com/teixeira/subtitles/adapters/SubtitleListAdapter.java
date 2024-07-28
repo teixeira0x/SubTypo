@@ -40,7 +40,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     Subtitle subtitle = subtitles.get(position);
 
     binding.text.setText(subtitle.getText());
-    binding.inScreen.setVisibility(subtitle.isInScreen() ? View.VISIBLE : View.GONE);
+    binding.inScreen.setVisibility(subtitle.isInScreen() ? View.VISIBLE : View.INVISIBLE);
     binding.startAndEnd.setText(subtitle.getStartTime() + " | " + subtitle.getEndTime());
 
     binding

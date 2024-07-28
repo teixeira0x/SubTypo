@@ -15,6 +15,7 @@
         android:ellipsize="marquee"
         android:layout_toLeftOf="@id/in_screen"
         android:textSize="14sp"
+        android:singleLine="true"
         android:id="@+id/text" />
 
     <TextView

@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.view.LayoutInflater;
+import com.teixeira.subtitles.R;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
 import com.teixeira.subtitles.callbacks.GetSubtitleListAdapterCallback;
 import com.teixeira.subtitles.databinding.FragmentSubtitleEditorBinding;
@@ -97,10 +99,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     binding.currentVideoTime.setOnClickListener(
         v -> ClipboardUtils.copyText(binding.currentVideoTime.getText().toString()));
     binding.deleteSubtitle.setOnClickListener(
-        v -> {
-          dismiss();
-          adapter.removeSubtitle(index);
-        });
+        v -> showAlertToDeleteSubtitle());
 
     binding.tieStartTime.setText(subtitle.getStartTime());
     binding.tieEndTime.setText(subtitle.getEndTime());
@@ -145,6 +144,18 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
             updatePreview();
           }
         });
+  }
+  
+  private void showAlertToDeleteSubtitle() {
+    new MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.delete)
+        .setMessage(getString(R.string.delete_message, subtitle.getText()))
+        .setPositiveButton(R.string.yes, (d, w) -> {
+          dismiss();
+          adapter.removeSubtitle(index);
+        })
+        .setNegativeButton(R.string.no, null)
+        .show();
   }
 
   private void saveSubtitle() {

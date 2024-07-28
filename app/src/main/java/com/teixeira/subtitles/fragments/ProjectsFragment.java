@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileUtils;
@@ -72,15 +73,18 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
 
   @Override
   public void onProjectMenuClickListener(View view, Project project) {
-    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-    builder.setItems(
-        new String[] {"Rename", "Delete"},
-        (d, w) -> {
-          if (w == 0) {
+    PopupMenu pm = new PopupMenu(requireContext(), view);
+    pm.getMenu().add(0, 0, 0, R.string.rename);
+    pm.getMenu().add(0, 1, 0, R.string.delete);
+
+    pm.setOnMenuItemClickListener(
+        item -> {
+          if (item.getItemId() == 0) {
             CreateProjectSheetFragment.newInstance(project).show(getChildFragmentManager(), null);
           } else deleteProject(project);
+          return true;
         });
-    builder.show();
+    pm.show();
   }
 
   public void loadProjects() {

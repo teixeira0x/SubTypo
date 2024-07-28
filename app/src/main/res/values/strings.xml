@@ -3,6 +3,7 @@
     <string name="app_name">Subtitles</string>
     <string name="delete">Delete</string>
     <string name="delete_message">Are you sure to delete: %1$s</string>
+    <string name="rename">Rename</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
@@ -17,7 +18,7 @@
 
     <string name="error_choose_a_video">Please choose a video</string>
     <string name="error_enter_a_name">Please enter a name</string>
-    <string name="error_export">Add subtitles to be able to export.</string>
+    <string name="error_no_subtitles_to_export">Add subtitles to be able to export.</string>
 
     <string name="subtitles">Subtitles</string>
 

@@ -93,7 +93,7 @@ public class ProjectActivity extends BaseActivity
 
     if (item.getItemId() == R.id.menu_export) {
       if (adapter.getSubtitles().isEmpty()) {
-        ToastUtils.showShort(R.string.error_export);
+        ToastUtils.showShort(R.string.error_no_subtitles_to_export);
         return false;
       }
 
@@ -140,6 +140,11 @@ public class ProjectActivity extends BaseActivity
   public boolean onSubtitleLongClickListener(View view, int index, Subtitle subtitle) {
 
     return true;
+  }
+
+  @Override
+  public void scrollToPosition(int position) {
+    binding.subtitles.scrollToPosition(position);
   }
 
   private void configureProject() {
@@ -268,7 +273,7 @@ public class ProjectActivity extends BaseActivity
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
         if (currentVideoTime >= startTime && currentVideoTime <= endTime) {
-          binding.videoContent.tvSubtitle.setText(subtitle.getText());
+          binding.videoContent.tvSubtitle.setSubtitle(subtitle);
           binding.videoContent.tvSubtitle.setVisibility(View.VISIBLE);
           subtitleFound = true;
           break;

@@ -66,6 +66,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
     if (listener != null) {
       listener.onUpdateSubtitles(subtitles);
+      listener.scrollToPosition(index);
     }
   }
 
@@ -76,6 +77,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
       if (listener != null) {
         listener.onUpdateSubtitles(subtitles);
+        listener.scrollToPosition(index);
       }
     }
   }
@@ -106,6 +108,8 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     boolean onSubtitleLongClickListener(View view, int index, Subtitle subtitle);
 
     void onUpdateSubtitles(List<Subtitle> subtitles);
+    
+    void scrollToPosition(int position);
   }
 
   class VH extends RecyclerView.ViewHolder {

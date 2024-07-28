@@ -1,10 +1,17 @@
 package com.teixeira.subtitles.ui;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Build;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.widget.VideoView;
 import androidx.core.content.res.ResourcesCompat;
 import com.google.android.material.textview.MaterialTextView;
 import com.teixeira.subtitles.R;
@@ -28,7 +35,7 @@ public class SubtitleTextView extends MaterialTextView {
     setPadding(5, 5, 5, 5);
     setTextSize(15);
 
-    setBackgroundColor(Color.BLACK);
+    // setBackgroundColor(Color.BLACK);
     setTextColor(Color.WHITE);
     setGravity(Gravity.CENTER);
   }
@@ -36,6 +43,18 @@ public class SubtitleTextView extends MaterialTextView {
   public void setSubtitle(Subtitle subtitle) {
     Objects.requireNonNull(subtitle);
 
-    setText(subtitle.getText());
+    Spanned text;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      // setText(Html.fromHtml(subtitle.getText(), Html.FROM_HTML_MODE_LEGACY));
+      text = Html.fromHtml(subtitle.getText(), Html.FROM_HTML_MODE_LEGACY);
+    } else {
+      // setText(Html.fromHtml(subtitle.getText()));
+      text = Html.fromHtml(subtitle.getText());
+    }
+
+    SpannableString span = new SpannableString(text);
+    span.setSpan(
+        new BackgroundColorSpan(Color.BLACK), 0, text.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+    setText(span);
   }
 }

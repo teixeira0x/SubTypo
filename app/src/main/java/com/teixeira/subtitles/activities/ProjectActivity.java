@@ -56,7 +56,7 @@ public class ProjectActivity extends BaseActivity
 
     setSupportActionBar(binding.toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
+    binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
     projectManager = ProjectManager.getInstance();
 

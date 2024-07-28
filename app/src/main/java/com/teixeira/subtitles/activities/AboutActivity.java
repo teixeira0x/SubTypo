@@ -27,6 +27,8 @@ public class AboutActivity extends BaseActivity {
 
     setSupportActionBar(binding.toolbar);
     getSupportActionBar().setTitle(R.string.about);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
     getSupportFragmentManager()
         .beginTransaction()

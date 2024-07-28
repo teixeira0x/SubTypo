@@ -16,6 +16,7 @@
     <string name="version">Version</string>
     <string name="github">GitHub</string>
     <string name="github_summary">This app is open source!</string>
+    <string name="open_source_license">Open source licenses</string>
 
     <!-- Project -->
     <string name="no_projects">No projects</string>

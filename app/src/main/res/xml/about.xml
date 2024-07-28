@@ -4,13 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        app:iconSpaceReserved="false"
+        app:icon="@drawable/ic_github"
         app:key="pref_github"
         app:title="@string/github"
         app:summary="@string/github_summary" />
 
     <Preference
-        app:iconSpaceReserved="false"
+        app:icon="@drawable/ic_license"
+        app:key="pref_licenses"
+        app:title="@string/open_source_license" />
+
+    <Preference
         app:key="pref_version"
         app:title="@string/version"
         app:summary="@string/version" />

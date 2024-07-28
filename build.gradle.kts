@@ -4,4 +4,10 @@ plugins {
   id("com.android.library") version "8.0.0" apply false
 }
 
+buildscript {
+  dependencies {
+    classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
+  }
+}
+
 tasks.register<Delete>("clean") { delete(rootProject.buildDir) }

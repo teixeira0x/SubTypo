@@ -1,4 +1,7 @@
-plugins { id("com.android.application") }
+plugins {
+  id("com.android.application")
+  id("com.google.android.gms.oss-licenses-plugin")
+}
 
 android {
   namespace = "com.teixeira.subtitles"
@@ -52,6 +55,7 @@ dependencies {
   implementation("androidx.constraintlayout:constraintlayout:2.1.4")
   implementation("androidx.preference:preference:1.2.1")
   implementation("com.google.android.material:material:1.9.0")
+  implementation("com.google.android.gms:play-services-oss-licenses:17.0.1")
   implementation("com.google.code.gson:gson:2.10.1")
   implementation("com.blankj:utilcodex:1.31.1")
 }

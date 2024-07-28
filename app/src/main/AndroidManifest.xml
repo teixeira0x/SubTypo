@@ -30,5 +30,12 @@
             android:name=".activities.AboutActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/AppTheme.Licence" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/AppTheme.Licence" />
     </application>
 </manifest>

@@ -135,6 +135,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       Collections.swap(
           adapter.getSubtitles(), holder.getAdapterPosition(), target.getAdapterPosition());
       adapter.notifyItemMoved(holder.getAdapterPosition(), target.getAdapterPosition());
+      adapter.listener.onUpdateSubtitles(adapter.getSubtitles());
       return true;
     }
 
@@ -150,10 +151,6 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
       super.onSelectedChanged(viewHolder, actionState);
-      if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-        adapter.notifyDataSetChanged();
-        adapter.listener.onUpdateSubtitles(adapter.getSubtitles());
-      }
     }
   }
 }

@@ -25,7 +25,7 @@ public class SubtitleTextView extends MaterialTextView {
     super(context, attrs, defStyleAttr);
 
     setTypeface(ResourcesCompat.getFont(context, R.font.roboto_regular));
-    setPadding(15, 15, 15, 15);
+    setPadding(5, 5, 5, 5);
     setTextSize(15);
 
     setBackgroundColor(Color.BLACK);

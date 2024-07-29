@@ -19,7 +19,7 @@
         android:layout_toEndOf="@id/icon"
         android:layout_centerVertical="true"
         android:ellipsize="marquee"
-        android:layout_toLeftOf="@id/selected"
+        android:layout_toLeftOf="@id/readio_button"
         android:textSize="14sp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="2dp"

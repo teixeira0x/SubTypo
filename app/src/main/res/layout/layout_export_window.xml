@@ -28,7 +28,7 @@
         <ImageView
             android:src="@drawable/ic_close"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/play"
+            android:layout_toLeftOf="@id/title_export"
             android:layout_alignParentEnd="true"
             style="@style/ControllerImageStyle"
             android:id="@+id/close" />
@@ -38,7 +38,6 @@
     <View
         android:layout_height="1dp"
         android:layout_width="0dp"
-        android:layout_below="@id/controller_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/types_container"

@@ -99,7 +99,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
   public void addSubtitle(int index, Subtitle subtitle) {
     subtitles.add(index, subtitle);
-    notifyItemChanged(index);
+    notifyItemInserted(index);
 
     if (listener != null) {
       listener.onUpdateSubtitles(subtitles);

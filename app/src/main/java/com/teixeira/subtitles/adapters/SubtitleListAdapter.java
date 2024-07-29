@@ -1,6 +1,7 @@
 package com.teixeira.subtitles.adapters;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -18,6 +19,8 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   private final List<Subtitle> subtitles;
 
   private final SubtitleListener listener;
+
+  private ItemTouchHelper touchHelper;
 
   public SubtitleListAdapter(SubtitleListener listener) {
     this(new ArrayList<>(), listener);
@@ -43,6 +46,13 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     binding.inScreen.setVisibility(subtitle.isInScreen() ? View.VISIBLE : View.INVISIBLE);
     binding.startAndEnd.setText(subtitle.getStartTime() + " | " + subtitle.getEndTime());
 
+    binding.dragHandler.setOnTouchListener(
+        (v, event) -> {
+          if (touchHelper != null && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            touchHelper.startDrag(holder);
+          }
+          return false;
+        });
     binding
         .getRoot()
         .setOnClickListener(v -> listener.onSubtitleClickListener(v, position, subtitle));
@@ -54,6 +64,10 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   @Override
   public int getItemCount() {
     return subtitles.size();
+  }
+  
+  public void setTouchHelper(ItemTouchHelper touchHelper) {
+    this.touchHelper = touchHelper;
   }
 
   public void setScreenSubtitleIndex(int index) {
@@ -67,6 +81,10 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
         subtitle.setInScreen(itsInScreen);
         notifyItemChanged(i);
       }
+    }
+
+    if (listener != null && index >= 0) {
+      listener.scrollToPosition(index);
     }
   }
 
@@ -146,7 +164,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
     @Override
     public boolean isLongPressDragEnabled() {
-      return true;
+      return false;
     }
 
     @Override

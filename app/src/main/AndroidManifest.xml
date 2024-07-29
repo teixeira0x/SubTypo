@@ -2,6 +2,8 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
     <application
         android:name=".App"
         android:allowBackup="true"

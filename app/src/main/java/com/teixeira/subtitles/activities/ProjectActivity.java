@@ -161,6 +161,8 @@ public class ProjectActivity extends BaseActivity
         new ItemTouchHelper(new SubtitleListAdapter.SubtitleTouchHelper(adapter));
     touchHelper.attachToRecyclerView(binding.subtitles);
 
+    adapter.setTouchHelper(touchHelper);
+
     configureVideoView();
   }
 

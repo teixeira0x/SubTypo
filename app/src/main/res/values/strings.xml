@@ -9,8 +9,13 @@
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="grant">Grant</string>
     <string name="export">Export</string>
+    <string name="export_file_type">Select the file type to export</string>
+    <string name="export_in_subrip">Export in SubRip format (.srt)</string>
 
+    <string name="permission_request">Permission Request</string>
+    <string name="permission_request_message">By granting the permissions, you will have a better experience with the app.</string>
 
     <!-- Preferences -->
     <string name="version">Version</string>

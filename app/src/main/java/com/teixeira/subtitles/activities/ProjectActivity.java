@@ -3,13 +3,12 @@ package com.teixeira.subtitles.activities;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.os.BundleCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,8 +25,7 @@ import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.project.ProjectManager;
-import com.teixeira.subtitles.source.SubtitleSourceMaker;
-import com.teixeira.subtitles.utils.FileUtil;
+import com.teixeira.subtitles.ui.ExportWindow;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
@@ -42,8 +40,7 @@ public class ProjectActivity extends BaseActivity
   private SubtitleListAdapter adapter;
   private Runnable onEverySecond;
 
-  private SubtitleSourceMaker subtitleSourceMaker;
-  private ActivityResultLauncher<String> subtitleFileSaver;
+  private ExportWindow exportWindow;
 
   @Override
   protected View bindView() {
@@ -60,26 +57,6 @@ public class ProjectActivity extends BaseActivity
     binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
     projectManager = ProjectManager.getInstance();
-
-    subtitleSourceMaker = new SubtitleSourceMaker();
-    subtitleFileSaver =
-        registerForActivityResult(
-            new ActivityResultContracts.CreateDocument("text/srt"),
-            uri -> {
-              if (uri != null) {
-                FileUtil.writeFileContent(
-                    uri, subtitleSourceMaker.makeSubRipSource(adapter.getSubtitles()));
-              }
-            });
-
-    binding.videoControllerContent.addSubtitle.setOnClickListener(
-        v -> {
-          stopVideo();
-          SubtitleEditorSheetFragment.newInstance(
-                  binding.videoContent.videoView.getCurrentPosition())
-              .show(getSupportFragmentManager(), null);
-        });
-
     configureProject();
   }
 
@@ -97,8 +74,8 @@ public class ProjectActivity extends BaseActivity
         ToastUtils.showShort(R.string.error_no_subtitles_to_export);
         return false;
       }
-
-      subtitleFileSaver.launch("subtitle.srt");
+      stopVideo();
+      exportWindow.showAsDropDown(binding.getRoot(), Gravity.CENTER, 0, 0);
     }
 
     return super.onOptionsItemSelected(item);
@@ -106,10 +83,13 @@ public class ProjectActivity extends BaseActivity
 
   @Override
   protected void onDestroy() {
-    mainHandler.removeCallbacks(onEverySecond);
-    projectManager.destroy();
     super.onDestroy();
+
+    mainHandler.removeCallbacks(onEverySecond);
     onEverySecond = null;
+
+    projectManager.destroy();
+    exportWindow.destroy();
     binding = null;
   }
 
@@ -153,10 +133,11 @@ public class ProjectActivity extends BaseActivity
   private void configureProject() {
     Bundle extras = getIntent().getExtras();
     project =
-        projectManager.setupProject(
-            BundleCompat.getParcelable(extras, "project", Project.class));
+        projectManager.setupProject(BundleCompat.getParcelable(extras, "project", Project.class));
     getSupportActionBar().setTitle(project.getName());
+
     adapter = new SubtitleListAdapter(project.getSubtitles(), this);
+    exportWindow = new ExportWindow(this, adapter);
 
     binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
     binding.subtitles.setAdapter(adapter);
@@ -213,6 +194,13 @@ public class ProjectActivity extends BaseActivity
 
     binding.videoControllerContent.skipBackward.setOnClickListener(v -> back5sec());
     binding.videoControllerContent.skipFoward.setOnClickListener(v -> skip5sec());
+    binding.videoControllerContent.addSubtitle.setOnClickListener(
+        v -> {
+          stopVideo();
+          SubtitleEditorSheetFragment.newInstance(
+                  binding.videoContent.videoView.getCurrentPosition())
+              .show(getSupportFragmentManager(), null);
+        });
   }
 
   public void back5sec() {
@@ -267,7 +255,7 @@ public class ProjectActivity extends BaseActivity
   public void onCompletion(MediaPlayer player) {
     binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
   }
-  
+
   private void callEverySecond() {
     callEverySecond(1L);
   }

@@ -1,10 +1,16 @@
 package com.teixeira.subtitles.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.teixeira.subtitles.R;
 
 abstract class BaseActivity extends AppCompatActivity {
 
@@ -20,6 +26,8 @@ abstract class BaseActivity extends AppCompatActivity {
     }
     super.onCreate(savedInstanceState);
     setContentView(bindView());
+
+    requestPermissions();
   }
 
   protected int getStatusBarColor() {
@@ -32,5 +40,31 @@ abstract class BaseActivity extends AppCompatActivity {
 
   protected int getNavigationBarDividerColor() {
     return MaterialColors.getColor(this, com.google.android.material.R.attr.colorOutlineVariant, 0);
+  }
+
+  private void requestPermissions() {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO)
+        != PackageManager.PERMISSION_GRANTED) {
+      new MaterialAlertDialogBuilder(this)
+          .setTitle(R.string.permission_request)
+          .setMessage(R.string.permission_request_message)
+          .setPositiveButton(
+              R.string.grant,
+              (d, w) -> {
+                String[] permissions;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                  permissions = new String[] {Manifest.permission.READ_MEDIA_VIDEO};
+                } else {
+                  permissions =
+                      new String[] {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                      };
+                }
+                ActivityCompat.requestPermissions(this, permissions, 1000);
+              })
+          .setNegativeButton(R.string.no, null)
+          .show();
+    }
   }
 }

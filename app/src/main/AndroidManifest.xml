@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action
@@ -27,11 +26,9 @@
         <activity
             android:name=".activities.ProjectActivity"
             android:configChanges="screenSize"
-            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activities.AboutActivity"
-            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.core.os.BundleCompat;
 import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -80,7 +81,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     currentVideoPosition = args.getLong("currentVideoPosition");
 
     if (args.containsKey("subtitle") && args.containsKey("index")) {
-      subtitle = args.getParcelable("subtitle", Subtitle.class).clone();
+      subtitle = BundleCompat.getParcelable(args, "subtitle", Subtitle.class).clone();
       index = args.getInt("index");
     } else {
       subtitle =

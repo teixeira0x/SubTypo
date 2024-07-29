@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.os.BundleCompat;
 import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.UriUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -64,7 +65,7 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
 
     Bundle args = getArguments();
     if (args != null && args.containsKey("project")) {
-      project = args.getParcelable("project", Project.class);
+      project = BundleCompat.getParcelable(args, "project", Project.class);
       videoFile = new File(project.getVideoPath());
       needChooseVideo = false;
     }

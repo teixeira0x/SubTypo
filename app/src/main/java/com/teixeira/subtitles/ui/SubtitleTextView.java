@@ -1,14 +1,11 @@
 package com.teixeira.subtitles.ui;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Build;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.Gravity;

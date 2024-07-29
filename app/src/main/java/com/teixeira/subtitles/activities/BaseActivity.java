@@ -1,5 +1,6 @@
 package com.teixeira.subtitles.activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +14,10 @@ abstract class BaseActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     getWindow().setStatusBarColor(getStatusBarColor());
     getWindow().setNavigationBarColor(getNavigationBarColor());
-    getWindow().setNavigationBarDividerColor(getNavigationBarDividerColor());
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      getWindow().setNavigationBarDividerColor(getNavigationBarDividerColor());
+    }
     super.onCreate(savedInstanceState);
     setContentView(bindView());
   }

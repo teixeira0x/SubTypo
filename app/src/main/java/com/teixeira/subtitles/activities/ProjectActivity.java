@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.os.BundleCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
@@ -124,7 +125,7 @@ public class ProjectActivity extends BaseActivity
     FileIOUtils.writeFileFromString(project.getProjectPath() + "/subtitles.json", subtitlesJson);
 
     if (onEverySecond != null) {
-      callEverySecond();
+      callEverySecond(50L);
     }
 
     binding.noSubtitles.setVisibility(subtitles.isEmpty() ? View.VISIBLE : View.GONE);
@@ -150,9 +151,10 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void configureProject() {
+    Bundle extras = getIntent().getExtras();
     project =
         projectManager.setupProject(
-            getIntent().getExtras().getParcelable("project", Project.class));
+            BundleCompat.getParcelable(extras, "project", Project.class));
     getSupportActionBar().setTitle(project.getName());
     adapter = new SubtitleListAdapter(project.getSubtitles(), this);
 
@@ -186,7 +188,7 @@ public class ProjectActivity extends BaseActivity
               binding.videoControllerContent.currentVideoPosition.setText(
                   VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
-              callEverySecond();
+              callEverySecond(100L);
             }
           }
 
@@ -265,10 +267,14 @@ public class ProjectActivity extends BaseActivity
   public void onCompletion(MediaPlayer player) {
     binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
   }
-
+  
   private void callEverySecond() {
+    callEverySecond(1L);
+  }
+
+  private void callEverySecond(long delay) {
     mainHandler.removeCallbacks(onEverySecond);
-    mainHandler.postDelayed(onEverySecond, 1);
+    mainHandler.postDelayed(onEverySecond, delay);
   }
 
   private void onEverySecond() {

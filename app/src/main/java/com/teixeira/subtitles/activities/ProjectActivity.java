@@ -181,7 +181,8 @@ public class ProjectActivity extends BaseActivity
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-              binding.videoControllerContent.currentVideoTime.setText(VideoUtils.getTime(progress));
+              binding.videoControllerContent.currentVideoPosition.setText(
+                  VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
               callEverySecond();
             }
@@ -247,7 +248,7 @@ public class ProjectActivity extends BaseActivity
 
   private void onVideoPrepared(MediaPlayer player) {
     binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
-    binding.videoControllerContent.allVideoTime.setText(
+    binding.videoControllerContent.videoDuration.setText(
         VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
     mainHandler.post(onEverySecond);
 
@@ -269,9 +270,10 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void onEverySecond() {
-    int currentVideoTime = binding.videoContent.videoView.getCurrentPosition();
-    binding.videoControllerContent.currentVideoTime.setText(VideoUtils.getTime(currentVideoTime));
-    binding.videoControllerContent.seekBar.setProgress(currentVideoTime);
+    int currentVideoPosition = binding.videoContent.videoView.getCurrentPosition();
+    binding.videoControllerContent.currentVideoPosition.setText(
+        VideoUtils.getTime(currentVideoPosition));
+    binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
     boolean subtitleFound = false;
@@ -281,7 +283,7 @@ public class ProjectActivity extends BaseActivity
         long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
-        if (currentVideoTime >= startTime && currentVideoTime <= endTime) {
+        if (currentVideoPosition >= startTime && currentVideoPosition <= endTime) {
           binding.videoContent.tvSubtitle.setSubtitle(subtitle);
           binding.videoContent.tvSubtitle.setVisibility(View.VISIBLE);
           adapter.setScreenSubtitleIndex(i);

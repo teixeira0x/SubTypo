@@ -23,6 +23,7 @@
     <string name="new_project">New Project</string>
     <string name="enter_name">Enter a name</string>
     <string name="choose_video">Choose Video</string>
+    <string name="current_video_position">Current video position: %1$s</string>
 
     <string name="error_choose_a_video">Please choose a video</string>
     <string name="error_enter_a_name">Please enter a name</string>

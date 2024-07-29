@@ -30,19 +30,19 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private SubtitleListAdapter adapter;
   private Subtitle subtitle;
   private int index = -1;
-  private long currentVideoTime;
+  private long currentVideoPosition;
 
   private Runnable updatePreviewCallback;
 
-  public static SubtitleEditorSheetFragment newInstance(long currentVideoTime) {
-    return newInstance(currentVideoTime, -1, null);
+  public static SubtitleEditorSheetFragment newInstance(long currentVideoPosition) {
+    return newInstance(currentVideoPosition, -1, null);
   }
 
   public static SubtitleEditorSheetFragment newInstance(
-      long currentVideoTime, int index, Subtitle subtitle) {
+      long currentVideoPosition, int index, Subtitle subtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
     Bundle args = new Bundle();
-    args.putLong("currentVideoTime", currentVideoTime);
+    args.putLong("currentVideoPosition", currentVideoPosition);
     if (subtitle != null) {
       args.putParcelable("subtitle", subtitle);
       args.putInt("index", index);
@@ -77,7 +77,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       throw new IllegalArgumentException("Arguments cannot be null");
     }
 
-    currentVideoTime = args.getLong("currentVideoTime");
+    currentVideoPosition = args.getLong("currentVideoPosition");
 
     if (args.containsKey("subtitle") && args.containsKey("index")) {
       subtitle = args.getParcelable("subtitle", Subtitle.class).clone();
@@ -85,8 +85,8 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     } else {
       subtitle =
           new Subtitle(
-              VideoUtils.getTime(currentVideoTime),
-              VideoUtils.getTime(currentVideoTime + 2000),
+              VideoUtils.getTime(currentVideoPosition),
+              VideoUtils.getTime(currentVideoPosition + 2000),
               "");
       index = -1;
 
@@ -95,11 +95,11 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
     updatePreviewCallback = () -> binding.preview.setSubtitle(subtitle);
 
-    binding.currentVideoTime.setText(VideoUtils.getTime(currentVideoTime));
-    binding.currentVideoTime.setOnClickListener(
-        v -> ClipboardUtils.copyText(binding.currentVideoTime.getText().toString()));
-    binding.deleteSubtitle.setOnClickListener(
-        v -> showAlertToDeleteSubtitle());
+    binding.currentVideoPosition.setText(
+        getString(R.string.current_video_position, VideoUtils.getTime(currentVideoPosition)));
+    binding.currentVideoPosition.setOnClickListener(
+        v -> ClipboardUtils.copyText(VideoUtils.getTime(currentVideoPosition)));
+    binding.deleteSubtitle.setOnClickListener(v -> showAlertToDeleteSubtitle());
 
     binding.tieStartTime.setText(subtitle.getStartTime());
     binding.tieEndTime.setText(subtitle.getEndTime());
@@ -145,15 +145,17 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
           }
         });
   }
-  
+
   private void showAlertToDeleteSubtitle() {
     new MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete)
         .setMessage(getString(R.string.delete_message, subtitle.getText()))
-        .setPositiveButton(R.string.yes, (d, w) -> {
-          dismiss();
-          adapter.removeSubtitle(index);
-        })
+        .setPositiveButton(
+            R.string.yes,
+            (d, w) -> {
+              dismiss();
+              adapter.removeSubtitle(index);
+            })
         .setNegativeButton(R.string.no, null)
         .show();
   }
@@ -175,7 +177,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
       long subStartTime = VideoUtils.getMilliSeconds(sub.getStartTime());
 
-      if (subStartTime >= currentVideoTime) {
+      if (subStartTime >= currentVideoPosition) {
         index = i;
         break;
       }

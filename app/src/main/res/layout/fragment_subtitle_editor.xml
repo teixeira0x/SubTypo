@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/delete_subtitle"
             android:textSize="14sp"
-            android:id="@+id/current_video_time" />
+            android:id="@+id/current_video_position" />
 
         <ImageView
             android:layout_height="wrap_content"

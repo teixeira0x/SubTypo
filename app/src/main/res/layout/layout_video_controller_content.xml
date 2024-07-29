@@ -18,7 +18,7 @@
             android:src="@drawable/ic_play"
             android:layout_marginEnd="2dp"
             android:textSize="14sp"
-            android:id="@+id/current_video_time" />
+            android:id="@+id/current_video_position" />
 
         <SeekBar
             android:layout_height="wrap_content"
@@ -29,9 +29,8 @@
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:src="@drawable/ic_play"
             android:textSize="14sp"
-            android:id="@+id/all_video_time" />
+            android:id="@+id/video_duration" />
 
     </LinearLayout>
 

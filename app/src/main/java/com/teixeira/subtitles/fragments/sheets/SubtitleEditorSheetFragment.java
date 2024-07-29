@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.view.LayoutInflater;
-import com.teixeira.subtitles.R;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -13,6 +12,7 @@ import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
 import com.teixeira.subtitles.callbacks.GetSubtitleListAdapterCallback;
 import com.teixeira.subtitles.databinding.FragmentSubtitleEditorBinding;
@@ -90,7 +90,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
               "");
       index = -1;
 
-      binding.deleteSubtitle.setVisibility(View.GONE);
+      binding.deleteSubtitle.setVisibility(View.INVISIBLE);
     }
 
     updatePreviewCallback = () -> binding.preview.setSubtitle(subtitle);

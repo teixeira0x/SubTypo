@@ -126,6 +126,8 @@ public class ProjectActivity extends BaseActivity
     if (onEverySecond != null) {
       callEverySecond();
     }
+
+    binding.noSubtitles.setVisibility(subtitles.isEmpty() ? View.VISIBLE : View.GONE);
   }
 
   @Override

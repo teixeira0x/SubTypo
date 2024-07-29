@@ -29,6 +29,10 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   public SubtitleListAdapter(@NonNull List<Subtitle> subtitles, SubtitleListener listener) {
     this.subtitles = subtitles;
     this.listener = listener;
+
+    if (listener != null) {
+      listener.onUpdateSubtitles(subtitles);
+    }
   }
 
   @Override
@@ -65,7 +69,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   public int getItemCount() {
     return subtitles.size();
   }
-  
+
   public void setTouchHelper(ItemTouchHelper touchHelper) {
     this.touchHelper = touchHelper;
   }

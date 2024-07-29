@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_below="@id/app_bar"
-        android:orientation="vertical"
         android:id="@+id/video_container">
 
         <include
@@ -34,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_below="@id/video_container"
-        android:orientation="vertical"
         android:id="@+id/controller_container">
 
         <include
@@ -43,11 +41,26 @@
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <FrameLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_below="@id/controller_container"
-        android:padding="5dp"
-        android:id="@+id/subtitles" />
+        android:layout_below="@id/controller_container">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_below="@id/controller_container"
+            android:padding="5dp"
+            android:id="@+id/subtitles" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            android:id="@+id/no_subtitles"
+            android:text="@string/no_subtitles" />
+
+    </FrameLayout>
 
 </RelativeLayout>

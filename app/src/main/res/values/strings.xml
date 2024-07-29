@@ -28,6 +28,7 @@
     <string name="new_project">New Project</string>
     <string name="enter_name">Enter a name</string>
     <string name="choose_video">Choose Video</string>
+    <string name="total_subtitles">Total subtitles: %1$s</string>
     <string name="current_video_position">Current video position: %1$s</string>
     <string name="no_subtitles">Without subtitles click \"+\" to add subtitles!</string>
 

@@ -4,5 +4,15 @@
 <h2 align="center"><b>Subtitles</b></h2>
 <p align="center">A video subtitle editor/maker for Android  </p>
 
+## Screenshots
+
+<p align="center">
+
+<img width="125" height="250" src="./screenshots/screenshot1.png">
+<img width="125" height="250" src="./screenshots/screenshot2.png">
+<img width="125" height="250" src="./screenshots/screenshot3.png">
+
+</p>
+
 ## Thanks to
 - [Akash Yadav](https://github.com/itsaky) for the awesome [AndroidIDE](https://github.com/AndroidIDEOfficial/AndroidIDE)

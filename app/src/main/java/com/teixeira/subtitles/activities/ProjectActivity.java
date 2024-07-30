@@ -169,7 +169,7 @@ public class ProjectActivity extends BaseActivity
               binding.videoControllerContent.currentVideoPosition.setText(
                   VideoUtils.getTime(progress));
               binding.videoContent.videoView.seekTo(progress);
-              callEverySecond(100L);
+              callEverySecond(50L);
             }
           }
 
@@ -242,6 +242,8 @@ public class ProjectActivity extends BaseActivity
     binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
     binding.videoControllerContent.videoDuration.setText(
         VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
+    binding.videoControllerContent.timeLine.setVideoDuration(
+        binding.videoContent.videoView.getDuration());
     mainHandler.post(onEverySecond);
 
     int width = player.getVideoWidth();
@@ -270,6 +272,8 @@ public class ProjectActivity extends BaseActivity
     binding.videoControllerContent.currentVideoPosition.setText(
         VideoUtils.getTime(currentVideoPosition));
     binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
+
+    binding.videoControllerContent.timeLine.setCurrentVideoPosition(currentVideoPosition);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
     boolean subtitleFound = false;

@@ -5,6 +5,11 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical">
+  
+  <com.teixeira.subtitles.ui.TimeLineView
+        android:id="@+id/time_line"
+        android:layout_height="40dp"
+        android:layout_width="match_parent" />
 
     <LinearLayout
         android:layout_height="wrap_content"
@@ -63,5 +68,7 @@
             android:id="@+id/add_subtitle" />
 
     </RelativeLayout>
+
+    
 
 </LinearLayout>

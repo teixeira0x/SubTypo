@@ -90,7 +90,7 @@
         android:layout_height="1dp"
         android:layout_width="0dp"
         android:background="?attr/colorOutlineVariant"
-        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/time_line"
         app:layout_constraintTop_toBottomOf="@id/subtitles_container"

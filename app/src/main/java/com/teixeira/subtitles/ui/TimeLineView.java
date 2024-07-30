@@ -26,6 +26,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
+import com.google.android.material.color.MaterialColors;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
@@ -151,7 +152,8 @@ public class TimeLineView extends View {
 
   private void drawTimeLine(Canvas canvas) {
 
-    paint.setColor(Color.WHITE);
+    int colorControlNormal = MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
+    paint.setColor(colorControlNormal);
 
     int width = canvas.getWidth();
     int height = canvas.getHeight();
@@ -200,7 +202,8 @@ public class TimeLineView extends View {
 
     canvas.drawPath(path, paint);
 
-    paint.setColor(Color.WHITE);
+    int colorControlNormal = MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
+    paint.setColor(colorControlNormal);
 
     String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
     paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);

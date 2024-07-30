@@ -35,6 +35,7 @@ import java.util.List;
 public class TimeLineView extends View {
 
   private long videoDuration;
+  private String videoDurationText;
   private long currentVideoPosition;
   private List<Subtitle> subtitles;
 
@@ -55,8 +56,10 @@ public class TimeLineView extends View {
     super(context, attrs, defStyleAttr);
     bounds = new Rect();
     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    paint.setTextSize(14);
 
     videoDuration = 0;
+    videoDurationText = "";
     currentVideoPosition = 0;
     subtitles = null;
   }
@@ -73,7 +76,7 @@ public class TimeLineView extends View {
   @Override
   public boolean onTouchEvent(MotionEvent event) {
 
-    float touchX = event.getX();
+    float touchX = Math.max(0, Math.min(event.getX(), getWidth()));
 
     long newCurrentVideoPosition = (long) (touchX / getWidth() * videoDuration);
 
@@ -114,6 +117,7 @@ public class TimeLineView extends View {
 
   public void setVideoDuration(long duration) {
     this.videoDuration = duration;
+    this.videoDurationText = VideoUtils.getTime(duration);
     invalidate();
   }
 
@@ -134,7 +138,7 @@ public class TimeLineView extends View {
     int width = canvas.getWidth();
     int height = canvas.getHeight();
 
-    float centerX = height / 2;
+    float centerX = width / 2;
     float centerY = height / 2;
 
     long seconds = videoDuration / 1000;
@@ -160,6 +164,9 @@ public class TimeLineView extends View {
         canvas.drawLine(hourX, hourY, hourX, height, paint);
       }
     }
+
+    paint.getTextBounds(videoDurationText, 0, videoDurationText.length(), bounds);
+    canvas.drawText(videoDurationText, width - bounds.width() - 20, 20, paint);
   }
 
   private void drawPositionHandler(Canvas canvas) {
@@ -182,7 +189,6 @@ public class TimeLineView extends View {
     canvas.drawPath(path, paint);
 
     paint.setColor(Color.WHITE);
-    paint.setTextSize(14);
 
     String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
     paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);

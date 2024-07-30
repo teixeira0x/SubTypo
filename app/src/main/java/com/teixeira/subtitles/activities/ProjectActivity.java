@@ -167,10 +167,8 @@ public class ProjectActivity extends BaseActivity
 
           @Override
           public void onMoveHandler(long position) {
-            binding.videoControllerContent.currentVideoPosition.setText(
-                VideoUtils.getTime(position));
             binding.videoContent.videoView.seekTo((int) position);
-            callEverySecond(50L);
+            callEverySecond(20L);
           }
 
           @Override
@@ -184,8 +182,6 @@ public class ProjectActivity extends BaseActivity
             if (wasPlaying) playVideo();
           }
         });
-
-    binding.videoControllerContent.seekBar.setClickable(false);
 
     binding.videoControllerContent.play.setOnClickListener(
         v -> {
@@ -241,9 +237,6 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void onVideoPrepared(MediaPlayer player) {
-    binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
-    binding.videoControllerContent.videoDuration.setText(
-        VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
     binding.videoControllerContent.timeLine.setVideoDuration(
         binding.videoContent.videoView.getDuration());
     mainHandler.post(onEverySecond);
@@ -271,10 +264,6 @@ public class ProjectActivity extends BaseActivity
 
   private void onEverySecond() {
     int currentVideoPosition = binding.videoContent.videoView.getCurrentPosition();
-    binding.videoControllerContent.currentVideoPosition.setText(
-        VideoUtils.getTime(currentVideoPosition));
-    binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
-
     binding.videoControllerContent.timeLine.setCurrentVideoPosition(currentVideoPosition);
 
     List<Subtitle> subtitles = adapter.getSubtitles();

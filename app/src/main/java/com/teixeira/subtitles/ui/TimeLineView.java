@@ -40,6 +40,8 @@ public class TimeLineView extends View {
 
   private Rect bounds;
   private Paint paint;
+  private boolean isTouching = false;
+  private OnMoveHandlerListener onMoveHandler;
 
   public TimeLineView(Context context) {
     this(context, null);
@@ -70,8 +72,44 @@ public class TimeLineView extends View {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
-    // TODO: Implement this method
-    return super.onTouchEvent(event);
+
+    float touchX = event.getX();
+
+    long newCurrentVideoPosition = (long) (touchX / getWidth() * videoDuration);
+
+    switch (event.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        isTouching = true;
+        setCurrentVideoPosition(newCurrentVideoPosition);
+        if (onMoveHandler != null) {
+          onMoveHandler.onMoveHandler(newCurrentVideoPosition);
+          onMoveHandler.onStartTouch();
+        }
+        break;
+
+      case MotionEvent.ACTION_MOVE:
+        if (isTouching) {
+          setCurrentVideoPosition(newCurrentVideoPosition);
+          if (onMoveHandler != null) {
+            onMoveHandler.onMoveHandler(newCurrentVideoPosition);
+          }
+        }
+        break;
+
+      case MotionEvent.ACTION_UP:
+      case MotionEvent.ACTION_CANCEL:
+        isTouching = false;
+        if (onMoveHandler != null) {
+          onMoveHandler.onStopTouch();
+        }
+        break;
+    }
+
+    return true;
+  }
+
+  public void setOnMoveHandlerListener(OnMoveHandlerListener listener) {
+    this.onMoveHandler = listener;
   }
 
   public void setVideoDuration(long duration) {
@@ -146,7 +184,7 @@ public class TimeLineView extends View {
     paint.setColor(Color.WHITE);
     paint.setTextSize(14);
 
-    String currentVideoPositionText= VideoUtils.getTime(currentVideoPosition);
+    String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
     paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);
     canvas.drawText(currentVideoPositionText, x - (bounds.width() / 2), height / 2, paint);
   }
@@ -178,5 +216,13 @@ public class TimeLineView extends View {
         // Ignore
       }
     }
+  }
+
+  public interface OnMoveHandlerListener {
+    void onMoveHandler(long position);
+
+    void onStartTouch();
+
+    void onStopTouch();
   }
 }

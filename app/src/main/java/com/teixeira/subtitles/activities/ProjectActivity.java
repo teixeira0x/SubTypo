@@ -26,6 +26,7 @@ import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.project.ProjectManager;
 import com.teixeira.subtitles.ui.ExportWindow;
+import com.teixeira.subtitles.ui.TimeLineView;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
@@ -159,32 +160,32 @@ public class ProjectActivity extends BaseActivity
     binding.videoContent.videoView.setOnPreparedListener(this::onVideoPrepared);
     binding.videoContent.videoView.setOnCompletionListener(this::onCompletion);
 
-    binding.videoControllerContent.seekBar.setOnSeekBarChangeListener(
-        new SeekBar.OnSeekBarChangeListener() {
+    binding.videoControllerContent.timeLine.setOnMoveHandlerListener(
+        new TimeLineView.OnMoveHandlerListener() {
 
           private boolean wasPlaying;
 
           @Override
-          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser) {
-              binding.videoControllerContent.currentVideoPosition.setText(
-                  VideoUtils.getTime(progress));
-              binding.videoContent.videoView.seekTo(progress);
-              callEverySecond(50L);
-            }
+          public void onMoveHandler(long position) {
+            binding.videoControllerContent.currentVideoPosition.setText(
+                VideoUtils.getTime(position));
+            binding.videoContent.videoView.seekTo((int) position);
+            callEverySecond(50L);
           }
 
           @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {
+          public void onStartTouch() {
             wasPlaying = binding.videoContent.videoView.isPlaying();
             if (wasPlaying) stopVideo();
           }
 
           @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {
+          public void onStopTouch() {
             if (wasPlaying) playVideo();
           }
         });
+
+    binding.videoControllerContent.seekBar.setClickable(false);
 
     binding.videoControllerContent.play.setOnClickListener(
         v -> {

@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -36,6 +37,8 @@ public class TimeLineView extends View {
   private long videoDuration;
   private long currentVideoPosition;
   private List<Subtitle> subtitles;
+
+  private Rect bounds;
   private Paint paint;
 
   public TimeLineView(Context context) {
@@ -48,6 +51,7 @@ public class TimeLineView extends View {
 
   public TimeLineView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    bounds = new Rect();
     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     videoDuration = 0;
@@ -138,6 +142,13 @@ public class TimeLineView extends View {
     path.close();
 
     canvas.drawPath(path, paint);
+
+    paint.setColor(Color.WHITE);
+    paint.setTextSize(14);
+
+    String currentVideoPositionText= VideoUtils.getTime(currentVideoPosition);
+    paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);
+    canvas.drawText(currentVideoPositionText, x - (bounds.width() / 2), height / 2, paint);
   }
 
   private void drawSubtitles(Canvas canvas) {

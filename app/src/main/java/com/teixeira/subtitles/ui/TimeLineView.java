@@ -20,9 +20,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import com.teixeira.subtitles.models.Subtitle;
+import com.teixeira.subtitles.utils.VideoUtils;
+import java.util.List;
 
 /**
  * @author Felipe Teixeira
@@ -31,6 +35,7 @@ public class TimeLineView extends View {
 
   private long videoDuration;
   private long currentVideoPosition;
+  private List<Subtitle> subtitles;
   private Paint paint;
 
   public TimeLineView(Context context) {
@@ -47,12 +52,14 @@ public class TimeLineView extends View {
 
     videoDuration = 0;
     currentVideoPosition = 0;
+    subtitles = null;
   }
 
   @Override
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
 
+    drawSubtitles(canvas);
     drawTimeLine(canvas);
     drawPositionHandler(canvas);
   }
@@ -70,6 +77,11 @@ public class TimeLineView extends View {
 
   public void setCurrentVideoPosition(long currentVideoPosition) {
     this.currentVideoPosition = currentVideoPosition;
+    invalidate();
+  }
+
+  public void setSubtitles(List<Subtitle> subtitles) {
+    this.subtitles = subtitles;
     invalidate();
   }
 
@@ -115,7 +127,7 @@ public class TimeLineView extends View {
     int width = canvas.getWidth();
     int height = canvas.getHeight();
 
-    float x = (float) currentVideoPosition / videoDuration * canvas.getWidth();
+    float x = (float) currentVideoPosition / videoDuration * width;
     canvas.drawLine(x, 0, x, height / 2, paint);
 
     float size = 8;
@@ -126,6 +138,34 @@ public class TimeLineView extends View {
     path.close();
 
     canvas.drawPath(path, paint);
+  }
 
+  private void drawSubtitles(Canvas canvas) {
+
+    if (subtitles == null) {
+      return;
+    }
+
+    int width = canvas.getWidth();
+    int height = canvas.getHeight();
+
+    paint.setColor(Color.YELLOW);
+    paint.setAlpha(80);
+
+    for (Subtitle subtitle : subtitles) {
+      try {
+        long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
+        long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
+
+        float left = (float) startTime / videoDuration * width;
+        float top = 0;
+        float right = (float) endTime / videoDuration * width;
+        float bottom = height;
+
+        canvas.drawRect(new RectF(left, top, right, bottom), paint);
+      } catch (Exception e) {
+        // Ignore
+      }
+    }
   }
 }

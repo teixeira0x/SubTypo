@@ -108,6 +108,7 @@ public class ProjectActivity extends BaseActivity
       callEverySecond(50L);
     }
 
+    binding.videoControllerContent.timeLine.setSubtitles(subtitles);
     binding.noSubtitles.setVisibility(subtitles.isEmpty() ? View.VISIBLE : View.GONE);
   }
 

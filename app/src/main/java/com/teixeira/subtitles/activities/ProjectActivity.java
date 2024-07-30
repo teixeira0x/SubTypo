@@ -160,25 +160,50 @@ public class ProjectActivity extends BaseActivity
     binding.videoContent.videoView.setOnPreparedListener(this::onVideoPrepared);
     binding.videoContent.videoView.setOnCompletionListener(this::onCompletion);
 
-    binding.videoControllerContent.timeLine.setOnMoveHandlerListener(
-        new TimeLineView.OnMoveHandlerListener() {
+    /*binding.videoControllerContent.timeLine.setOnMoveHandlerListener(
+    new TimeLineView.OnMoveHandlerListener() {
+
+      private boolean wasPlaying;
+
+      @Override
+      public void onMoveHandler(long position) {
+        binding.videoContent.videoView.seekTo((int) position);
+        callEverySecond(20L);
+      }
+
+      @Override
+      public void onStartTouch() {
+        wasPlaying = binding.videoContent.videoView.isPlaying();
+        if (wasPlaying) stopVideo();
+      }
+
+      @Override
+      public void onStopTouch() {
+        if (wasPlaying) playVideo();
+      }
+    });*/
+
+    binding.videoControllerContent.seekBar.setOnSeekBarChangeListener(
+        new SeekBar.OnSeekBarChangeListener() {
 
           private boolean wasPlaying;
 
           @Override
-          public void onMoveHandler(long position) {
-            binding.videoContent.videoView.seekTo((int) position);
-            callEverySecond(20L);
+          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
+              binding.videoContent.videoView.seekTo((int) progress);
+              callEverySecond(20L);
+            }
           }
 
           @Override
-          public void onStartTouch() {
+          public void onStartTrackingTouch(SeekBar seekBar) {
             wasPlaying = binding.videoContent.videoView.isPlaying();
             if (wasPlaying) stopVideo();
           }
 
           @Override
-          public void onStopTouch() {
+          public void onStopTrackingTouch(SeekBar seekBar) {
             if (wasPlaying) playVideo();
           }
         });
@@ -237,8 +262,11 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void onVideoPrepared(MediaPlayer player) {
+    binding.videoControllerContent.videoDuration.setText(
+        VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
     binding.videoControllerContent.timeLine.setVideoDuration(
         binding.videoContent.videoView.getDuration());
+    binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
     mainHandler.post(onEverySecond);
 
     int width = player.getVideoWidth();
@@ -264,7 +292,10 @@ public class ProjectActivity extends BaseActivity
 
   private void onEverySecond() {
     int currentVideoPosition = binding.videoContent.videoView.getCurrentPosition();
+    binding.videoControllerContent.currentVideoPosition.setText(
+        VideoUtils.getTime(currentVideoPosition));
     binding.videoControllerContent.timeLine.setCurrentVideoPosition(currentVideoPosition);
+    binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
     boolean subtitleFound = false;

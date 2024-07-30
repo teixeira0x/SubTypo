@@ -11,6 +11,33 @@
         android:layout_height="40dp"
         android:layout_width="match_parent" />
 
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:textSize="14sp"
+            android:id="@+id/current_video_position" />
+
+        <SeekBar
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1.0"
+            android:id="@+id/seek_bar" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:id="@+id/video_duration" />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

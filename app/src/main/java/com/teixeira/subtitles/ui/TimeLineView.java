@@ -25,6 +25,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Scroller;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
@@ -34,15 +35,18 @@ import java.util.List;
  */
 public class TimeLineView extends View {
 
-  private long videoDuration;
-  private String videoDurationText;
-  private long currentVideoPosition;
-  private List<Subtitle> subtitles;
-
   private Rect bounds;
   private Paint paint;
   private boolean isTouching = false;
   private OnMoveHandlerListener onMoveHandler;
+  private float zoom;
+  private Scroller scroller;
+  private float scrollX;
+
+  private long videoDuration;
+  private long currentVideoPosition;
+  private String videoDurationText;
+  private List<Subtitle> subtitles;
 
   public TimeLineView(Context context) {
     this(context, null);
@@ -56,7 +60,10 @@ public class TimeLineView extends View {
     super(context, attrs, defStyleAttr);
     bounds = new Rect();
     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    paint.setTextSize(14);
+    paint.setTextSize(16);
+    zoom = 2.0f;
+    scroller = new Scroller(context);
+    scrollX = 0;
 
     videoDuration = 0;
     videoDurationText = "";
@@ -76,9 +83,9 @@ public class TimeLineView extends View {
   @Override
   public boolean onTouchEvent(MotionEvent event) {
 
-    float touchX = Math.max(0, Math.min(event.getX(), getWidth()));
+    /*float touchX = Math.max(0, Math.min(event.getX(), getWidth()));
 
-    long newCurrentVideoPosition = (long) (touchX / getWidth() * videoDuration);
+    long newCurrentVideoPosition = (long) ((touchX / getWidth() * videoDuration) - zoom - scrollX);
 
     switch (event.getAction()) {
       case MotionEvent.ACTION_DOWN:
@@ -106,9 +113,23 @@ public class TimeLineView extends View {
           onMoveHandler.onStopTouch();
         }
         break;
-    }
+    }*/
 
     return true;
+  }
+
+  @Override
+  public void computeScroll() {
+    super.computeScroll();
+    if (scroller.computeScrollOffset()) {
+      scrollX = scroller.getCurrX();
+      invalidate();
+    }
+  }
+
+  public void startScroll(float startX, float endX, int duration) {
+    scroller.startScroll((int) startX, 0, (int) (endX - startX), 0, duration);
+    invalidate();
   }
 
   public void setOnMoveHandlerListener(OnMoveHandlerListener listener) {
@@ -141,28 +162,25 @@ public class TimeLineView extends View {
     float centerX = width / 2;
     float centerY = height / 2;
 
+    float x = 0;
+    float y = 0;
+
     long seconds = videoDuration / 1000;
     for (int i = 0; i <= seconds; i++) {
 
-      paint.setAlpha(90);
-
-      float x = (float) i / seconds * width;
-      float y = height - (height / 4);
-      canvas.drawLine(x, y, x, height, paint);
+      x = ((float) i / seconds * width) * zoom - scrollX;
 
       paint.setAlpha(100);
 
-      if (i % 60 == 0) {
-        float minuteX = (float) i / seconds * width;
-        float minuteY = centerY;
-        canvas.drawLine(minuteX, minuteY, minuteX, height, paint);
+      if (i % 60 == 0) { // Minutes
+        y = centerY + (centerY / 4);
+      } else if (i % 3600 == 0) { // Hours
+        y = centerY;
+      } else {
+        y = height - (height / 4);
+        paint.setAlpha(90);
       }
-
-      if (i % 3600 == 0) {
-        float hourX = (float) i / seconds * width;
-        float hourY = centerY;
-        canvas.drawLine(hourX, hourY, hourX, height, paint);
-      }
+      canvas.drawLine(x, y, x, height, paint);
     }
 
     paint.getTextBounds(videoDurationText, 0, videoDurationText.length(), bounds);
@@ -176,7 +194,7 @@ public class TimeLineView extends View {
     int width = canvas.getWidth();
     int height = canvas.getHeight();
 
-    float x = (float) currentVideoPosition / videoDuration * width;
+    float x = ((float) currentVideoPosition / videoDuration * width) * zoom - scrollX;
     canvas.drawLine(x, 0, x, height / 2, paint);
 
     float size = 8;
@@ -193,6 +211,8 @@ public class TimeLineView extends View {
     String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
     paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);
     canvas.drawText(currentVideoPositionText, x - (bounds.width() / 2), height / 2, paint);
+
+    startScroll(scrollX, x, 200);
   }
 
   private void drawSubtitles(Canvas canvas) {
@@ -212,9 +232,9 @@ public class TimeLineView extends View {
         long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
-        float left = (float) startTime / videoDuration * width;
+        float left = ((float) startTime / videoDuration * width) * zoom - scrollX;
         float top = 0;
-        float right = (float) endTime / videoDuration * width;
+        float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
         float bottom = height;
 
         canvas.drawRect(new RectF(left, top, right, bottom), paint);

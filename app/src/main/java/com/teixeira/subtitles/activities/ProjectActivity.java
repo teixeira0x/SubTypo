@@ -26,7 +26,6 @@ import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.project.ProjectManager;
 import com.teixeira.subtitles.ui.ExportWindow;
-import com.teixeira.subtitles.ui.TimeLineView;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
@@ -109,7 +108,7 @@ public class ProjectActivity extends BaseActivity
       callEverySecond(50L);
     }
 
-    binding.videoControllerContent.timeLine.setSubtitles(subtitles);
+    binding.timeLine.setSubtitles(subtitles);
     binding.noSubtitles.setVisibility(subtitles.isEmpty() ? View.VISIBLE : View.GONE);
   }
 
@@ -264,8 +263,7 @@ public class ProjectActivity extends BaseActivity
   private void onVideoPrepared(MediaPlayer player) {
     binding.videoControllerContent.videoDuration.setText(
         VideoUtils.getTime(binding.videoContent.videoView.getDuration()));
-    binding.videoControllerContent.timeLine.setVideoDuration(
-        binding.videoContent.videoView.getDuration());
+    binding.timeLine.setVideoDuration(binding.videoContent.videoView.getDuration());
     binding.videoControllerContent.seekBar.setMax(binding.videoContent.videoView.getDuration());
     mainHandler.post(onEverySecond);
 
@@ -294,7 +292,7 @@ public class ProjectActivity extends BaseActivity
     int currentVideoPosition = binding.videoContent.videoView.getCurrentPosition();
     binding.videoControllerContent.currentVideoPosition.setText(
         VideoUtils.getTime(currentVideoPosition));
-    binding.videoControllerContent.timeLine.setCurrentVideoPosition(currentVideoPosition);
+    binding.timeLine.setCurrentVideoPosition(currentVideoPosition);
     binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
 
     List<Subtitle> subtitles = adapter.getSubtitles();

@@ -45,7 +45,6 @@ public class TimeLineView extends View {
 
   private long videoDuration;
   private long currentVideoPosition;
-  private String videoDurationText;
   private List<Subtitle> subtitles;
 
   public TimeLineView(Context context) {
@@ -66,7 +65,6 @@ public class TimeLineView extends View {
     scrollX = 0;
 
     videoDuration = 0;
-    videoDurationText = "";
     currentVideoPosition = 0;
     subtitles = null;
   }
@@ -138,7 +136,6 @@ public class TimeLineView extends View {
 
   public void setVideoDuration(long duration) {
     this.videoDuration = duration;
-    this.videoDurationText = VideoUtils.getTime(duration);
     invalidate();
   }
 
@@ -182,9 +179,6 @@ public class TimeLineView extends View {
       }
       canvas.drawLine(x, y, x, height, paint);
     }
-
-    paint.getTextBounds(videoDurationText, 0, videoDurationText.length(), bounds);
-    canvas.drawText(videoDurationText, width - bounds.width() - 20, 20, paint);
   }
 
   private void drawPositionHandler(Canvas canvas) {

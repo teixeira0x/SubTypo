@@ -13,7 +13,7 @@ android {
     minSdk = 24
     targetSdk = 34
     versionCode = 1
-    versionName = "1.0"
+    versionName = "1.1"
 
     vectorDrawables { useSupportLibrary = true }
   }
@@ -54,14 +54,14 @@ android {
 
 
 dependencies {
-  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-  implementation("androidx.appcompat:appcompat:1.6.1")
-  implementation("androidx.core:core:1.12.0")
-  implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-  implementation("androidx.preference:preference:1.2.1")
+  coreLibraryDesugaring(libs.android.desugar)
+  implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.core)
+  implementation(libs.androidx.preference)
 
-  implementation("com.google.android.material:material:1.9.0")
-  implementation("com.google.android.gms:play-services-oss-licenses:17.0.1")
-  implementation("com.google.code.gson:gson:2.10.1")
-  implementation("com.blankj:utilcodex:1.31.1")
+  implementation(libs.google.material)
+  implementation(libs.google.oss.licenses)
+  implementation(libs.google.gson)
+
+  implementation(libs.common.utilcode)
 }

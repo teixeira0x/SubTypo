@@ -1,3 +1,18 @@
+/*
+ * This file is part of Subtiles.
+ *
+ * Subtitles is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * Subtitles is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with Subtitles.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.teixeira.subtitles.activities;
 
 import android.media.MediaPlayer;
@@ -9,14 +24,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.os.BundleCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
 import com.teixeira.subtitles.callbacks.GetSubtitleListAdapterCallback;
@@ -25,7 +40,9 @@ import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.project.ProjectManager;
+import com.teixeira.subtitles.tasks.TaskExecutor;
 import com.teixeira.subtitles.ui.ExportWindow;
+import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
@@ -38,7 +55,9 @@ public class ProjectActivity extends BaseActivity
   private ProjectManager projectManager;
   private Project project;
   private SubtitleListAdapter adapter;
+
   private Runnable onEverySecond;
+  private Runnable saveProjectCallback;
 
   private ExportWindow exportWindow;
 
@@ -57,6 +76,20 @@ public class ProjectActivity extends BaseActivity
     binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
     projectManager = ProjectManager.getInstance();
+
+    Bundle extras = getIntent().getExtras();
+    project =
+        projectManager.setupProject(BundleCompat.getParcelable(extras, "project", Project.class));
+    getSupportActionBar().setTitle(project.getName());
+
+    exportWindow = new ExportWindow(this);
+    onEverySecond = this::onEverySecond;
+    saveProjectCallback = this::saveProject;
+  }
+
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
     configureProject();
   }
 
@@ -88,6 +121,9 @@ public class ProjectActivity extends BaseActivity
     mainHandler.removeCallbacks(onEverySecond);
     onEverySecond = null;
 
+    mainHandler.removeCallbacks(saveProjectCallback);
+    saveProjectCallback = null;
+
     projectManager.destroy();
     exportWindow.destroy();
     binding = null;
@@ -99,17 +135,15 @@ public class ProjectActivity extends BaseActivity
   }
 
   @Override
-  public void onUpdateSubtitles(List<Subtitle> subtitles) {
-    String subtitlesJson =
-        new Gson().toJson(subtitles, new TypeToken<List<Subtitle>>() {}.getType());
-    FileIOUtils.writeFileFromString(project.getProjectPath() + "/subtitles.json", subtitlesJson);
-
-    if (onEverySecond != null) {
-      callEverySecond(50L);
+  public void onUpdateSubtitles(List<Subtitle> subtitles, boolean save) {
+    if (save) {
+      mainHandler.removeCallbacks(saveProjectCallback);
+      mainHandler.postDelayed(saveProjectCallback, 10L);
     }
 
     binding.timeLine.setSubtitles(subtitles);
     binding.noSubtitles.setVisibility(subtitles.isEmpty() ? View.VISIBLE : View.GONE);
+    callEverySecond(50L);
   }
 
   @Override
@@ -132,32 +166,43 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void configureProject() {
-    Bundle extras = getIntent().getExtras();
-    project =
-        projectManager.setupProject(BundleCompat.getParcelable(extras, "project", Project.class));
-    getSupportActionBar().setTitle(project.getName());
+    MaterialAlertDialogBuilder builder =
+        DialogUtils.createProgressDialog(this, getString(R.string.loading_project), false);
+    AlertDialog dialog = builder.show();
 
-    adapter = new SubtitleListAdapter(project.getSubtitles(), this);
-    exportWindow = new ExportWindow(this, adapter);
+    TaskExecutor.executeAsyncProvideError(
+        () -> {
+          setVideoListeners();
 
-    binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
-    binding.subtitles.setAdapter(adapter);
+          return project.getSubtitles();
+        },
+        (result, throwable) -> {
+          dialog.dismiss();
+          if (throwable != null) {
+            DialogUtils.createSimpleDialog(
+                    this, getString(R.string.error_on_loading_project), throwable.toString())
+                .setPositiveButton(R.string.close_project, (d, w) -> finish())
+                .setCancelable(false)
+                .show();
+            return;
+          }
+          binding.videoContent.videoView.setVideoPath(project.getVideoPath());
+          adapter = new SubtitleListAdapter(result, this);
+          exportWindow.setSubtitleListAdapter(adapter);
+          binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
+          binding.subtitles.setAdapter(adapter);
 
-    ItemTouchHelper touchHelper =
-        new ItemTouchHelper(new SubtitleListAdapter.SubtitleTouchHelper(adapter));
-    touchHelper.attachToRecyclerView(binding.subtitles);
+          ItemTouchHelper touchHelper =
+              new ItemTouchHelper(new SubtitleListAdapter.SubtitleTouchHelper(adapter));
+          touchHelper.attachToRecyclerView(binding.subtitles);
 
-    adapter.setTouchHelper(touchHelper);
-
-    configureVideoView();
+          adapter.setTouchHelper(touchHelper);
+        });
   }
 
-  private void configureVideoView() {
-    onEverySecond = () -> onEverySecond();
-
-    binding.videoContent.videoView.setVideoPath(project.getVideoPath());
+  private void setVideoListeners() {
     binding.videoContent.videoView.setOnPreparedListener(this::onVideoPrepared);
-    binding.videoContent.videoView.setOnCompletionListener(this::onCompletion);
+    binding.videoContent.videoView.setOnCompletionListener(this::onVideoCompletion);
 
     /*binding.videoControllerContent.timeLine.setOnMoveHandlerListener(
     new TimeLineView.OnMoveHandlerListener() {
@@ -190,8 +235,8 @@ public class ProjectActivity extends BaseActivity
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-              binding.videoContent.videoView.seekTo((int) progress);
-              callEverySecond(20L);
+              binding.videoContent.videoView.seekTo(progress);
+              callEverySecond(10L);
             }
           }
 
@@ -225,7 +270,7 @@ public class ProjectActivity extends BaseActivity
         });
   }
 
-  public void back5sec() {
+  private void back5sec() {
     int seek = binding.videoContent.videoView.getCurrentPosition() - 5000;
     if (binding.videoContent.videoView.getCurrentPosition() <= 5000) {
       seek = 0;
@@ -237,7 +282,7 @@ public class ProjectActivity extends BaseActivity
     }
   }
 
-  public void skip5sec() {
+  private void skip5sec() {
     int seek = binding.videoContent.videoView.getCurrentPosition() + 5000;
     if (seek > binding.videoContent.videoView.getDuration()) {
       seek = binding.videoContent.videoView.getDuration();
@@ -275,7 +320,7 @@ public class ProjectActivity extends BaseActivity
     }
   }
 
-  public void onCompletion(MediaPlayer player) {
+  public void onVideoCompletion(MediaPlayer player) {
     binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
   }
 
@@ -284,16 +329,19 @@ public class ProjectActivity extends BaseActivity
   }
 
   private void callEverySecond(long delay) {
+    if (onEverySecond == null) {
+      return;
+    }
     mainHandler.removeCallbacks(onEverySecond);
     mainHandler.postDelayed(onEverySecond, delay);
   }
 
   private void onEverySecond() {
     int currentVideoPosition = binding.videoContent.videoView.getCurrentPosition();
+    binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
     binding.videoControllerContent.currentVideoPosition.setText(
         VideoUtils.getTime(currentVideoPosition));
     binding.timeLine.setCurrentVideoPosition(currentVideoPosition);
-    binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
 
     List<Subtitle> subtitles = adapter.getSubtitles();
     boolean subtitleFound = false;
@@ -321,8 +369,21 @@ public class ProjectActivity extends BaseActivity
     }
 
     if (binding.videoContent.videoView.isPlaying()) {
-      mainHandler.removeCallbacks(onEverySecond);
-      mainHandler.postDelayed(onEverySecond, 1);
+      callEverySecond();
     }
+  }
+
+  private void saveProject() {
+    getSupportActionBar().setSubtitle("Saving");
+    try {
+      FileIOUtils.writeFileFromString(
+          project.getSubtitleFile(), project.getSubtitleFormat().toText(adapter.getSubtitles()));
+    } catch (Exception e) {
+      DialogUtils.createSimpleDialog(
+              this, getString(R.string.error_on_saving_project), e.toString())
+          .setPositiveButton(R.string.ok, null)
+          .show();
+    }
+    getSupportActionBar().setSubtitle(null);
   }
 }

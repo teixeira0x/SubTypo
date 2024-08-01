@@ -125,7 +125,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            subtitle.setStartTime(editable.toString());
+            String time = editable.toString();
+            if (validateSubtitleTime(time)) {
+              subtitle.setStartTime(time);
+            }
           }
         });
     binding.tieEndTime.addTextChangedListener(
@@ -133,7 +136,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            subtitle.setEndTime(editable.toString());
+            String time = editable.toString();
+            if (validateSubtitleTime(time)) {
+              subtitle.setEndTime(time);
+            }
           }
         });
     binding.tieText.addTextChangedListener(
@@ -141,10 +147,16 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            subtitle.setText(editable.toString());
+            subtitle.setText(editable.toString().trim());
             updatePreview();
           }
         });
+  }
+
+  private boolean validateSubtitleTime(String time) {
+    boolean isValidTime = VideoUtils.isValidTime(time.split(":"));
+    binding.dialogButtons.save.setEnabled(isValidTime);
+    return isValidTime;
   }
 
   private void showAlertToDeleteSubtitle() {

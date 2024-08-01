@@ -3,9 +3,8 @@ package com.teixeira.subtitles.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.blankj.utilcode.util.FileIOUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.util.ArrayList;
+import com.teixeira.subtitles.subtitle.file.SubtitleFormat;
+import java.io.File;
 import java.util.List;
 
 public class Project implements Parcelable, Comparable<Project> {
@@ -15,11 +14,15 @@ public class Project implements Parcelable, Comparable<Project> {
   private String videoPath;
   private String name;
 
+  private SubtitleFormat subtitleFormat;
+
   public Project(String projectId, String projectPath, String videoPath, String name) {
     this.projectId = projectId;
     this.projectPath = projectPath;
     this.videoPath = videoPath;
     this.name = name;
+
+    this.subtitleFormat = SubtitleFormat.FORMAT_SUBRIP;
   }
 
   public Project(Parcel parcel) {
@@ -50,6 +53,10 @@ public class Project implements Parcelable, Comparable<Project> {
     this.videoPath = videoPath;
   }
 
+  public String getSubtitleFile() {
+    return projectPath + "/subtitle." + subtitleFormat.getExtension();
+  }
+
   public String getName() {
     return this.name;
   }
@@ -58,18 +65,16 @@ public class Project implements Parcelable, Comparable<Project> {
     this.name = name;
   }
 
-  public List<Subtitle> getSubtitles() {
-    List<Subtitle> subtitles =
-        new Gson()
-            .fromJson(
-                FileIOUtils.readFile2String(projectPath + "/subtitles.json"),
-                new TypeToken<List<Subtitle>>() {}.getType());
-
-    if (subtitles == null) {
-      return new ArrayList<>();
+  public List<Subtitle> getSubtitles() throws Exception {
+    File subtitleFile = new File(getSubtitleFile());
+    if (!subtitleFile.exists()) {
+      subtitleFile.createNewFile();
     }
+    return subtitleFormat.toList(FileIOUtils.readFile2String(getSubtitleFile()));
+  }
 
-    return subtitles;
+  public SubtitleFormat getSubtitleFormat() {
+    return this.subtitleFormat;
   }
 
   @Override

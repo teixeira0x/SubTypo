@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="5dp"
+    android:padding="2dp"
     android:foreground="@drawable/ripple_effect">
 
     <ImageView
         android:layout_height="50dp"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
         android:scaleType="center"
         android:id="@+id/icon" />
 
@@ -28,9 +28,9 @@
     <RadioButton
         android:layout_height="50dp"
         android:layout_width="50dp"
+        android:clickable="false"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:clickable="false"
         android:id="@+id/readio_button" />
 
 </RelativeLayout>

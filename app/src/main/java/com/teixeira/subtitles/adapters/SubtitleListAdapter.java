@@ -13,6 +13,7 @@ import com.teixeira.subtitles.models.Subtitle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapter.VH> {
 
@@ -26,13 +27,13 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     this(new ArrayList<>(), listener);
   }
 
-  public SubtitleListAdapter(@NonNull List<Subtitle> subtitles, SubtitleListener listener) {
+  public SubtitleListAdapter(@NonNull List<Subtitle> subtitles, @NonNull SubtitleListener listener) {
+    Objects.requireNonNull(subtitles);
+    Objects.requireNonNull(listener);
     this.subtitles = subtitles;
     this.listener = listener;
 
-    if (listener != null) {
-      listener.onUpdateSubtitles(subtitles);
-    }
+    listener.onUpdateSubtitles(subtitles, false);
   }
 
   @Override
@@ -87,7 +88,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       }
     }
 
-    if (listener != null && index >= 0) {
+    if (index >= 0) {
       listener.scrollToPosition(index);
     }
   }
@@ -101,10 +102,8 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     subtitles.add(index, subtitle);
     notifyItemInserted(index);
 
-    if (listener != null) {
-      listener.onUpdateSubtitles(subtitles);
-      listener.scrollToPosition(index);
-    }
+    listener.onUpdateSubtitles(subtitles, true);
+    listener.scrollToPosition(index);
   }
 
   public void setSubtitle(int index, Subtitle subtitle) {
@@ -112,10 +111,8 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       subtitles.set(index, subtitle);
       notifyItemChanged(index, subtitle);
 
-      if (listener != null) {
-        listener.onUpdateSubtitles(subtitles);
-        listener.scrollToPosition(index);
-      }
+      listener.onUpdateSubtitles(subtitles, true);
+      listener.scrollToPosition(index);
     }
   }
 
@@ -129,9 +126,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       subtitles.remove(subtitle);
       notifyItemRemoved(index);
 
-      if (listener != null) {
-        listener.onUpdateSubtitles(subtitles);
-      }
+      listener.onUpdateSubtitles(subtitles, true);
     }
   }
 
@@ -144,7 +139,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
     boolean onSubtitleLongClickListener(View view, int index, Subtitle subtitle);
 
-    void onUpdateSubtitles(List<Subtitle> subtitles);
+    void onUpdateSubtitles(List<Subtitle> subtitles, boolean save);
 
     void scrollToPosition(int position);
   }
@@ -176,7 +171,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       Collections.swap(
           adapter.getSubtitles(), holder.getAdapterPosition(), target.getAdapterPosition());
       adapter.notifyItemMoved(holder.getAdapterPosition(), target.getAdapterPosition());
-      adapter.listener.onUpdateSubtitles(adapter.getSubtitles());
+      adapter.listener.onUpdateSubtitles(adapter.getSubtitles(), true);
       return true;
     }
 

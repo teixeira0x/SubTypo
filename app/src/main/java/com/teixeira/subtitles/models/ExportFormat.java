@@ -1,16 +1,17 @@
 package com.teixeira.subtitles.models;
 
-public class ExportType {
-  public static final int TYPE_SUBRIP = 0;
+public class ExportFormat {
+
+  public static final int FORMAT_SUBRIP = 0;
 
   private int icon;
   private String name;
-  private int type;
+  private int format;
 
-  public ExportType(int icon, String name, int type) {
+  public ExportFormat(int icon, String name, int format) {
     this.icon = icon;
     this.name = name;
-    this.type = type;
+    this.format = format;
   }
 
   public int getIcon() {
@@ -29,11 +30,11 @@ public class ExportType {
     this.name = name;
   }
 
-  public int getType() {
-    return this.type;
+  public int getFormat() {
+    return this.format;
   }
 
-  public void setType(int type) {
-    this.type = type;
+  public void setFormat(int format) {
+    this.format = format;
   }
 }

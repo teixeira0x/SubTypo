@@ -41,20 +41,17 @@ public class VideoUtils {
 
   public static long getMilliSeconds(String time) {
     String[] parts = time.split(":");
-    if (parts.length != 3) {
+    if (!isValidTime(parts)) {
       throw new IllegalArgumentException("Time format must be hh:mm:ss,SSS");
     }
 
     long hours = Long.parseLong(parts[0]);
     long minutes = Long.parseLong(parts[1]);
 
-    String[] second = parts[2].split(",");
-    if (second.length != 2) {
-      throw new IllegalArgumentException("Time format must be hh:mm:ss,SSS");
-    }
-
-    long seconds = Long.parseLong(second[0]);
-    long milliseconds = Long.parseLong(second[1]);
+    String secondsAndMillis = parts[2];
+    String[] secParts = secondsAndMillis.split(",");
+    long seconds = Long.parseLong(secParts[0]);
+    long milliseconds = Long.parseLong(secParts[1]);
 
     long totalMillis =
         TimeUnit.HOURS.toMillis(hours)
@@ -63,6 +60,40 @@ public class VideoUtils {
             + milliseconds;
 
     return totalMillis;
+  }
+
+  public static boolean isValidTime(String[] timeParts) {
+    if (timeParts.length != 3) {
+      return false;
+    }
+
+    String secondsAndMillis = timeParts[2];
+    String[] secParts = secondsAndMillis.split(",");
+    if (secParts.length != 2) {
+      return false;
+    }
+
+    try {
+      int hours = Integer.parseInt(timeParts[0]);
+      int minutes = Integer.parseInt(timeParts[1]);
+      int seconds = Integer.parseInt(secParts[0]);
+      int millis = Integer.parseInt(secParts[1]);
+
+      if (hours < 0
+          || hours > 99
+          || minutes < 0
+          || minutes > 59
+          || seconds < 0
+          || seconds > 59
+          || millis < 0
+          || millis > 999) {
+        return false;
+      }
+    } catch (NumberFormatException e) {
+      return false;
+    }
+
+    return true;
   }
 
   private VideoUtils() {}

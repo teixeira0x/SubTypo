@@ -5,14 +5,15 @@
     <string name="delete">Delete</string>
     <string name="delete_message">Are you sure to delete: %1$s</string>
     <string name="rename">Rename</string>
+    <string name="ok">Ok</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="grant">Grant</string>
     <string name="export">Export</string>
-    <string name="export_file_type">Select the file type to export</string>
-    <string name="export_in_subrip">Export in SubRip format (.srt)</string>
+    <string name="export_file_format">Select the file format to export</string>
+    <string name="export_format_subrip">Export in SubRip format (.srt)</string>
 
     <string name="permission_request">Permission Request</string>
     <string name="permission_request_message">By granting the permissions, you will have a better experience with the app.</string>
@@ -24,6 +25,8 @@
     <string name="open_source_license">Open source licenses</string>
 
     <!-- Project -->
+    <string name="loading_project">Loading project..</string>
+    <string name="close_project">Close Project</string>
     <string name="no_projects">No projects</string>
     <string name="new_project">New Project</string>
     <string name="enter_name">Enter a name</string>
@@ -34,6 +37,9 @@
 
     <string name="error_choose_a_video">Please choose a video</string>
     <string name="error_enter_a_name">Please enter a name</string>
+    <string name="error_on_loading_project">An error occurred when trying to load the project:</string>
+    <string name="error_on_saving_project">An error occurred when trying to save the project:</string>
+    <string name="error_on_export_subtitles">An error occurred when trying to export subtitles:</string>
     <string name="error_no_subtitles_to_export">Add subtitles to be able to export.</string>
 
     <string name="subtitles">Subtitles</string>

@@ -60,14 +60,14 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:textSize="14sp"
-            android:text="@string/export_file_type"
-            android:id="@+id/export_file_type" />
+            android:text="@string/export_file_format"
+            android:id="@+id/export_file_format" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_below="@id/export_file_type"
-            android:id="@+id/export_types" />
+            android:layout_below="@id/export_file_format"
+            android:id="@+id/export_formats" />
 
     </RelativeLayout>
 

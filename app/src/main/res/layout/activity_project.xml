@@ -81,8 +81,8 @@
             android:layout_width="wrap_content"
             android:textSize="14sp"
             android:layout_gravity="center"
-            android:id="@+id/no_subtitles"
-            android:text="@string/no_subtitles" />
+            android:text="@string/proj_no_subtitles"
+            android:id="@+id/no_subtitles" />
 
     </FrameLayout>
 

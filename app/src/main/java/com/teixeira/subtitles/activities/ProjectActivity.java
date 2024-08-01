@@ -84,7 +84,7 @@ public class ProjectActivity extends BaseActivity
 
     exportWindow = new ExportWindow(this);
     onEverySecond = this::onEverySecond;
-    saveProjectCallback = this::saveProject;
+    saveProjectCallback = this::saveProjectAsync;
   }
 
   @Override
@@ -167,7 +167,7 @@ public class ProjectActivity extends BaseActivity
 
   private void configureProject() {
     MaterialAlertDialogBuilder builder =
-        DialogUtils.createProgressDialog(this, getString(R.string.loading_project), false);
+        DialogUtils.createProgressDialog(this, getString(R.string.proj_loading), false);
     AlertDialog dialog = builder.show();
 
     TaskExecutor.executeAsyncProvideError(
@@ -180,8 +180,8 @@ public class ProjectActivity extends BaseActivity
           dialog.dismiss();
           if (throwable != null) {
             DialogUtils.createSimpleDialog(
-                    this, getString(R.string.error_on_loading_project), throwable.toString())
-                .setPositiveButton(R.string.close_project, (d, w) -> finish())
+                    this, getString(R.string.error_loading_project), throwable.toString())
+                .setPositiveButton(R.string.proj_close, (d, w) -> finish())
                 .setCancelable(false)
                 .show();
             return;
@@ -373,17 +373,21 @@ public class ProjectActivity extends BaseActivity
     }
   }
 
-  private void saveProject() {
-    getSupportActionBar().setSubtitle("Saving");
+  private void saveProjectAsync() {
+    getSupportActionBar().setSubtitle(R.string.proj_saving);
+    TaskExecutor.executeAsyncProvideError(
+        this::saveProject, (r, throwable) -> getSupportActionBar().setSubtitle(null));
+  }
+
+  private Void saveProject() {
     try {
       FileIOUtils.writeFileFromString(
           project.getSubtitleFile(), project.getSubtitleFormat().toText(adapter.getSubtitles()));
     } catch (Exception e) {
-      DialogUtils.createSimpleDialog(
-              this, getString(R.string.error_on_saving_project), e.toString())
+      DialogUtils.createSimpleDialog(this, getString(R.string.error_saving_project), e.toString())
           .setPositiveButton(R.string.ok, null)
           .show();
     }
-    getSupportActionBar().setSubtitle(null);
+    return null;
   }
 }

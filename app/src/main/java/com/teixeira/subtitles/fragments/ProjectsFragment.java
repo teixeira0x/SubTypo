@@ -100,7 +100,7 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
   private void deleteProject(Project project) {
     new MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete)
-        .setMessage(getString(R.string.delete_message, project.getName()))
+        .setMessage(getString(R.string.msg_delete_confirmation, project.getName()))
         .setPositiveButton(R.string.yes, (d, w) -> deleteProjectAsync(project))
         .setNegativeButton(R.string.no, null)
         .show();

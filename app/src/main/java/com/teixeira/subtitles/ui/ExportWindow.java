@@ -90,7 +90,7 @@ public class ExportWindow extends PopupWindow {
       } catch (Exception e) {
         DialogUtils.createSimpleDialog(
                 getContentView().getContext(),
-                getContentView().getContext().getString(R.string.error_on_export_subtitles),
+                getContentView().getContext().getString(R.string.error_exporting_subtitles),
                 e.toString())
             .setPositiveButton(R.string.ok, null)
             .show();

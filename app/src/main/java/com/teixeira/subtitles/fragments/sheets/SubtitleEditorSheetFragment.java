@@ -89,7 +89,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     }
 
     binding.currentVideoPosition.setText(
-        getString(R.string.current_video_position, VideoUtils.getTime(currentVideoPosition)));
+        getString(R.string.proj_current_video_position, VideoUtils.getTime(currentVideoPosition)));
     binding.currentVideoPosition.setOnClickListener(
         v -> ClipboardUtils.copyText(VideoUtils.getTime(currentVideoPosition)));
     binding.deleteSubtitle.setOnClickListener(v -> showAlertToDeleteSubtitle());
@@ -140,7 +140,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
           }
         });
   }
-  
+
   private void validateFields() {
     binding.dialogButtons.save.setEnabled(
         isValidSubtitleTime(binding.tieStartTime.getText().toString())
@@ -165,7 +165,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private void showAlertToDeleteSubtitle() {
     new MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete)
-        .setMessage(getString(R.string.delete_message, subtitle.getText()))
+        .setMessage(getString(R.string.msg_delete_confirmation, subtitle.getText()))
         .setPositiveButton(
             R.string.yes,
             (d, w) -> {

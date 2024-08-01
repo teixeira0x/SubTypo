@@ -107,7 +107,7 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
       binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.getVideoPath()));
       binding.tieName.setText(project.getName());
     } else {
-      binding.tieName.setText(R.string.new_project);
+      binding.tieName.setText(R.string.proj_new);
     }
     binding.btnChooseVideo.setClickable(needChooseVideo);
   }
@@ -122,12 +122,12 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
   private void writeProject() {
 
     if (videoFile == null && needChooseVideo) {
-      ToastUtils.showShort(R.string.error_choose_a_video);
+      ToastUtils.showShort(R.string.error_choose_video);
       return;
     }
 
     if (TextUtils.isEmpty(binding.tieName.getText().toString())) {
-      ToastUtils.showShort(R.string.error_enter_a_name);
+      ToastUtils.showShort(R.string.error_enter_name);
       return;
     }
 

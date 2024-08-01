@@ -3,7 +3,6 @@
     <string name="app_name">SubTypo</string>
     <string name="about">About</string>
     <string name="delete">Delete</string>
-    <string name="delete_message">Are you sure to delete: %1$s</string>
     <string name="rename">Rename</string>
     <string name="ok">Ok</string>
     <string name="yes">Yes</string>
@@ -12,39 +11,44 @@
     <string name="save">Save</string>
     <string name="grant">Grant</string>
     <string name="export">Export</string>
-    <string name="export_file_format">Select the file format to export</string>
-    <string name="export_format_subrip">Export in SubRip format (.srt)</string>
 
-    <string name="permission_request">Permission Request</string>
-    <string name="permission_request_message">By granting the permissions, you will have a better experience with the app.</string>
+    <!-- Messages -->
+    <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
+    <string name="msg_permission_request">Permission Request</string>
+    <string name="msg_permission_request_detail">By granting the permissions, you will have a better experience with the app.</string>
 
     <!-- Preferences -->
-    <string name="version">Version</string>
-    <string name="github">GitHub</string>
-    <string name="github_summary">This app is open source!</string>
-    <string name="open_source_license">Open source licenses</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_github">GitHub</string>
+    <string name="pref_github_summary">This app is open source!</string>
+    <string name="pref_open_source_license">Open source licenses</string>
 
     <!-- Project -->
-    <string name="loading_project">Loading project..</string>
-    <string name="close_project">Close Project</string>
-    <string name="no_projects">No projects</string>
-    <string name="new_project">New Project</string>
-    <string name="enter_name">Enter a name</string>
-    <string name="choose_video">Choose Video</string>
-    <string name="total_subtitles">Total subtitles: %1$s</string>
-    <string name="current_video_position">Current video position: %1$s</string>
-    <string name="no_subtitles">Without subtitles click \"+\" to add subtitles!</string>
+    <string name="proj_loading">Loading project..</string>
+    <string name="proj_saving">Saving project..</string>
+    <string name="proj_close">Close Project</string>
+    <string name="proj_no_projects">No projects</string>
+    <string name="proj_new">New Project</string>
+    <string name="proj_enter_name">Enter a name</string>
+    <string name="proj_choose_video">Choose Video</string>
+    <string name="proj_total_subtitles">Total subtitles: %1$s</string>
+    <string name="proj_current_video_position">Current video position: %1$s</string>
+    <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>
+  
+    <string name="proj_export_file_format">Select the file format to export</string>
+    <string name="proj_export_format_subrip">Export in SubRip format (.srt)</string>
 
-    <string name="error_choose_a_video">Please choose a video</string>
-    <string name="error_enter_a_name">Please enter a name</string>
-    <string name="error_on_loading_project">An error occurred when trying to load the project:</string>
-    <string name="error_on_saving_project">An error occurred when trying to save the project:</string>
-    <string name="error_on_export_subtitles">An error occurred when trying to export subtitles:</string>
+    <!-- Errors -->
+    <string name="error_choose_video">Please choose a video</string>
+    <string name="error_enter_name">Please enter a name</string>
+    <string name="error_loading_project">An error occurred when trying to load the project:</string>
+    <string name="error_saving_project">An error occurred when trying to save the project:</string>
+    <string name="error_exporting_subtitles">An error occurred when trying to export subtitles:</string>
     <string name="error_no_subtitles_to_export">Add subtitles to be able to export.</string>
 
+    <!-- Subtitles -->
     <string name="subtitles">Subtitles</string>
-
-    <string name="enter_caption_start_time">Enter subtitle start time</string>
-    <string name="enter_caption_end_tine">Enter subtitle end time</string>
-    <string name="enter_caption_text">Enter subtitle text</string>
+    <string name="subtitle_enter_start_time">Enter subtitle start time</string>
+    <string name="subtitle_enter_end_time">Enter subtitle end time</string>
+    <string name="subtitle_enter_text">Enter subtitle text</string>
 </resources>

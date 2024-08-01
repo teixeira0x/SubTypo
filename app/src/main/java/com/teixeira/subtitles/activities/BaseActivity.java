@@ -45,8 +45,8 @@ abstract class BaseActivity extends AppCompatActivity {
   private void requestPermissions() {
     if (!isPermissionsGranted()) {
       new MaterialAlertDialogBuilder(this)
-          .setTitle(R.string.permission_request)
-          .setMessage(R.string.permission_request_message)
+          .setTitle(R.string.msg_permission_request)
+          .setMessage(R.string.msg_permission_request_detail)
           .setPositiveButton(
               R.string.grant,
               (d, w) -> {

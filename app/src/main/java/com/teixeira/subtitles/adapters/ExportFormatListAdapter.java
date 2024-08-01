@@ -20,7 +20,7 @@ public class ExportFormatListAdapter
     formats.add(
         new ExportFormat(
             R.drawable.ic_file_code,
-            context.getString(R.string.export_format_subrip),
+            context.getString(R.string.proj_export_format_subrip),
             ExportFormat.FORMAT_SUBRIP));
   }
 

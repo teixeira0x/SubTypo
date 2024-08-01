@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_marginLeft="5dp"
             style="@style/Widget.Material3.Button.OutlinedButton"
-            android:text="@string/choose_video"
+            android:text="@string/proj_choose_video"
             android:id="@+id/btn_choose_video" />
 
     </LinearLayout>
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginBottom="10dp"
-        android:hint="@string/enter_name"
+        android:hint="@string/proj_enter_name"
         android:layout_marginTop="5dp"
         android:id="@+id/til_name">
 

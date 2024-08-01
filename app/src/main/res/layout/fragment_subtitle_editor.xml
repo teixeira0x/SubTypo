@@ -65,7 +65,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/enter_caption_start_time"
+                android:hint="@string/subtitle_enter_start_time"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:id="@+id/til_start_time">
@@ -80,7 +80,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/enter_caption_end_tine"
+                android:hint="@string/subtitle_enter_end_time"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"
-            android:hint="@string/enter_caption_text"
+            android:hint="@string/subtitle_enter_text"
             android:layout_marginTop="5dp"
             android:id="@+id/til_text">
 

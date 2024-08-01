@@ -6,17 +6,16 @@
     <Preference
         app:icon="@drawable/ic_github"
         app:key="pref_github"
-        app:title="@string/github"
-        app:summary="@string/github_summary" />
+        app:title="@string/pref_github"
+        app:summary="@string/pref_github_summary" />
 
     <Preference
         app:icon="@drawable/ic_license"
         app:key="pref_licenses"
-        app:title="@string/open_source_license" />
+        app:title="@string/pref_open_source_license" />
 
     <Preference
         app:key="pref_version"
-        app:title="@string/version"
-        app:summary="@string/version" />
+        app:title="@string/pref_version" />
 
 </PreferenceScreen>

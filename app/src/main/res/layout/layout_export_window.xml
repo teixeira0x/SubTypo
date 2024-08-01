@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:textSize="14sp"
-            android:text="@string/export_file_format"
+            android:text="@string/proj_export_file_format"
             android:id="@+id/export_file_format" />
 
         <androidx.recyclerview.widget.RecyclerView

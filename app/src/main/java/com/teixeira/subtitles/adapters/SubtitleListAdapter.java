@@ -23,15 +23,20 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
   private ItemTouchHelper touchHelper;
 
+  private int lastScreenSubtitleIndex;
+
   public SubtitleListAdapter(SubtitleListener listener) {
     this(new ArrayList<>(), listener);
   }
 
-  public SubtitleListAdapter(@NonNull List<Subtitle> subtitles, @NonNull SubtitleListener listener) {
+  public SubtitleListAdapter(
+      @NonNull List<Subtitle> subtitles, @NonNull SubtitleListener listener) {
     Objects.requireNonNull(subtitles);
     Objects.requireNonNull(listener);
     this.subtitles = subtitles;
     this.listener = listener;
+
+    this.lastScreenSubtitleIndex = -1;
 
     listener.onUpdateSubtitles(subtitles, false);
   }
@@ -76,6 +81,11 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   }
 
   public void setScreenSubtitleIndex(int index) {
+
+    if (index == lastScreenSubtitleIndex) {
+      return;
+    }
+
     for (int i = 0; i < subtitles.size(); i++) {
       Subtitle subtitle = subtitles.get(i);
 
@@ -91,6 +101,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     if (index >= 0) {
       listener.scrollToPosition(index);
     }
+    lastScreenSubtitleIndex = index;
   }
 
   public void addSubtitle(Subtitle subtitle) {
@@ -171,7 +182,6 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
       Collections.swap(
           adapter.getSubtitles(), holder.getAdapterPosition(), target.getAdapterPosition());
       adapter.notifyItemMoved(holder.getAdapterPosition(), target.getAdapterPosition());
-      adapter.listener.onUpdateSubtitles(adapter.getSubtitles(), true);
       return true;
     }
 
@@ -187,6 +197,9 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
       super.onSelectedChanged(viewHolder, actionState);
+      if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+        adapter.listener.onUpdateSubtitles(adapter.getSubtitles(), true);
+      }
     }
   }
 }

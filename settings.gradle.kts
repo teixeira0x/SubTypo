@@ -15,6 +15,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Subtitles"
+rootProject.name = "SubTypo"
 
 include(":app")

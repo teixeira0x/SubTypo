@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Subtitles</string>
+    <string name="app_name">SubTypo</string>
     <string name="about">About</string>
     <string name="delete">Delete</string>
     <string name="delete_message">Are you sure to delete: %1$s</string>

@@ -1,8 +1,8 @@
 <p align="center">
   <img src="./app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Subtitles" width="80" height="80"/>
 </p>
-<h2 align="center"><b>Subtitles</b></h2>
-<p align="center">A video subtitle editor/maker for Android  </p>
+<h2 align="center"><b>SubTypo(graphy)</b></h2>
+<p align="center">A video subtitle editor/maker for Android</p>
 
 ## Screenshots
 

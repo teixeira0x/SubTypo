@@ -2,11 +2,11 @@ package com.teixeira.subtitles.subtitle.exceptions;
 
 public class SubtitleException extends Exception {
 
-  public SubtitleException(String error) {
-    super(error);
+  public SubtitleException(String message) {
+    super(message);
   }
 
-  public SubtitleException(String error, Exception cause) {
-    super(error, cause);
+  public SubtitleException(String message, Exception cause) {
+    super(message, cause);
   }
 }

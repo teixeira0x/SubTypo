@@ -13,13 +13,11 @@
         android:layout_centerInParent="true"
         android:id="@+id/video_view" />
 
-    <com.teixeira.subtitles.ui.SubtitleTextView
+    <com.teixeira.subtitles.subtitle.SubtitleView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        android:layout_centerHorizontal="true"
         android:layout_alignBottom="@id/video_view"
-        android:id="@+id/tv_subtitle" />
+        android:visibility="gone"
+        android:id="@+id/subtitle_view" />
 
 </RelativeLayout>

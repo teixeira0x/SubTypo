@@ -75,8 +75,9 @@ public class SubRipFormat extends SubtitleFormat {
 
           String text = lines[lineIndex];
           if (TextUtils.isEmpty(text)) {
-            if (lineIndex == startTextLine) {
-              throw new SubtitleException("Incorrect text in line: " + lineIndex);
+            String nextLine = lines[lineIndex+1];
+            if (!TextUtils.isDigitsOnly(nextLine)) {
+              throw new SubtitleException("The caption text cannot contain empty lines.");
             }
             break;
           }

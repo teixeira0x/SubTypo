@@ -236,7 +236,7 @@ public class ProjectActivity extends BaseActivity
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
               binding.videoContent.videoView.seekTo(progress);
-              callEverySecond(10L);
+              callEverySecond(5L);
             }
           }
 
@@ -352,8 +352,8 @@ public class ProjectActivity extends BaseActivity
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
         if (currentVideoPosition >= startTime && currentVideoPosition <= endTime) {
-          binding.videoContent.tvSubtitle.setSubtitle(subtitle);
-          binding.videoContent.tvSubtitle.setVisibility(View.VISIBLE);
+          binding.videoContent.subtitleView.setSubtitle(subtitle);
+          binding.videoContent.subtitleView.setVisibility(View.VISIBLE);
           adapter.setScreenSubtitleIndex(i);
           subtitleFound = true;
           break;
@@ -364,7 +364,7 @@ public class ProjectActivity extends BaseActivity
     }
 
     if (!subtitleFound) {
-      binding.videoContent.tvSubtitle.setVisibility(View.GONE);
+      binding.videoContent.subtitleView.setVisibility(View.GONE);
       adapter.setScreenSubtitleIndex(-1);
     }
 

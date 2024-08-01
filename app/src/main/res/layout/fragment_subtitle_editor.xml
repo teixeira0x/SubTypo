@@ -44,18 +44,15 @@
         android:orientation="vertical">
 
         <FrameLayout
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_width="match_parent"
-            android:maxHeight="200dp"
             android:background="@drawable/transparent_background"
-            android:paddingVertical="10dp"
             android:paddingHorizontal="5dp"
             android:id="@+id/preview_container">
 
-            <com.teixeira.subtitles.ui.SubtitleTextView
+            <com.teixeira.subtitles.subtitle.SubtitleView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:id="@+id/preview" />
 
         </FrameLayout>

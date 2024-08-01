@@ -2,11 +2,11 @@ package com.teixeira.subtitles.subtitle.exceptions;
 
 public class SubtitleTimeFormatException extends SubtitleException {
 
-  public SubtitleTimeFormatException(String error) {
-    super(error);
+  public SubtitleTimeFormatException(String message) {
+    super(message);
   }
 
-  public SubtitleTimeFormatException(String error, Exception cause) {
-    super(error, cause);
+  public SubtitleTimeFormatException(String message, Exception cause) {
+    super(message, cause);
   }
 }

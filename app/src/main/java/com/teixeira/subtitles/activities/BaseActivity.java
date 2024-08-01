@@ -43,8 +43,7 @@ abstract class BaseActivity extends AppCompatActivity {
   }
 
   private void requestPermissions() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO)
-        != PackageManager.PERMISSION_GRANTED) {
+    if (!isPermissionsGranted()) {
       new MaterialAlertDialogBuilder(this)
           .setTitle(R.string.permission_request)
           .setMessage(R.string.permission_request_message)
@@ -65,6 +64,16 @@ abstract class BaseActivity extends AppCompatActivity {
               })
           .setNegativeButton(R.string.no, null)
           .show();
+    }
+  }
+
+  protected boolean isPermissionsGranted() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO)
+          == PackageManager.PERMISSION_GRANTED;
+    } else {
+      return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+          == PackageManager.PERMISSION_GRANTED;
     }
   }
 }

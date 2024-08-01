@@ -69,7 +69,7 @@ public class SubRipFormat extends SubtitleFormat {
         String endTime = times[1];
 
         lineIndex++;
-        int startTextLine = lineIndex;
+
         StringBuilder textBuilder = new StringBuilder();
         while (lineIndex < lines.length) {
 

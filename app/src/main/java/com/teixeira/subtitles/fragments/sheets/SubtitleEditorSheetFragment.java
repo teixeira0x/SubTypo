@@ -2,15 +2,14 @@ package com.teixeira.subtitles.fragments.sheets;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.os.BundleCompat;
 import com.blankj.utilcode.util.ClipboardUtils;
-import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
@@ -24,16 +23,11 @@ import java.util.List;
 
 public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
-  private static final long UPDATE_PREVIEW_DELAY = 100L;
-  private static final Handler mainHandler = ThreadUtils.getMainHandler();
-
   private FragmentSubtitleEditorBinding binding;
   private SubtitleListAdapter adapter;
   private Subtitle subtitle;
   private int index = -1;
   private long currentVideoPosition;
-
-  private Runnable updatePreviewCallback;
 
   public static SubtitleEditorSheetFragment newInstance(long currentVideoPosition) {
     return newInstance(currentVideoPosition, -1, null);
@@ -94,8 +88,6 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       binding.deleteSubtitle.setVisibility(View.INVISIBLE);
     }
 
-    updatePreviewCallback = () -> binding.preview.setSubtitle(subtitle);
-
     binding.currentVideoPosition.setText(
         getString(R.string.current_video_position, VideoUtils.getTime(currentVideoPosition)));
     binding.currentVideoPosition.setOnClickListener(
@@ -109,13 +101,12 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     binding.dialogButtons.cancel.setOnClickListener(v -> dismiss());
     binding.dialogButtons.save.setOnClickListener(v -> saveSubtitle());
     configureTextWatchers();
+    validateFields();
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    mainHandler.removeCallbacks(updatePreviewCallback);
-    updatePreviewCallback = null;
     binding = null;
   }
 
@@ -125,10 +116,8 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            String time = editable.toString();
-            if (validateSubtitleTime(time)) {
-              subtitle.setStartTime(time);
-            }
+            subtitle.setStartTime(editable.toString());
+            validateFields();
           }
         });
     binding.tieEndTime.addTextChangedListener(
@@ -136,10 +125,8 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            String time = editable.toString();
-            if (validateSubtitleTime(time)) {
-              subtitle.setEndTime(time);
-            }
+            subtitle.setEndTime(editable.toString());
+            validateFields();
           }
         });
     binding.tieText.addTextChangedListener(
@@ -148,15 +135,31 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
           @Override
           public void afterTextChanged(Editable editable) {
             subtitle.setText(editable.toString().trim());
-            updatePreview();
+            binding.preview.setSubtitle(subtitle);
+            validateFields();
           }
         });
   }
+  
+  private void validateFields() {
+    binding.dialogButtons.save.setEnabled(
+        isValidSubtitleTime(binding.tieStartTime.getText().toString())
+            && isValidSubtitleTime(binding.tieEndTime.getText().toString())
+            && isValidSubtitleText(binding.tieText.getText().toString()));
+  }
 
-  private boolean validateSubtitleTime(String time) {
-    boolean isValidTime = VideoUtils.isValidTime(time.split(":"));
-    binding.dialogButtons.save.setEnabled(isValidTime);
-    return isValidTime;
+  private boolean isValidSubtitleTime(String time) {
+    return VideoUtils.isValidTime(time.split(":"));
+  }
+
+  private boolean isValidSubtitleText(String text) {
+    String[] lines = text.split("\n");
+    for (String line : lines) {
+      if (TextUtils.isEmpty(line)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private void showAlertToDeleteSubtitle() {
@@ -196,15 +199,5 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       }
     }
     return index;
-  }
-
-  private void updatePreview() {
-
-    if (updatePreviewCallback == null) {
-      return;
-    }
-
-    mainHandler.removeCallbacks(updatePreviewCallback);
-    mainHandler.postDelayed(updatePreviewCallback, UPDATE_PREVIEW_DELAY);
   }
 }

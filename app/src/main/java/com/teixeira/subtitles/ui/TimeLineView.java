@@ -152,7 +152,8 @@ public class TimeLineView extends View {
 
   private void drawTimeLine(Canvas canvas) {
 
-    int colorControlNormal = MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
+    int colorControlNormal =
+        MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
     paint.setColor(colorControlNormal);
 
     int width = canvas.getWidth();
@@ -202,7 +203,8 @@ public class TimeLineView extends View {
 
     canvas.drawPath(path, paint);
 
-    int colorControlNormal = MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
+    int colorControlNormal =
+        MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
     paint.setColor(colorControlNormal);
 
     String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
@@ -222,7 +224,6 @@ public class TimeLineView extends View {
     int height = canvas.getHeight();
 
     paint.setColor(Color.YELLOW);
-    paint.setAlpha(80);
 
     for (Subtitle subtitle : subtitles) {
       try {
@@ -233,6 +234,8 @@ public class TimeLineView extends View {
         float top = 0;
         float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
         float bottom = height;
+
+        paint.setAlpha(subtitle.isInScreen() ? 90 : 80);
 
         canvas.drawRect(new RectF(left, top, right, bottom), paint);
       } catch (Exception e) {

@@ -14,7 +14,7 @@ androidx-preference = { module = "androidx.preference:preference", version = "1.
 # Google
 google-gson = { module = "com.google.code.gson:gson", version = "2.10.1" }
 google-material = { module = "com.google.android.material:material", version = "1.10.0" }
-google-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version = "17.0.1" }
+google-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version = "17.1.0" }
 
 # Common
 common-utilcode = { module = "com.blankj:utilcodex", version = "1.31.1" }

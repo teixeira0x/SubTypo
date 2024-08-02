@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
+            android:configChanges="screenSize"
             android:exported="true">
             <intent-filter>
                 <action

@@ -23,6 +23,10 @@ import java.util.List;
 
 public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
+  public static final String KEY_CURRENT_VIDEO_POSITION = "current_video_position";
+  public static final String KEY_SELECTED_SUBTITLE = "selected_subtitle";
+  public static final String KEY_SELECTED_SUBTITLE_INDEX = "selected_subtitle_index";
+
   private FragmentSubtitleEditorBinding binding;
   private SubtitleListAdapter adapter;
   private Subtitle subtitle;
@@ -37,10 +41,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       long currentVideoPosition, int index, Subtitle subtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
     Bundle args = new Bundle();
-    args.putLong("currentVideoPosition", currentVideoPosition);
+    args.putLong(KEY_CURRENT_VIDEO_POSITION, currentVideoPosition);
     if (subtitle != null) {
-      args.putParcelable("subtitle", subtitle);
-      args.putInt("index", index);
+      args.putParcelable(KEY_SELECTED_SUBTITLE, subtitle);
+      args.putInt(KEY_SELECTED_SUBTITLE_INDEX, index);
     }
     fragment.setArguments(args);
     return fragment;
@@ -72,11 +76,11 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       throw new IllegalArgumentException("Arguments cannot be null");
     }
 
-    currentVideoPosition = args.getLong("currentVideoPosition");
+    currentVideoPosition = args.getLong(KEY_CURRENT_VIDEO_POSITION);
 
-    if (args.containsKey("subtitle") && args.containsKey("index")) {
-      subtitle = BundleCompat.getParcelable(args, "subtitle", Subtitle.class).clone();
-      index = args.getInt("index");
+    if (args.containsKey(KEY_SELECTED_SUBTITLE) && args.containsKey(KEY_SELECTED_SUBTITLE_INDEX)) {
+      subtitle = BundleCompat.getParcelable(args, KEY_SELECTED_SUBTITLE, Subtitle.class).clone();
+      index = args.getInt(KEY_SELECTED_SUBTITLE_INDEX);
     } else {
       subtitle =
           new Subtitle(
@@ -153,7 +157,11 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   }
 
   private boolean isValidSubtitleText(String text) {
-    String[] lines = text.split("\n");
+    if (TextUtils.isEmpty(text)) {
+      return false;
+    }
+
+    String[] lines = text.trim().split("\n");
     for (String line : lines) {
       if (TextUtils.isEmpty(line)) {
         return false;

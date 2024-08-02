@@ -12,10 +12,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_debug:
-    name: Generate Debug APK
+  build:
+    name: Build APKs
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build-type: [debug, release]
     steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -26,39 +34,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'true'
-        
+
       - name: Give permission to executable
         run: chmod +x gradlew
 
-      - name: Generate Debug APK
-        run: ./gradlew assembleDebug
+      - name: Generate APK
+        run: ./gradlew assemble${{ matrix.build-type }}
 
-      - uses: actions/upload-artifact@master
+      - name: Upload APK
+        uses: actions/upload-artifact@master
         with:
-          name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
-  build_release:
-    name: Generate Release APK
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: 'true'
-        
-      - name: Give permission to executable
-        run: chmod +x gradlew
-
-      - name: Generate Release APK
-        run: ./gradlew assembleRelease
-
-      - uses: actions/upload-artifact@master
-        with:
-          name: app-release
-          path: app/build/outputs/apk/release/app-release.apk
+          name: app-${{ matrix.build-type }}
+          path: app/build/outputs/apk/${{ matrix.build-type }}/app-${{ matrix.build-type }}.apk

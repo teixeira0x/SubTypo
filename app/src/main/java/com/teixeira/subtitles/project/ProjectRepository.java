@@ -1,9 +1,10 @@
 package com.teixeira.subtitles.project;
 
+import static com.teixeira.subtitles.utils.FileUtil.PROJECTS_DIR;
+
 import android.text.TextUtils;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.teixeira.subtitles.models.Project;
-import com.teixeira.subtitles.utils.Constants;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +20,7 @@ public class ProjectRepository {
 
   public static String writeProject(String projectId, String name, String videoPath) {
     try {
-      File projectDir = new File(Constants.PROJECTS_DIR_PATH, projectId);
+      File projectDir = new File(PROJECTS_DIR, projectId);
       if (!projectDir.exists()) {
         projectDir.mkdirs();
       }
@@ -32,7 +33,7 @@ public class ProjectRepository {
 
   public static List<Project> fetchProjects() {
     List<Project> projects = new ArrayList<>();
-    File projectsDir = new File(Constants.PROJECTS_DIR_PATH);
+    File projectsDir = PROJECTS_DIR;
     if (!projectsDir.exists()) {
       projectsDir.mkdirs();
     }
@@ -83,7 +84,7 @@ public class ProjectRepository {
 
   private static String generateProjectId() {
     int id = 0;
-    File[] dirs = new File(Constants.PROJECTS_DIR_PATH).listFiles((f, unused) -> f.isDirectory());
+    File[] dirs = PROJECTS_DIR.listFiles((f, unused) -> f.isDirectory());
     for (File dir : dirs) {
       if (!TextUtils.isDigitsOnly(dir.getName())) continue;
       id = Math.max(id, Integer.parseInt(dir.getName()));

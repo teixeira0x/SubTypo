@@ -29,6 +29,7 @@ import androidx.core.os.BundleCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
@@ -357,6 +358,8 @@ public class ProjectActivity extends BaseActivity
 
     if (width > height) {
       binding.videoContent.videoView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+    } else if (height > width) {
+      binding.videoContent.getRoot().getLayoutParams().height = SizeUtils.dp2px(350f);
     }
     loadVideoInfo();
   }

@@ -52,7 +52,7 @@ public class ProjectActivity extends BaseActivity
 
   public static final String KEY_PROJECT = "project";
   public static final String KEY_VIDEO_INFO = "video_info";
-  
+
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 
   private ActivityProjectBinding binding;
@@ -87,6 +87,7 @@ public class ProjectActivity extends BaseActivity
     project =
         projectManager.setupProject(BundleCompat.getParcelable(extras, KEY_PROJECT, Project.class));
     getSupportActionBar().setTitle(project.getName());
+    getSupportActionBar().setSubtitle(project.getProjectId());
 
     exportWindow = new ExportWindow(this);
     onEverySecond = this::onEverySecond;
@@ -416,7 +417,8 @@ public class ProjectActivity extends BaseActivity
   private void saveProjectAsync() {
     getSupportActionBar().setSubtitle(R.string.proj_saving);
     TaskExecutor.executeAsyncProvideError(
-        this::saveProject, (r, throwable) -> getSupportActionBar().setSubtitle(null));
+        this::saveProject,
+        (r, throwable) -> getSupportActionBar().setSubtitle(project.getProjectId()));
   }
 
   private Void saveProject() {

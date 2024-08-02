@@ -20,7 +20,7 @@ import com.teixeira.subtitles.databinding.FragmentConfigureProjectBinding;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectRepository;
 import com.teixeira.subtitles.tasks.TaskExecutor;
-import com.teixeira.subtitles.utils.Constants;
+import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.io.File;
@@ -35,7 +35,7 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     CreateProjectSheetFragment fragment = new CreateProjectSheetFragment();
     if (project != null) {
       Bundle args = new Bundle();
-      args.putParcelable("project", project);
+      args.putParcelable(ProjectActivity.KEY_PROJECT, project);
       fragment.setArguments(args);
     }
     return fragment;
@@ -64,8 +64,8 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    if (args != null && args.containsKey("project")) {
-      project = BundleCompat.getParcelable(args, "project", Project.class);
+    if (args != null && args.containsKey(ProjectActivity.KEY_PROJECT)) {
+      project = BundleCompat.getParcelable(args, ProjectActivity.KEY_PROJECT, Project.class);
       videoFile = new File(project.getVideoPath());
       needChooseVideo = false;
     }
@@ -151,10 +151,10 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
               binding.tieName.getText().toString(), videoFile.getAbsolutePath());
       Intent intent = new Intent(requireContext(), ProjectActivity.class);
       intent.putExtra(
-          "project",
+          ProjectActivity.KEY_PROJECT,
           new Project(
               projectId,
-              Constants.PROJECTS_DIR_PATH + "/" + projectId,
+              FileUtil.PROJECTS_DIR + "/" + projectId,
               videoFile.getAbsolutePath(),
               binding.tieName.getText().toString()));
       startActivity(intent);

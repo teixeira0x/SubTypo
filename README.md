@@ -8,15 +8,28 @@
 
 <p align="center">
 
-<img width="125" height="250" src="./screenshots/screenshot1.png">
-<img width="125" height="250" src="./screenshots/screenshot2.png">
-<img width="125" height="250" src="./screenshots/screenshot3.png">
+<img width="150" height="350" src="./screenshots/screenshot1.png">
+<img width="150" height="350" src="./screenshots/screenshot2.png">
+<img width="150" height="350" src="./screenshots/screenshot3.png">
 
 </p>
 
-## Warning ⚠
+<b>Advantages of using SubTypo 📽</b>
 
-All forks/pull requests must be made using the dev branch! 
+* Does not collect any of your data
+* Completely free
+* Beautiful and easy to understand interface
+* No ads
+
+<hr/>
+
+## Contributors 🌐
+
+Commits should always be made to the `dev` branch, the `main` branch is protected and will only contain release commits. 
+
+<hr/>
 
 ## Thanks to
 - [Akash Yadav](https://github.com/itsaky) for the awesome [AndroidIDE](https://github.com/AndroidIDEOfficial/AndroidIDE)
+
+<hr/>

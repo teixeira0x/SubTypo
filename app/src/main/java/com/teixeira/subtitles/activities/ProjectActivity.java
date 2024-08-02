@@ -426,7 +426,8 @@ public class ProjectActivity extends BaseActivity
   private Void saveProject() {
     try {
       FileIOUtils.writeFileFromString(
-          project.getSubtitleFile(), project.getSubtitleFormat().toText(adapter.getSubtitles()));
+          project.getProjectPath() + "/" + project.getSubtitleFile().getNameWithExtension(),
+          project.getSubtitleFormat().toText(adapter.getSubtitles()));
     } catch (Exception e) {
       DialogUtils.createSimpleDialog(this, getString(R.string.error_saving_project), e.toString())
           .setPositiveButton(R.string.ok, null)

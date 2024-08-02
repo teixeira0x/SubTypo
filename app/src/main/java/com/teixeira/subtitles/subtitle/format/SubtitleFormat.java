@@ -1,4 +1,4 @@
-package com.teixeira.subtitles.subtitle.file;
+package com.teixeira.subtitles.subtitle.format;
 
 import androidx.annotation.NonNull;
 import com.teixeira.subtitles.models.Subtitle;

@@ -32,7 +32,7 @@ import com.teixeira.subtitles.adapters.SubtitleListAdapter;
 import com.teixeira.subtitles.databinding.LayoutExportWindowBinding;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectManager;
-import com.teixeira.subtitles.subtitle.file.SubtitleFormat;
+import com.teixeira.subtitles.subtitle.file.SubtitleFile;
 import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
@@ -43,7 +43,7 @@ public class ExportWindow extends PopupWindow {
   private ExportFormatListAdapter exportFormatListAdapter;
   private SubtitleListAdapter subtitleListAdapter;
   private ActivityResultLauncher<String> subtitleFileSaver;
-  private SubtitleFormat subtitleFormat;
+  private SubtitleFile subtitleFile;
 
   public ExportWindow(AppCompatActivity activity) {
     super(activity);
@@ -58,7 +58,7 @@ public class ExportWindow extends PopupWindow {
     binding.export.setOnClickListener(this::onExportClick);
 
     Project project = ProjectManager.getInstance().getProject();
-    this.subtitleFormat = project.getSubtitleFormat();
+    this.subtitleFile = project.getSubtitleFile();
 
     exportFormatListAdapter = new ExportFormatListAdapter(activity);
     binding.exportFormats.setLayoutManager(new LinearLayoutManager(activity));
@@ -81,14 +81,15 @@ public class ExportWindow extends PopupWindow {
   }
 
   private void onExportClick(View view) {
-    subtitleFileSaver.launch("subtitle." + subtitleFormat.getExtension());
+    subtitleFileSaver.launch(subtitleFile.getNameWithExtension());
   }
 
   private void onSaveSubtitleFile(Uri uri) {
     dismiss();
     if (uri != null && subtitleListAdapter != null) {
       try {
-        FileUtil.writeFileContent(uri, subtitleFormat.toText(subtitleListAdapter.getSubtitles()));
+        FileUtil.writeFileContent(
+            uri, subtitleFile.getSubtitleFormat().toText(subtitleListAdapter.getSubtitles()));
         ToastUtils.showLong(
             R.string.proj_export_saved, UriUtils.uri2FileNoCacheCopy(uri).getAbsolutePath());
       } catch (Exception e) {

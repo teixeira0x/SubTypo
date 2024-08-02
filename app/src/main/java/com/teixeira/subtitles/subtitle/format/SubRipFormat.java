@@ -1,4 +1,4 @@
-package com.teixeira.subtitles.subtitle.file;
+package com.teixeira.subtitles.subtitle.format;
 
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
@@ -13,7 +13,7 @@ import java.util.Objects;
 public class SubRipFormat extends SubtitleFormat {
 
   protected SubRipFormat() {
-    super("srt");
+    super(".srt");
   }
 
   @Override

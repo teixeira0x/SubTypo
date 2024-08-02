@@ -14,5 +14,9 @@
 
 </p>
 
+## Warning ⚠
+
+All forks/pull requests must be made using the dev branch! 
+
 ## Thanks to
 - [Akash Yadav](https://github.com/itsaky) for the awesome [AndroidIDE](https://github.com/AndroidIDEOfficial/AndroidIDE)

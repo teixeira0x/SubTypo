@@ -73,7 +73,7 @@ public class SubtitleView extends View {
             .build();
 
     canvas.save();
-    canvas.translate(0, (getHeight() - 80) - staticLayout.getHeight());
+    canvas.translate(0, (getHeight() - 60) - staticLayout.getHeight());
     staticLayout.draw(canvas);
     canvas.restore();
   }

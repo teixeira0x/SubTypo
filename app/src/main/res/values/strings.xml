@@ -4,6 +4,7 @@
     <string name="about">About</string>
     <string name="delete">Delete</string>
     <string name="rename">Rename</string>
+    <string name="edit">Edit</string>
     <string name="ok">Ok</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -16,6 +17,7 @@
     <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
     <string name="msg_permission_request">Permission Request</string>
     <string name="msg_permission_request_detail">By granting the permissions, you will have a better experience with the app.</string>
+    <string name="msg_video_not_chosen">Video not chosen</string>
 
     <!-- Preferences -->
     <string name="pref_version">Version</string>
@@ -29,8 +31,10 @@
     <string name="proj_close">Close Project</string>
     <string name="proj_no_projects">Without projects click "+" to create projects!</string>
     <string name="proj_new">New Project</string>
+    <string name="proj_edit">Edit Project</string>
     <string name="proj_enter_name">Enter a name</string>
-    <string name="proj_choose_video">Choose Video</string>
+    <string name="proj_choose_video">Choose video</string>
+    <string name="proj_click_choose_video">Click to choose video</string>
     <string name="proj_total_subtitles">Total subtitles: %1$s</string>
     <string name="proj_current_video_position">Current video position: %1$s</string>
     <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>

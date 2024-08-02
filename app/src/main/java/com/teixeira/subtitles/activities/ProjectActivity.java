@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ThreadUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
@@ -39,22 +38,28 @@ import com.teixeira.subtitles.databinding.ActivityProjectBinding;
 import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
+import com.teixeira.subtitles.models.VideoInfo;
 import com.teixeira.subtitles.project.ProjectManager;
 import com.teixeira.subtitles.tasks.TaskExecutor;
 import com.teixeira.subtitles.ui.ExportWindow;
 import com.teixeira.subtitles.utils.DialogUtils;
+import com.teixeira.subtitles.utils.ToastUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
 public class ProjectActivity extends BaseActivity
     implements GetSubtitleListAdapterCallback, SubtitleListAdapter.SubtitleListener {
 
+  public static final String KEY_PROJECT = "project";
+  public static final String KEY_VIDEO_INFO = "video_info";
+  
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 
   private ActivityProjectBinding binding;
   private ProjectManager projectManager;
   private Project project;
   private SubtitleListAdapter adapter;
+  private VideoInfo videoInfo;
 
   private Runnable onEverySecond;
   private Runnable saveProjectCallback;
@@ -75,11 +80,12 @@ public class ProjectActivity extends BaseActivity
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
+    videoInfo = new VideoInfo(0);
     projectManager = ProjectManager.getInstance();
 
     Bundle extras = getIntent().getExtras();
     project =
-        projectManager.setupProject(BundleCompat.getParcelable(extras, "project", Project.class));
+        projectManager.setupProject(BundleCompat.getParcelable(extras, KEY_PROJECT, Project.class));
     getSupportActionBar().setTitle(project.getName());
 
     exportWindow = new ExportWindow(this);
@@ -90,7 +96,14 @@ public class ProjectActivity extends BaseActivity
   @Override
   protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
-    configureProject();
+    configureProject(savedInstanceState);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putParcelable(KEY_VIDEO_INFO, videoInfo);
   }
 
   @Override
@@ -130,6 +143,19 @@ public class ProjectActivity extends BaseActivity
   }
 
   @Override
+  protected void onPause() {
+    stopVideo();
+    updateVideoInfo();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    loadVideoInfo();
+  }
+
+  @Override
   public SubtitleListAdapter getSubtitleListAdapter() {
     return this.adapter;
   }
@@ -165,7 +191,7 @@ public class ProjectActivity extends BaseActivity
     binding.subtitles.scrollToPosition(position);
   }
 
-  private void configureProject() {
+  private void configureProject(Bundle savedInstanceState) {
     MaterialAlertDialogBuilder builder =
         DialogUtils.createProgressDialog(this, getString(R.string.proj_loading), false);
     AlertDialog dialog = builder.show();
@@ -187,6 +213,11 @@ public class ProjectActivity extends BaseActivity
             return;
           }
           binding.videoContent.videoView.setVideoPath(project.getVideoPath());
+          if (savedInstanceState != null && savedInstanceState.containsKey(KEY_VIDEO_INFO)) {
+            this.videoInfo =
+                BundleCompat.getParcelable(savedInstanceState, KEY_VIDEO_INFO, VideoInfo.class);
+          }
+
           adapter = new SubtitleListAdapter(result, this);
           exportWindow.setSubtitleListAdapter(adapter);
           binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
@@ -270,6 +301,14 @@ public class ProjectActivity extends BaseActivity
         });
   }
 
+  private void updateVideoInfo() {
+    videoInfo.setCurrentVideoPosition(binding.videoContent.videoView.getCurrentPosition());
+  }
+
+  private void loadVideoInfo() {
+    binding.videoContent.videoView.seekTo(videoInfo.getCurrentVideoPosition());
+  }
+
   private void back5sec() {
     int seek = binding.videoContent.videoView.getCurrentPosition() - 5000;
     if (binding.videoContent.videoView.getCurrentPosition() <= 5000) {
@@ -318,6 +357,7 @@ public class ProjectActivity extends BaseActivity
     if (width > height) {
       binding.videoContent.videoView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
     }
+    loadVideoInfo();
   }
 
   public void onVideoCompletion(MediaPlayer player) {

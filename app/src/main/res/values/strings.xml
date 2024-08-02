@@ -27,16 +27,17 @@
     <string name="proj_loading">Loading project..</string>
     <string name="proj_saving">Saving project..</string>
     <string name="proj_close">Close Project</string>
-    <string name="proj_no_projects">No projects</string>
+    <string name="proj_no_projects">Without projects click "+" to create projects!</string>
     <string name="proj_new">New Project</string>
     <string name="proj_enter_name">Enter a name</string>
     <string name="proj_choose_video">Choose Video</string>
     <string name="proj_total_subtitles">Total subtitles: %1$s</string>
     <string name="proj_current_video_position">Current video position: %1$s</string>
     <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>
-  
+
     <string name="proj_export_file_format">Select the file format to export</string>
     <string name="proj_export_format_subrip">Export in SubRip format (.srt)</string>
+    <string name="proj_export_saved">Saved on path:  %1$s</string>
 
     <!-- Errors -->
     <string name="error_choose_video">Please choose a video</string>

@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.blankj.utilcode.util.UriUtils;
 import com.google.android.material.color.MaterialColors;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.ExportFormatListAdapter;
@@ -34,6 +35,7 @@ import com.teixeira.subtitles.project.ProjectManager;
 import com.teixeira.subtitles.subtitle.file.SubtitleFormat;
 import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
+import com.teixeira.subtitles.utils.ToastUtils;
 
 public class ExportWindow extends PopupWindow {
 
@@ -87,6 +89,8 @@ public class ExportWindow extends PopupWindow {
     if (uri != null && subtitleListAdapter != null) {
       try {
         FileUtil.writeFileContent(uri, subtitleFormat.toText(subtitleListAdapter.getSubtitles()));
+        ToastUtils.showLong(
+            R.string.proj_export_saved, UriUtils.uri2FileNoCacheCopy(uri).getAbsolutePath());
       } catch (Exception e) {
         DialogUtils.createSimpleDialog(
                 getContentView().getContext(),

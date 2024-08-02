@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.os.BundleCompat;
-import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.UriUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.teixeira.subtitles.R;
@@ -22,6 +21,7 @@ import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectRepository;
 import com.teixeira.subtitles.tasks.TaskExecutor;
 import com.teixeira.subtitles.utils.Constants;
+import com.teixeira.subtitles.utils.ToastUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.io.File;
 

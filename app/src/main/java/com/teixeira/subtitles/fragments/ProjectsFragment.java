@@ -62,7 +62,7 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
   @Override
   public void onProjectClickListener(View view, Project project) {
     Intent intent = new Intent(requireContext(), ProjectActivity.class);
-    intent.putExtra("project", project);
+    intent.putExtra(ProjectActivity.KEY_PROJECT, project);
     startActivity(intent);
   }
 

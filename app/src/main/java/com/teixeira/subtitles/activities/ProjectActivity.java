@@ -81,7 +81,11 @@ public class ProjectActivity extends BaseActivity
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-    videoInfo = new VideoInfo(0);
+    if (savedInstanceState != null && savedInstanceState.containsKey(KEY_VIDEO_INFO)) {
+      videoInfo = BundleCompat.getParcelable(savedInstanceState, KEY_VIDEO_INFO, VideoInfo.class);
+    } else {
+      videoInfo = new VideoInfo(0);
+    }
     projectManager = ProjectManager.getInstance();
 
     Bundle extras = getIntent().getExtras();
@@ -215,11 +219,6 @@ public class ProjectActivity extends BaseActivity
             return;
           }
           binding.videoContent.videoView.setVideoPath(project.getVideoPath());
-          if (savedInstanceState != null && savedInstanceState.containsKey(KEY_VIDEO_INFO)) {
-            this.videoInfo =
-                BundleCompat.getParcelable(savedInstanceState, KEY_VIDEO_INFO, VideoInfo.class);
-          }
-
           adapter = new SubtitleListAdapter(result, this);
           exportWindow.setSubtitleListAdapter(adapter);
           binding.subtitles.setLayoutManager(new LinearLayoutManager(this));

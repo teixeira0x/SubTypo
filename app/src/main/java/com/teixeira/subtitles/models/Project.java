@@ -3,7 +3,8 @@ package com.teixeira.subtitles.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.blankj.utilcode.util.FileIOUtils;
-import com.teixeira.subtitles.subtitle.file.SubtitleFormat;
+import com.teixeira.subtitles.subtitle.file.SubtitleFile;
+import com.teixeira.subtitles.subtitle.format.SubtitleFormat;
 import java.io.File;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class Project implements Parcelable, Comparable<Project> {
   private String videoPath;
   private String name;
 
-  private SubtitleFormat subtitleFormat;
+  private SubtitleFile subtitleFile;
 
   public Project(String projectId, String projectPath, String videoPath, String name) {
     this.projectId = projectId;
@@ -22,7 +23,7 @@ public class Project implements Parcelable, Comparable<Project> {
     this.videoPath = videoPath;
     this.name = name;
 
-    this.subtitleFormat = SubtitleFormat.FORMAT_SUBRIP;
+    this.subtitleFile = new SubtitleFile(SubtitleFormat.FORMAT_SUBRIP, "subtitle");
   }
 
   public Project(Parcel parcel) {
@@ -53,8 +54,8 @@ public class Project implements Parcelable, Comparable<Project> {
     this.videoPath = videoPath;
   }
 
-  public String getSubtitleFile() {
-    return projectPath + "/subtitle." + subtitleFormat.getExtension();
+  public SubtitleFile getSubtitleFile() {
+    return this.subtitleFile;
   }
 
   public String getName() {
@@ -66,15 +67,15 @@ public class Project implements Parcelable, Comparable<Project> {
   }
 
   public List<Subtitle> getSubtitles() throws Exception {
-    File subtitleFile = new File(getSubtitleFile());
+    File subtitleFile = new File(projectPath + "/" + this.subtitleFile.getNameWithExtension());
     if (!subtitleFile.exists()) {
       subtitleFile.createNewFile();
     }
-    return subtitleFormat.toList(FileIOUtils.readFile2String(getSubtitleFile()));
+    return this.getSubtitleFormat().toList(FileIOUtils.readFile2String(subtitleFile));
   }
 
   public SubtitleFormat getSubtitleFormat() {
-    return this.subtitleFormat;
+    return this.subtitleFile.getSubtitleFormat();
   }
 
   @Override

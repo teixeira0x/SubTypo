@@ -48,8 +48,6 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
 
   private UpdateProjectsCallback callback;
 
-  private boolean needChooseVideo = true;
-
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -67,7 +65,6 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     if (args != null && args.containsKey(ProjectActivity.KEY_PROJECT)) {
       project = BundleCompat.getParcelable(args, ProjectActivity.KEY_PROJECT, Project.class);
       videoFile = new File(project.getVideoPath());
-      needChooseVideo = false;
     }
   }
 
@@ -99,29 +96,32 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     if (uri != null) {
       videoFile = UriUtils.uri2File(uri);
       binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(videoFile.getAbsolutePath()));
+      binding.videoName.setText(videoFile.getName());
     }
   }
 
   private void configureDetails() {
     if (project != null) {
-      binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.getVideoPath()));
+      binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(videoFile.getAbsolutePath()));
+      binding.videoName.setText(videoFile.getName());
       binding.tieName.setText(project.getName());
+      binding.title.setText(R.string.proj_edit);
     } else {
+      binding.title.setText(R.string.proj_new);
       binding.tieName.setText(R.string.proj_new);
     }
-    binding.btnChooseVideo.setClickable(needChooseVideo);
   }
 
   private void setListeners() {
-    binding.btnChooseVideo.setOnClickListener(
-        v -> videoDocumentPicker.launch(new String[] {"video/mp4"}));
+    binding.chooseVideo.setOnClickListener(
+        v -> videoDocumentPicker.launch(new String[] {"video/*"}));
     binding.dialogButtons.cancel.setOnClickListener(v -> dismiss());
     binding.dialogButtons.save.setOnClickListener(v -> writeProject());
   }
 
   private void writeProject() {
 
-    if (videoFile == null && needChooseVideo) {
+    if (videoFile == null) {
       ToastUtils.showShort(R.string.error_choose_video);
       return;
     }

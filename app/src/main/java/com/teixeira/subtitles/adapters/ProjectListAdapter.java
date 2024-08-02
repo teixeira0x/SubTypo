@@ -34,7 +34,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
     Project project = projects.get(position);
 
     binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.getVideoPath()));
-    binding.id.setText(project.getProjectId());
     binding.name.setText(project.getName());
 
     binding.getRoot().setOnClickListener(v -> listener.onProjectClickListener(v, project));
@@ -97,8 +96,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
       Project oldProject = oldList.get(oldPosition);
       Project newProject = newList.get(newPosition);
 
-      return oldProject.getProjectId().equals(newProject.getProjectId())
-          && oldProject.getName().equals(newProject.getName());
+      return oldProject.getProjectId().equals(newProject.getProjectId());
     }
 
     @Override
@@ -107,6 +105,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
       Project newProject = newList.get(newPosition);
 
       return oldProject.getProjectPath().equals(newProject.getProjectPath())
+          && oldProject.getVideoPath().equals(newProject.getVideoPath())
           && oldProject.getName().equals(newProject.getName());
     }
   }

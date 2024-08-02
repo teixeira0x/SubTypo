@@ -7,27 +7,49 @@
     android:padding="@dimen/dialog_padding"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:text="@string/proj_new"
+        android:id="@+id/title" />
 
-        <ImageView
-            android:layout_height="260px"
-            android:layout_width="480px"
-            android:scaleType="fitCenter"
-            android:background="@android:color/black"
-            android:id="@+id/video_icon" />
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:id="@+id/choose_video">
 
-        <Button
+        <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="5dp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:text="@string/proj_choose_video"
-            android:id="@+id/btn_choose_video" />
+            android:clickable="false"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/choose_video_text"
+            android:text="@string/proj_click_choose_video" />
 
-    </LinearLayout>
+        <ImageView
+            android:layout_height="280px"
+            android:layout_width="560px"
+            android:layout_below="@id/choose_video_text"
+            android:scaleType="fitCenter"
+            android:background="@android:color/black"
+            android:clickable="false"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/video_icon" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/video_icon"
+            android:clickable="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="@string/msg_video_not_chosen"
+            android:id="@+id/video_name" />
+
+    </RelativeLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"

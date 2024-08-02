@@ -74,7 +74,7 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
   @Override
   public void onProjectMenuClickListener(View view, Project project) {
     PopupMenu pm = new PopupMenu(requireContext(), view);
-    pm.getMenu().add(0, 0, 0, R.string.rename);
+    pm.getMenu().add(0, 0, 0, R.string.edit);
     pm.getMenu().add(0, 1, 0, R.string.delete);
 
     pm.setOnMenuItemClickListener(

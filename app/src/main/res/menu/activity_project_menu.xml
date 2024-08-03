@@ -4,7 +4,12 @@
     <item
         android:id="@+id/menu_export"
         android:icon="@drawable/ic_export_variant"
-        android:title="@string/export"
+        android:title="@string/proj_export_subtitles"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_import"
+        android:icon="@drawable/ic_export_variant"
+        android:title="@string/proj_import_subtitles" />
 
 </menu>

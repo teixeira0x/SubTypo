@@ -22,7 +22,7 @@
             android:layout_toLeftOf="@id/close"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@string/export"
+            android:text="@string/proj_export_subtitles"
             android:id="@+id/title_export" />
 
         <ImageView

@@ -16,6 +16,7 @@
 package com.teixeira.subtitles.activities;
 
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -24,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.os.BundleCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -44,6 +47,7 @@ import com.teixeira.subtitles.project.ProjectManager;
 import com.teixeira.subtitles.tasks.TaskExecutor;
 import com.teixeira.subtitles.ui.ExportWindow;
 import com.teixeira.subtitles.utils.DialogUtils;
+import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
@@ -65,6 +69,7 @@ public class ProjectActivity extends BaseActivity
   private Runnable onEverySecond;
   private Runnable saveProjectCallback;
 
+  private ActivityResultLauncher<String[]> subtitleDocumentPicker;
   private ExportWindow exportWindow;
 
   @Override
@@ -94,6 +99,9 @@ public class ProjectActivity extends BaseActivity
     getSupportActionBar().setTitle(project.getName());
     getSupportActionBar().setSubtitle(project.getProjectId());
 
+    subtitleDocumentPicker =
+        registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(), this::onPickSubtitleFile);
     exportWindow = new ExportWindow(this);
     onEverySecond = this::onEverySecond;
     saveProjectCallback = this::saveProjectAsync;
@@ -128,6 +136,8 @@ public class ProjectActivity extends BaseActivity
       }
       stopVideo();
       exportWindow.showAsDropDown(binding.getRoot(), Gravity.CENTER, 0, 0);
+    } else if (item.getItemId() == R.id.menu_import) {
+      subtitleDocumentPicker.launch(new String[] {"*/*"});
     }
 
     return super.onOptionsItemSelected(item);
@@ -414,6 +424,38 @@ public class ProjectActivity extends BaseActivity
     if (binding.videoContent.videoView.isPlaying()) {
       callEverySecond();
     }
+  }
+
+  private void onPickSubtitleFile(Uri uri) {
+    MaterialAlertDialogBuilder builder =
+        DialogUtils.createSimpleDialog(
+            this,
+            getString(R.string.proj_import_subtitles),
+            getString(R.string.msg_import_subtitles_warning));
+
+    builder.setNegativeButton(R.string.cancel, null);
+    builder.setPositiveButton(
+        R.string.ok,
+        (d, w) -> {
+          MaterialAlertDialogBuilder progressBuilder =
+              DialogUtils.createProgressDialog(this, getString(R.string.proj_loading), false);
+          AlertDialog dialog = progressBuilder.show();
+
+          TaskExecutor.executeAsyncProvideError(
+              () -> project.getSubtitleFormat().toList(FileUtil.readFileContent(uri)),
+              (result, throwable) -> {
+                dialog.dismiss();
+                if (throwable != null) {
+                  DialogUtils.createSimpleDialog(
+                          this, getString(R.string.error_reading_subtitles), throwable.toString())
+                      .setPositiveButton(R.string.ok, null)
+                      .show();
+                  return;
+                }
+                adapter.setSubtitles(result);
+              });
+        });
+    builder.show();
   }
 
   private void saveProjectAsync() {

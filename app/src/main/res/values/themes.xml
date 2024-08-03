@@ -7,10 +7,6 @@
 
   <style name="AppTheme" parent="Base.AppTheme" />
 
-  <style name="AppTheme.Licence" parent="AppTheme">
-    <item name="android:statusBarColor">?attr/colorSurface</item>
-    <item name="android:navigationBarColor">?attr/colorSurface</item>
-  </style>
 
   <style name="ControllerImageStyle">
     <item name="android:layout_width">35dp</item>

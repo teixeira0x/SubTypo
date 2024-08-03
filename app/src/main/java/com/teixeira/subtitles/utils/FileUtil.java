@@ -23,6 +23,4 @@ public class FileUtil {
       e.printStackTrace();
     }
   }
-
-  // public static String get
 }

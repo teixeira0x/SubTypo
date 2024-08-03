@@ -45,13 +45,25 @@ public class Subtitle implements Parcelable {
   public void setText(String text) {
     this.text = text;
   }
-  
+
   public boolean isInScreen() {
     return this.inScreen;
   }
 
   public void setInScreen(boolean inScreen) {
     this.inScreen = inScreen;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+
+    if (other instanceof Subtitle subtitle) {
+      return startTime.equals(subtitle.startTime)
+          && endTime.equals(subtitle.endTime)
+          && text.equals(subtitle.text);
+    }
+
+    return false;
   }
 
   @Override
@@ -71,8 +83,8 @@ public class Subtitle implements Parcelable {
     parcel.writeBoolean(inScreen);
   }
 
-  public static final Parcelable.Creator<Subtitle> CREATOR =
-      new Parcelable.Creator<Subtitle>() {
+  public static final Creator<Subtitle> CREATOR =
+      new Creator<Subtitle>() {
 
         @Override
         public Subtitle createFromParcel(Parcel parcel) {

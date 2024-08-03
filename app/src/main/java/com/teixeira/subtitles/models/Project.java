@@ -99,8 +99,8 @@ public class Project implements Parcelable, Comparable<Project> {
     parcel.writeString(name);
   }
 
-  public static final Parcelable.Creator<Project> CREATOR =
-      new Parcelable.Creator<Project>() {
+  public static final Creator<Project> CREATOR =
+      new Creator<>() {
 
         @Override
         public Project createFromParcel(Parcel parcel) {

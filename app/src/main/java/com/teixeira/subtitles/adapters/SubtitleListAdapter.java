@@ -10,35 +10,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.teixeira.subtitles.databinding.LayoutSubtitleItemBinding;
 import com.teixeira.subtitles.models.Subtitle;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapter.VH> {
 
-  private List<Subtitle> subtitles;
-
   private final SubtitleListener listener;
 
+  private List<Subtitle> subtitles;
   private ItemTouchHelper touchHelper;
 
   private int lastScreenSubtitleIndex;
 
-  public SubtitleListAdapter(SubtitleListener listener) {
-    this(new ArrayList<>(), listener);
-  }
-
-  public SubtitleListAdapter(
-      @NonNull List<Subtitle> subtitles, @NonNull SubtitleListener listener) {
-    Objects.requireNonNull(subtitles);
+  public SubtitleListAdapter(@NonNull SubtitleListener listener) {
     Objects.requireNonNull(listener);
-    this.subtitles = subtitles;
     this.listener = listener;
 
     this.lastScreenSubtitleIndex = -1;
-
-    listener.onUpdateSubtitles(subtitles, false);
   }
 
   @Override
@@ -73,14 +62,15 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
   @Override
   public int getItemCount() {
-    return subtitles.size();
+    return subtitles != null ? subtitles.size() : 0;
   }
 
-  public void setSubtitles(List<Subtitle> subtitles) {
+  public void setSubtitles(List<Subtitle> subtitles, boolean save, boolean updateUndoStack) {
     this.subtitles = subtitles;
+
     notifyDataSetChanged();
 
-    listener.onUpdateSubtitles(subtitles, true);
+    listener.onUpdateSubtitles(this.subtitles, save, updateUndoStack);
   }
 
   public void setTouchHelper(ItemTouchHelper touchHelper) {
@@ -120,31 +110,33 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     subtitles.add(index, subtitle);
     notifyItemInserted(index);
 
-    listener.onUpdateSubtitles(subtitles, true);
+    listener.onUpdateSubtitles(subtitles, true, true);
     listener.scrollToPosition(index);
   }
 
   public void setSubtitle(int index, Subtitle subtitle) {
-    if (index != -1) {
+    if (index > -1) {
       subtitles.set(index, subtitle);
       notifyItemChanged(index, subtitle);
 
-      listener.onUpdateSubtitles(subtitles, true);
+      listener.onUpdateSubtitles(subtitles, true, true);
       listener.scrollToPosition(index);
     }
   }
 
   public void removeSubtitle(int index) {
-    removeSubtitle(subtitles.get(index));
+    if (index > -1 && index < subtitles.size()) {
+      removeSubtitle(subtitles.get(index));
+    }
   }
 
   public void removeSubtitle(Subtitle subtitle) {
     int index = subtitles.indexOf(subtitle);
-    if (index != -1) {
+    if (index > -1) {
       subtitles.remove(subtitle);
       notifyItemRemoved(index);
 
-      listener.onUpdateSubtitles(subtitles, true);
+      listener.onUpdateSubtitles(subtitles, true, true);
     }
   }
 
@@ -157,7 +149,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
     boolean onSubtitleLongClickListener(View view, int index, Subtitle subtitle);
 
-    void onUpdateSubtitles(List<Subtitle> subtitles, boolean save);
+    void onUpdateSubtitles(List<Subtitle> subtitles, boolean save, boolean updateUndoStack);
 
     void scrollToPosition(int position);
   }
@@ -205,7 +197,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
       super.onSelectedChanged(viewHolder, actionState);
       if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-        adapter.listener.onUpdateSubtitles(adapter.getSubtitles(), true);
+        adapter.listener.onUpdateSubtitles(adapter.getSubtitles(), true, true);
       }
     }
   }

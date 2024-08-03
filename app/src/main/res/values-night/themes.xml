@@ -3,6 +3,7 @@
   <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
     <item name="android:windowLightStatusBar">false</item>
     <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    <item name="switchPreferenceCompatStyle">@style/AppTheme.SwitchPreference</item>
   </style>
 
   <style name="AppTheme" parent="Base.AppTheme" />

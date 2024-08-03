@@ -8,7 +8,7 @@ import com.teixeira.subtitles.BuildConfig;
 import com.teixeira.subtitles.R;
 
 public class PreferencesFragment extends PreferenceFragmentCompat {
-  
+
   public static final String FRAGMENT_TAG = "PreferencesFragment";
 
   @Override
@@ -19,6 +19,13 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
     generalPref.setOnPreferenceClickListener(
         pref -> {
           changePreferenceFragment(new GeneralPreferencesFragment());
+          return true;
+        });
+
+    Preference developmentPref = findPreference("pref_development");
+    developmentPref.setOnPreferenceClickListener(
+        pref -> {
+          changePreferenceFragment(new DevelopmentPreferencesFragment());
           return true;
         });
 

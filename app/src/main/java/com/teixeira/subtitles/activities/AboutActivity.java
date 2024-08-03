@@ -1,11 +1,9 @@
 package com.teixeira.subtitles.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.teixeira.subtitles.App;
 import com.teixeira.subtitles.BuildConfig;
 import com.teixeira.subtitles.R;
@@ -46,13 +44,6 @@ public class AboutActivity extends BaseActivity {
       githubPref.setOnPreferenceClickListener(
           pref -> {
             App.getInstance().openUrl("https://github.com/teixeira0x/subtitles");
-            return true;
-          });
-
-      Preference licensePref = findPreference("pref_licenses");
-      licensePref.setOnPreferenceClickListener(
-          pref -> {
-            startActivity(new Intent(requireContext(), OssLicensesMenuActivity.class));
             return true;
           });
 

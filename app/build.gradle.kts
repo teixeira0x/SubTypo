@@ -1,7 +1,6 @@
 plugins {
   id("com.android.application")
   id("kotlin-android")
-  id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -13,7 +12,7 @@ android {
     minSdk = 24
     targetSdk = 34
     versionCode = 1
-    versionName = "1.1"
+    versionName = "1.1.0"
 
     vectorDrawables { useSupportLibrary = true }
   }
@@ -60,7 +59,6 @@ dependencies {
   implementation(libs.androidx.preference)
 
   implementation(libs.google.material)
-  implementation(libs.google.oss.licenses)
   implementation(libs.google.gson)
 
   implementation(libs.common.utilcode)

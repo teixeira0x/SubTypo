@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapter.VH> {
 
-  private final List<Subtitle> subtitles;
+  private List<Subtitle> subtitles;
 
   private final SubtitleListener listener;
 
@@ -74,6 +74,13 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   @Override
   public int getItemCount() {
     return subtitles.size();
+  }
+
+  public void setSubtitles(List<Subtitle> subtitles) {
+    this.subtitles = subtitles;
+    notifyDataSetChanged();
+
+    listener.onUpdateSubtitles(subtitles, true);
   }
 
   public void setTouchHelper(ItemTouchHelper touchHelper) {

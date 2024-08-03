@@ -30,7 +30,7 @@
             android:configChanges="screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.AboutActivity"
+            android:name=".activities.PreferencesActivity"
             android:exported="false" />
 
     </application>

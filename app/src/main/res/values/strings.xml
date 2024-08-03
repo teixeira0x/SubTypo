@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">SubTypo</string>
     <string name="about">About</string>
+    <string name="settings">Settings</string>
     <string name="delete">Delete</string>
     <string name="rename">Rename</string>
     <string name="edit">Edit</string>
@@ -20,6 +21,14 @@
     <string name="msg_video_not_chosen">Video not chosen</string>
 
     <!-- Preferences -->
+    <string name="pref_general">General</string>
+    <string name="pref_general_summary">General application settings.</string>
+    <string name="pref_category_aparence">Aparence</string>
+    <string name="pref_ui_mode">UI Mode</string>
+    <string name="pref_ui_mode_summary">Choose light or dark mode</string>
+    <string name="pref_ui_mode_value_light">Light</string>
+    <string name="pref_ui_mode_value_dark">Dark</string>
+    <string name="pref_ui_mode_value_follow">Follow System</string>
     <string name="pref_version">Version</string>
     <string name="pref_github">GitHub</string>
     <string name="pref_github_summary">This app is open source!</string>

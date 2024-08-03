@@ -41,8 +41,8 @@ public class MainActivity extends BaseActivity implements UpdateProjectsCallback
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
-    if (item.getItemId() == R.id.menu_about) {
-      startActivity(new Intent(this, AboutActivity.class));
+    if (item.getItemId() == R.id.menu_settings) {
+      startActivity(new Intent(this, PreferencesActivity.class));
     }
 
     return super.onOptionsItemSelected(item);

@@ -3,10 +3,14 @@
   <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
     <item name="android:windowLightStatusBar">true</item>
     <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    <item name="switchPreferenceCompatStyle">@style/AppTheme.SwitchPreference</item>
   </style>
 
   <style name="AppTheme" parent="Base.AppTheme" />
 
+  <style name="AppTheme.SwitchPreference" parent="Preference.SwitchPreference.Material">
+    <item name="android:widgetLayout">@layout/layout_material_switch_style</item>
+  </style>
 
   <style name="ControllerImageStyle">
     <item name="android:layout_width">35dp</item>

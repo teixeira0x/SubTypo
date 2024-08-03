@@ -13,6 +13,12 @@
             app:title="@string/pref_general"
             app:summary="@string/pref_general_summary" />
 
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="pref_development"
+            app:title="@string/pref_development"
+            app:summary="@string/pref_development_summary" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

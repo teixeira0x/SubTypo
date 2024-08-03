@@ -4,10 +4,10 @@ import android.os.Bundle;
 import androidx.preference.PreferenceFragmentCompat;
 import com.teixeira.subtitles.R;
 
-public class GeneralPreferencesFragment extends PreferenceFragmentCompat {
+public class DevelopmentPreferencesFragment extends PreferenceFragmentCompat {
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    setPreferencesFromResource(R.xml.preferences_general, rootKey);
+    setPreferencesFromResource(R.xml.preferences_development, rootKey);
   }
 }

@@ -39,6 +39,17 @@
         android:padding="2dp">
 
         <ImageView
+            android:src="@drawable/ic_undo"
+            style="@style/ControllerImageStyle"
+            android:id="@+id/undo" />
+
+        <ImageView
+            android:src="@drawable/ic_redo"
+            android:layout_toEndOf="@id/undo"
+            style="@style/ControllerImageStyle"
+            android:id="@+id/redo" />
+
+        <ImageView
             android:src="@drawable/ic_skip_backward"
             android:layout_toLeftOf="@id/play"
             style="@style/ControllerImageStyle"

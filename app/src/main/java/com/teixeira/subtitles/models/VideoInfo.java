@@ -33,8 +33,8 @@ public class VideoInfo implements Parcelable {
     this.currentVideoPosition = currentVideoPosition;
   }
 
-  public static final Parcelable.Creator<VideoInfo> CREATOR =
-      new Parcelable.Creator<VideoInfo>() {
+  public static final Creator<VideoInfo> CREATOR =
+      new Creator<>() {
 
         @Override
         public VideoInfo createFromParcel(Parcel parcel) {

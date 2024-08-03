@@ -7,6 +7,8 @@ import com.teixeira.subtitles.App;
 public class Preferences {
   public static final String PREFERENCE_UI_MODE = "pref_ui_mode";
 
+  public static final String PREFERENCE_DEVELOPMENT_UNDO_REDO = "pref_development_undo_redo";
+
   public static int getUIModeValue() {
     SharedPreferences prefs = App.getInstance().getDefaultPrefs();
     switch (prefs.getInt(PREFERENCE_UI_MODE, 0)) {
@@ -16,5 +18,9 @@ public class Preferences {
         return AppCompatDelegate.MODE_NIGHT_YES;
     }
     return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+  }
+
+  public static boolean isDevelopmentUndoAndRedoEnabled() {
+    return App.getInstance().getDefaultPrefs().getBoolean(PREFERENCE_DEVELOPMENT_UNDO_REDO, false);
   }
 }

@@ -32,20 +32,23 @@ import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
 /**
+ * This class draws a timeline view.
+ *
  * @author Felipe Teixeira
+ * @since 2024-07-30
  */
 public class TimeLineView extends View {
 
   private Rect bounds;
   private Paint paint;
-  private boolean isTouching = false;
-  private OnMoveHandlerListener onMoveHandler;
+  private boolean isTouching;
   private float zoom;
   private Scroller scroller;
   private float scrollX;
 
-  private long videoDuration;
-  private long currentVideoPosition;
+  private HandlerMotionListener handlerMotionListener;
+  private int videoDuration;
+  private int currentVideoPosition;
   private List<Subtitle> subtitles;
 
   public TimeLineView(Context context) {
@@ -61,6 +64,7 @@ public class TimeLineView extends View {
     bounds = new Rect();
     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     paint.setTextSize(16);
+    isTouching = false;
     zoom = 2.0f;
     scroller = new Scroller(context);
     scrollX = 0;
@@ -76,7 +80,7 @@ public class TimeLineView extends View {
 
     drawSubtitles(canvas);
     drawTimeLine(canvas);
-    drawPositionHandler(canvas);
+    drawCurrentVideoPositionHandler(canvas);
   }
 
   @Override
@@ -84,23 +88,23 @@ public class TimeLineView extends View {
 
     /*float touchX = Math.max(0, Math.min(event.getX(), getWidth()));
 
-    long newCurrentVideoPosition = (long) ((touchX / getWidth() * videoDuration) - zoom - scrollX);
+    int newCurrentVideoPosition = (touchX / getWidth() * videoDuration) - zoom - scrollX;
 
     switch (event.getAction()) {
       case MotionEvent.ACTION_DOWN:
         isTouching = true;
         setCurrentVideoPosition(newCurrentVideoPosition);
-        if (onMoveHandler != null) {
-          onMoveHandler.onMoveHandler(newCurrentVideoPosition);
-          onMoveHandler.onStartTouch();
+        if (handlerMotionListener != null) {
+          handlerMotionListener.handlerMotionListener(newCurrentVideoPosition);
+          handlerMotionListener.onStartTouch();
         }
         break;
 
       case MotionEvent.ACTION_MOVE:
         if (isTouching) {
           setCurrentVideoPosition(newCurrentVideoPosition);
-          if (onMoveHandler != null) {
-            onMoveHandler.onMoveHandler(newCurrentVideoPosition);
+          if (handlerMotionListener != null) {
+            handlerMotionListener.handlerMotionListener(newCurrentVideoPosition);
           }
         }
         break;
@@ -108,8 +112,8 @@ public class TimeLineView extends View {
       case MotionEvent.ACTION_UP:
       case MotionEvent.ACTION_CANCEL:
         isTouching = false;
-        if (onMoveHandler != null) {
-          onMoveHandler.onStopTouch();
+        if (handlerMotionListener != null) {
+          handlerMotionListener.onStopTouch();
         }
         break;
     }*/
@@ -126,34 +130,68 @@ public class TimeLineView extends View {
     }
   }
 
+  /**
+   * Starts a scrolling animation from the given start position to the end position over a specified
+   * duration.
+   *
+   * @param startX The starting horizontal position of the scroll.
+   * @param endX The ending horizontal position of the scroll.
+   * @param duration The duration of the scroll in milliseconds.
+   */
   public void startScroll(float startX, float endX, int duration) {
     scroller.startScroll((int) startX, 0, (int) (endX - startX), 0, duration);
     invalidate();
   }
 
-  public void setOnMoveHandlerListener(OnMoveHandlerListener listener) {
-    this.onMoveHandler = listener;
+  /**
+   * Sets the handler's motion listener to the specified listener.
+   *
+   * @param handlerMotionListener The new listener.
+   */
+  public void setHandlerMotionListener(HandlerMotionListener handlerMotionListener) {
+    this.handlerMotionListener = handlerMotionListener;
   }
 
-  public void setVideoDuration(long duration) {
+  /**
+   * Sets the video duration to the new specified duration and redraws the view.
+   *
+   * @param duration The new duration.
+   */
+  public void setVideoDuration(int duration) {
     this.videoDuration = duration;
     invalidate();
   }
 
-  public void setCurrentVideoPosition(long currentVideoPosition) {
+  /**
+   * Sets the current position of the video to the specified current position and
+   * redraws the view.
+   *
+   * @param currentVideoPosition New video current position.
+   */
+  public void setCurrentVideoPosition(int currentVideoPosition) {
     this.currentVideoPosition = currentVideoPosition;
     invalidate();
   }
 
+  /**
+   * Sets the list of subtitles to be drawn with the specified list and redraws the view.
+   *
+   * @param subtitles New list of captions to draw.
+   */
   public void setSubtitles(List<Subtitle> subtitles) {
     this.subtitles = subtitles;
     invalidate();
   }
 
+  /**
+   * Draws lines for the seconds, minutes, and hours of the video.
+   *
+   * @param canvas The canvas to make the line drawings.
+   */
   private void drawTimeLine(Canvas canvas) {
 
     int colorControlNormal =
-        MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
+        MaterialColors.getColor(this, com.google.android.material.R.attr.colorSecondaryVariant);
     paint.setColor(colorControlNormal);
 
     int width = canvas.getWidth();
@@ -184,9 +222,16 @@ public class TimeLineView extends View {
     }
   }
 
-  private void drawPositionHandler(Canvas canvas) {
+  /**
+   * Draws a simple manipulator for the current position of the video.
+   *
+   * @param canvas The screen for drawing the handler.
+   */
+  private void drawCurrentVideoPositionHandler(Canvas canvas) {
 
-    paint.setColor(Color.GREEN);
+    int colorControlNormal =
+        MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
+    paint.setColor(colorControlNormal);
 
     int width = canvas.getWidth();
     int height = canvas.getHeight();
@@ -203,10 +248,6 @@ public class TimeLineView extends View {
 
     canvas.drawPath(path, paint);
 
-    int colorControlNormal =
-        MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
-    paint.setColor(colorControlNormal);
-
     String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
     paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);
     canvas.drawText(currentVideoPositionText, x - (bounds.width() / 2), height / 2, paint);
@@ -214,6 +255,11 @@ public class TimeLineView extends View {
     startScroll(scrollX, x, 200);
   }
 
+  /**
+   * Draws yellow rectangles for the subtitles.
+   *
+   * @param canvas The canvas for drawing the rectangles.
+   */
   private void drawSubtitles(Canvas canvas) {
 
     if (subtitles == null) {
@@ -231,24 +277,27 @@ public class TimeLineView extends View {
         long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
         float left = ((float) startTime / videoDuration * width) * zoom - scrollX;
-        float top = 0;
         float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
-        float bottom = height;
 
         paint.setAlpha(subtitle.isInScreen() ? 90 : 80);
 
-        canvas.drawRect(new RectF(left, top, right, bottom), paint);
+        canvas.drawRect(new RectF(left, 0, right, height), paint);
       } catch (Exception e) {
         // Ignore
       }
     }
   }
 
-  public interface OnMoveHandlerListener {
-    void onMoveHandler(long position);
+  /** Video current position handler motion listener */
+  public interface HandlerMotionListener {
 
+    /** This method is called when moving the current video position handler. */
+    void handlerMotionListener(int position);
+
+    /** This method is called when you touch the view. */
     void onStartTouch();
 
+    /** This method is called when you stop touching the view. */
     void onStopTouch();
   }
 }

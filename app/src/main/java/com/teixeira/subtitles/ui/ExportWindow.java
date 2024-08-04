@@ -17,7 +17,6 @@ package com.teixeira.subtitles.ui;
 
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,6 +36,11 @@ import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
 
+/**
+ * Creates a window to choose the file format and to export the subtitle file.
+ *
+ * @author Felipe Teixeira
+ */
 public class ExportWindow extends PopupWindow {
 
   private LayoutExportWindowBinding binding;
@@ -45,9 +49,16 @@ public class ExportWindow extends PopupWindow {
   private ActivityResultLauncher<String> subtitleFileSaver;
   private SubtitleFile subtitleFile;
 
-  public ExportWindow(AppCompatActivity activity) {
+  /**
+   * Creates a window with a list of formats for exporting the subtitle file.
+   *
+   * @param activity An activity to be used as context.
+   * @param subtitleListAdapter The subtitle list adapter.
+   */
+  public ExportWindow(AppCompatActivity activity, SubtitleListAdapter subtitleListAdapter) {
     super(activity);
 
+    this.subtitleListAdapter = subtitleListAdapter;
     binding = LayoutExportWindowBinding.inflate(activity.getLayoutInflater());
 
     subtitleFileSaver =
@@ -55,7 +66,8 @@ public class ExportWindow extends PopupWindow {
             new ActivityResultContracts.CreateDocument("text/srt"), this::onSaveSubtitleFile);
 
     binding.close.setOnClickListener(v -> dismiss());
-    binding.export.setOnClickListener(this::onExportClick);
+    binding.export.setOnClickListener(
+        v -> subtitleFileSaver.launch(subtitleFile.getNameWithExtension()));
 
     Project project = ProjectManager.getInstance().getProject();
     this.subtitleFile = project.getSubtitleFile();
@@ -67,23 +79,22 @@ public class ExportWindow extends PopupWindow {
     setWidth(WindowManager.LayoutParams.MATCH_PARENT);
     setHeight(WindowManager.LayoutParams.MATCH_PARENT);
     setContentView(binding.getRoot());
-    setBackgroundDrawable(createBackground());
+    setBackgroundDrawable(createWindowBackground());
     setFocusable(true);
   }
 
-  public void setSubtitleListAdapter(SubtitleListAdapter subtitleListAdapter) {
-    this.subtitleListAdapter = subtitleListAdapter;
-  }
-
+  /** Called when the activity is destroyed. */
   public void destroy() {
     subtitleFileSaver.unregister();
     binding = null;
   }
 
-  private void onExportClick(View view) {
-    subtitleFileSaver.launch(subtitleFile.getNameWithExtension());
-  }
-
+  /**
+   * When choosing the path and creating the subtitle file, this method is called to write the text
+   * of the file format.
+   *
+   * @param uri Uri of the created file.
+   */
   private void onSaveSubtitleFile(Uri uri) {
     dismiss();
     if (uri != null && subtitleListAdapter != null) {
@@ -103,7 +114,12 @@ public class ExportWindow extends PopupWindow {
     }
   }
 
-  private GradientDrawable createBackground() {
+  /**
+   * Creates a bordered background for the window.
+   *
+   * @return The background drawable.
+   */
+  private GradientDrawable createWindowBackground() {
     GradientDrawable gradientDrawable = new GradientDrawable();
     gradientDrawable.setStroke(
         2,

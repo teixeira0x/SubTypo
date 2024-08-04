@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class manages the undo and redo stack.
+ *
  * @author Felipe Teixeira
+ * @since 2024-08-03
  */
 public class UndoManager implements Parcelable {
 
@@ -45,6 +48,11 @@ public class UndoManager implements Parcelable {
   private int stackPointer;
   private int maxStackSize;
 
+  /**
+   * Creates a new UndoManager with the specified maximum stack size.
+   *
+   * @param maxStackSize The maximum size of undo and redo stacks.
+   */
   public UndoManager(int maxStackSize) {
     this.subtitlesStack = new ArrayList<>();
     this.enabled = true;
@@ -63,6 +71,11 @@ public class UndoManager implements Parcelable {
     }
   }
 
+  /**
+   * Adds a list of subtitles to the stack and shifts the stack pointer to the new list.
+   *
+   * @param subtitles The list that will be added to the stack.
+   */
   public void pushStack(List<Subtitle> subtitles) {
 
     if (!enabled) return;
@@ -78,14 +91,29 @@ public class UndoManager implements Parcelable {
     stackPointer = subtitlesStack.size() - 1;
   }
 
+  /**
+   * Checks if you can undo.
+   *
+   * @return Whether or not you can undo it.
+   */
   public boolean canUndo() {
     return enabled && stackPointer > 0;
   }
 
+  /**
+   * Checks if you can redo.
+   *
+   * @return Whether or not you can redo it.
+   */
   public boolean canRedo() {
     return enabled && stackPointer < subtitlesStack.size() - 1;
   }
 
+  /**
+   * Moves the stack pointer to the previous stack if you can undo.
+   *
+   * @return The previous stack list, or null if undo is not possible.
+   */
   public List<Subtitle> undo() {
     if (canUndo()) {
       stackPointer--;
@@ -94,6 +122,11 @@ public class UndoManager implements Parcelable {
     return null;
   }
 
+  /**
+   * Moves the stack pointer to the next stack if you can redo.
+   *
+   * @return The list of the next stack, or null if redo is not possible.
+   */
   public List<Subtitle> redo() {
     if (canRedo()) {
       stackPointer++;
@@ -102,10 +135,18 @@ public class UndoManager implements Parcelable {
     return null;
   }
 
+  /**
+   * @return Whether UndoManager is enabled.
+   */
   public boolean isEnabled() {
     return this.enabled;
   }
 
+  /**
+   * Defines whether the UndoManager is enabled with the new specified value.
+   *
+   * @param enabled The boolean value that defines enabled/disabled.
+   */
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
@@ -126,6 +167,7 @@ public class UndoManager implements Parcelable {
     }
   }
 
+  /** This class is a model object that saves the list of subtitles from the stack. */
   public static class StackItem implements Parcelable {
 
     public static final Creator<StackItem> CREATOR =
@@ -147,18 +189,15 @@ public class UndoManager implements Parcelable {
           }
         };
 
-    private List<Subtitle> subtitles;
+    List<Subtitle> subtitles;
 
-    public StackItem(List<Subtitle> subtitles) {
+    /**
+     * Creates a new stack item.
+     *
+     * @param subtitles The list of subtitles for this stack item.
+     */
+    StackItem(List<Subtitle> subtitles) {
       this.subtitles = new ArrayList<>(subtitles);
-    }
-
-    public List<Subtitle> getSubtitles() {
-      return this.subtitles;
-    }
-
-    public void setSubtitles(List<Subtitle> subtitles) {
-      this.subtitles = subtitles;
     }
 
     @Override

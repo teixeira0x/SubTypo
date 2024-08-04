@@ -101,11 +101,6 @@ public class ProjectActivity extends BaseActivity
     subtitleListAdapter = new SubtitleListAdapter(this);
     projectManager = ProjectManager.getInstance();
 
-    if (!Preferences.isDevelopmentUndoAndRedoEnabled()) {
-      binding.videoControllerContent.redo.setVisibility(View.GONE);
-      binding.videoControllerContent.undo.setVisibility(View.GONE);
-    }
-
     Bundle extras = getIntent().getExtras();
     project =
         projectManager.setupProject(BundleCompat.getParcelable(extras, KEY_PROJECT, Project.class));
@@ -115,9 +110,15 @@ public class ProjectActivity extends BaseActivity
     subtitleDocumentPicker =
         registerForActivityResult(
             new ActivityResultContracts.OpenDocument(), this::onPickSubtitleFile);
-    exportWindow = new ExportWindow(this);
+
+    exportWindow = new ExportWindow(this, subtitleListAdapter);
     onEverySecond = this::onEverySecond;
     saveProjectCallback = this::saveProjectAsync;
+
+    if (!Preferences.isDevelopmentUndoAndRedoEnabled()) {
+      binding.videoControllerContent.redo.setVisibility(View.GONE);
+      binding.videoControllerContent.undo.setVisibility(View.GONE);
+    }
   }
 
   @Override
@@ -247,7 +248,6 @@ public class ProjectActivity extends BaseActivity
           }
           binding.videoContent.videoView.setVideoPath(project.getVideoPath());
           subtitleListAdapter.setSubtitles(result, false, true);
-          exportWindow.setSubtitleListAdapter(subtitleListAdapter);
           binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
           binding.subtitles.setAdapter(subtitleListAdapter);
 

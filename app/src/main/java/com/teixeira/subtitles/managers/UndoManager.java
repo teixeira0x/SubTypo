@@ -17,6 +17,7 @@ package com.teixeira.subtitles.managers;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.core.os.ParcelCompat;
 import com.teixeira.subtitles.models.Subtitle;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,8 @@ public class UndoManager implements Parcelable {
     subtitlesStack = new ArrayList<>();
     int count = parcel.readInt();
     for (int i = 0; i < count; i++) {
-      subtitlesStack.add(parcel.readParcelable(UndoManager.class.getClassLoader()));
+      subtitlesStack.add(
+          ParcelCompat.readParcelable(parcel, UndoManager.class.getClassLoader(), StackItem.class));
     }
   }
 
@@ -117,7 +119,7 @@ public class UndoManager implements Parcelable {
   public List<Subtitle> undo() {
     if (canUndo()) {
       stackPointer--;
-      return subtitlesStack.get(stackPointer).subtitles;
+      return subtitlesStack.get(stackPointer).toList();
     }
     return null;
   }
@@ -130,7 +132,7 @@ public class UndoManager implements Parcelable {
   public List<Subtitle> redo() {
     if (canRedo()) {
       stackPointer++;
-      return subtitlesStack.get(stackPointer).subtitles;
+      return subtitlesStack.get(stackPointer).toList();
     }
     return null;
   }
@@ -175,12 +177,12 @@ public class UndoManager implements Parcelable {
 
           @Override
           public StackItem createFromParcel(Parcel parcel) {
-            List<Subtitle> subtitles = new ArrayList<>();
-            int count = parcel.readInt();
-            for (int i = 0; i < count; i++) {
-              subtitles.add(parcel.readParcelable(StackItem.class.getClassLoader()));
-            }
-            return new StackItem(subtitles);
+            StackItem item = new StackItem();
+            item.subtitles =
+                (Subtitle[])
+                    ParcelCompat.readArray(
+                        parcel, StackItem.class.getClassLoader(), Subtitle.class);
+            return item;
           }
 
           @Override
@@ -189,15 +191,28 @@ public class UndoManager implements Parcelable {
           }
         };
 
-    List<Subtitle> subtitles;
+    Subtitle[] subtitles;
+
+    StackItem() {}
 
     /**
-     * Creates a new stack item.
+     * Creates a new stack item and clones the subtitle list into an array.
      *
-     * @param subtitles The list of subtitles for this stack item.
+     * @param subtitleList The list of subtitles for this stack item.
      */
-    StackItem(List<Subtitle> subtitles) {
-      this.subtitles = new ArrayList<>(subtitles);
+    StackItem(List<Subtitle> subtitleList) {
+      this.subtitles = new Subtitle[subtitleList.size()];
+      for (int i = 0; i < subtitleList.size(); i++) {
+        this.subtitles[i] = subtitleList.get(i).clone();
+      }
+    }
+
+    public List<Subtitle> toList() {
+      List<Subtitle> subtitleList = new ArrayList<>();
+      for (Subtitle subtitle : subtitles) {
+        subtitleList.add(subtitle);
+      }
+      return subtitleList;
     }
 
     @Override
@@ -207,10 +222,7 @@ public class UndoManager implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-      parcel.writeInt(subtitles.size());
-      for (Subtitle subtitle : subtitles) {
-        parcel.writeParcelable(subtitle, flags);
-      }
+      parcel.writeArray(subtitles);
     }
   }
 }

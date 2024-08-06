@@ -27,6 +27,16 @@
         android:layout_marginLeft="5dp"
         android:id="@+id/name" />
 
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_toEndOf="@id/video_icon"
+        android:layout_below="@id/name"
+        android:layout_toLeftOf="@id/menu"
+        android:textSize="12sp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/video_name" />
+
     <ImageView
         android:layout_height="20dp"
         android:layout_width="20dp"

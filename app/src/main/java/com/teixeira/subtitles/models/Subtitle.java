@@ -7,7 +7,6 @@ public class Subtitle implements Parcelable {
   private String startTime;
   private String endTime;
   private String text;
-
   private boolean inScreen;
 
   public Subtitle(String startTime, String endTime, String text) {
@@ -54,25 +53,32 @@ public class Subtitle implements Parcelable {
     this.inScreen = inScreen;
   }
 
+  public Subtitle clone() {
+    return new Subtitle(startTime, endTime, text);
+  }
+
   @Override
-  public boolean equals(Object other) {
-
-    if (other instanceof Subtitle subtitle) {
-      return startTime.equals(subtitle.startTime)
-          && endTime.equals(subtitle.endTime)
-          && text.equals(subtitle.text);
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
     }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    Subtitle subtitle = (Subtitle) obj;
+    return equalsData(subtitle);
+  }
 
-    return false;
+  public boolean equalsData(Subtitle subtitle) {
+    return inScreen == subtitle.inScreen
+        && startTime.equals(subtitle.startTime)
+        && endTime.equals(subtitle.endTime)
+        && text.equals(subtitle.text);
   }
 
   @Override
   public int describeContents() {
     return 0;
-  }
-
-  public Subtitle clone() {
-    return new Subtitle(startTime, endTime, text);
   }
 
   @Override
@@ -85,7 +91,6 @@ public class Subtitle implements Parcelable {
 
   public static final Creator<Subtitle> CREATOR =
       new Creator<Subtitle>() {
-
         @Override
         public Subtitle createFromParcel(Parcel parcel) {
           return new Subtitle(parcel);

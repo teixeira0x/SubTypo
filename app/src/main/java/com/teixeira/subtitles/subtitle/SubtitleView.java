@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.teixeira.subtitles.models.Subtitle;
+import java.util.Objects;
 
 public class SubtitleView extends View {
 
@@ -46,6 +47,12 @@ public class SubtitleView extends View {
   }
 
   public void setSubtitle(@Nullable Subtitle subtitle) {
+    if (Objects.equals(this.subtitle, subtitle)) {
+        return;
+      }
+    if (this.subtitle != null && subtitle != null) {
+    }
+
     this.subtitle = subtitle;
     invalidate();
   }

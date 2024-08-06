@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import com.blankj.utilcode.util.FileUtils;
 import com.teixeira.subtitles.databinding.LayoutProjectItemBinding;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.utils.VideoUtils;
@@ -35,6 +36,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
     binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.getVideoPath()));
     binding.name.setText(project.getName());
+    binding.videoName.setText(FileUtils.getFileName(project.getVideoPath()));
 
     binding.getRoot().setOnClickListener(v -> listener.onProjectClickListener(v, project));
     binding.getRoot().setOnLongClickListener(v -> listener.onProjectLongClickListener(v, project));

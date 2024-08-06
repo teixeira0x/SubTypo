@@ -35,6 +35,7 @@ import com.teixeira.subtitles.subtitle.file.SubtitleFile;
 import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
+import com.teixeira.subtitles.viewmodels.SubtitlesViewModel;
 
 /**
  * Creates a window to choose the file format and to export the subtitle file.
@@ -45,7 +46,7 @@ public class ExportWindow extends PopupWindow {
 
   private LayoutExportWindowBinding binding;
   private ExportFormatListAdapter exportFormatListAdapter;
-  private SubtitleListAdapter subtitleListAdapter;
+  private SubtitlesViewModel viewModel;
   private ActivityResultLauncher<String> subtitleFileSaver;
   private SubtitleFile subtitleFile;
 
@@ -55,10 +56,10 @@ public class ExportWindow extends PopupWindow {
    * @param activity An activity to be used as context.
    * @param subtitleListAdapter The subtitle list adapter.
    */
-  public ExportWindow(AppCompatActivity activity, SubtitleListAdapter subtitleListAdapter) {
+  public ExportWindow(AppCompatActivity activity, SubtitlesViewModel viewModel) {
     super(activity);
 
-    this.subtitleListAdapter = subtitleListAdapter;
+    this.viewModel = viewModel;
     binding = LayoutExportWindowBinding.inflate(activity.getLayoutInflater());
 
     subtitleFileSaver =
@@ -97,10 +98,10 @@ public class ExportWindow extends PopupWindow {
    */
   private void onSaveSubtitleFile(Uri uri) {
     dismiss();
-    if (uri != null && subtitleListAdapter != null) {
+    if (uri != null) {
       try {
         FileUtil.writeFileContent(
-            uri, subtitleFile.getSubtitleFormat().toText(subtitleListAdapter.getSubtitles()));
+            uri, subtitleFile.getSubtitleFormat().toText(viewModel.getSubtitles()));
         ToastUtils.showLong(
             R.string.proj_export_saved, UriUtils.uri2FileNoCacheCopy(uri).getAbsolutePath());
       } catch (Exception e) {

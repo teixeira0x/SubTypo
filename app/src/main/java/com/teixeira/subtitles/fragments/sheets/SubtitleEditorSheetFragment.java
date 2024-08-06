@@ -1,6 +1,5 @@
 package com.teixeira.subtitles.fragments.sheets;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -9,16 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.os.BundleCompat;
+import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.ClipboardUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
-import com.teixeira.subtitles.adapters.SubtitleListAdapter;
-import com.teixeira.subtitles.callbacks.GetSubtitleListAdapterCallback;
 import com.teixeira.subtitles.databinding.FragmentSubtitleEditorBinding;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.utils.OnTextChangedListener;
 import com.teixeira.subtitles.utils.VideoUtils;
+import com.teixeira.subtitles.viewmodels.SubtitlesViewModel;
 import java.util.List;
 
 public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
@@ -28,8 +27,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   public static final String KEY_SELECTED_SUBTITLE_INDEX = "selected_subtitle_index";
 
   private FragmentSubtitleEditorBinding binding;
-  private SubtitleListAdapter adapter;
-  private Subtitle subtitle;
+  private SubtitlesViewModel viewModel;
+
+  private Subtitle previewSubtitile;
+  private Subtitle editingSubtitle;
   private int index = -1;
   private long currentVideoPosition;
 
@@ -38,12 +39,12 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   }
 
   public static SubtitleEditorSheetFragment newInstance(
-      long currentVideoPosition, int index, Subtitle subtitle) {
+      long currentVideoPosition, int index, Subtitle editingSubtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
     Bundle args = new Bundle();
     args.putLong(KEY_CURRENT_VIDEO_POSITION, currentVideoPosition);
-    if (subtitle != null) {
-      args.putParcelable(KEY_SELECTED_SUBTITLE, subtitle);
+    if (editingSubtitle != null) {
+      args.putParcelable(KEY_SELECTED_SUBTITLE, editingSubtitle);
       args.putInt(KEY_SELECTED_SUBTITLE_INDEX, index);
     }
     fragment.setArguments(args);
@@ -51,12 +52,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   }
 
   @Override
-  public void onAttach(Context context) {
-    if (context instanceof GetSubtitleListAdapterCallback) {
-      var callback = (GetSubtitleListAdapterCallback) context;
-      adapter = callback.getSubtitleListAdapter();
-    }
-    super.onAttach(context);
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    viewModel = new ViewModelProvider(getActivity()).get(SubtitlesViewModel.class);
   }
 
   @NonNull
@@ -79,10 +78,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     currentVideoPosition = args.getLong(KEY_CURRENT_VIDEO_POSITION);
 
     if (args.containsKey(KEY_SELECTED_SUBTITLE) && args.containsKey(KEY_SELECTED_SUBTITLE_INDEX)) {
-      subtitle = BundleCompat.getParcelable(args, KEY_SELECTED_SUBTITLE, Subtitle.class).clone();
+      editingSubtitle = BundleCompat.getParcelable(args, KEY_SELECTED_SUBTITLE, Subtitle.class);
       index = args.getInt(KEY_SELECTED_SUBTITLE_INDEX);
     } else {
-      subtitle =
+      editingSubtitle =
           new Subtitle(
               VideoUtils.getTime(currentVideoPosition),
               VideoUtils.getTime(currentVideoPosition + 2000),
@@ -91,6 +90,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
 
       binding.deleteSubtitle.setVisibility(View.INVISIBLE);
     }
+    previewSubtitile = editingSubtitle.clone();
 
     binding.currentVideoPosition.setText(
         getString(R.string.proj_current_video_position, VideoUtils.getTime(currentVideoPosition)));
@@ -98,10 +98,10 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
         v -> ClipboardUtils.copyText(VideoUtils.getTime(currentVideoPosition)));
     binding.deleteSubtitle.setOnClickListener(v -> showAlertToDeleteSubtitle());
 
-    binding.tieStartTime.setText(subtitle.getStartTime());
-    binding.tieEndTime.setText(subtitle.getEndTime());
-    binding.tieText.setText(subtitle.getText());
-    binding.preview.setSubtitle(subtitle);
+    binding.tieStartTime.setText(editingSubtitle.getStartTime());
+    binding.tieEndTime.setText(editingSubtitle.getEndTime());
+    binding.tieText.setText(editingSubtitle.getText());
+    binding.preview.setSubtitle(previewSubtitile);
     binding.dialogButtons.cancel.setOnClickListener(v -> dismiss());
     binding.dialogButtons.save.setOnClickListener(v -> saveSubtitle());
     configureTextWatchers();
@@ -115,31 +115,25 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   }
 
   private void configureTextWatchers() {
-    binding.tieStartTime.addTextChangedListener(
+
+    OnTextChangedListener validateFieldsTextWatcher =
         new OnTextChangedListener() {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            subtitle.setStartTime(editable.toString());
             validateFields();
           }
-        });
-    binding.tieEndTime.addTextChangedListener(
-        new OnTextChangedListener() {
+        };
 
-          @Override
-          public void afterTextChanged(Editable editable) {
-            subtitle.setEndTime(editable.toString());
-            validateFields();
-          }
-        });
+    binding.tieStartTime.addTextChangedListener(validateFieldsTextWatcher);
+    binding.tieEndTime.addTextChangedListener(validateFieldsTextWatcher);
     binding.tieText.addTextChangedListener(
         new OnTextChangedListener() {
 
           @Override
           public void afterTextChanged(Editable editable) {
-            subtitle.setText(editable.toString().trim());
-            binding.preview.setSubtitle(subtitle);
+            previewSubtitile.setText(editable.toString().trim());
+            binding.preview.invalidate();
             validateFields();
           }
         });
@@ -173,28 +167,32 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private void showAlertToDeleteSubtitle() {
     new MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete)
-        .setMessage(getString(R.string.msg_delete_confirmation, subtitle.getText()))
+        .setMessage(getString(R.string.msg_delete_confirmation, editingSubtitle.getText()))
         .setPositiveButton(
             R.string.yes,
             (d, w) -> {
               dismiss();
-              adapter.removeSubtitle(index);
+              viewModel.removeSubtitle(index);
             })
         .setNegativeButton(R.string.no, null)
         .show();
   }
 
   private void saveSubtitle() {
-    dismiss();
-    if (index != -1) {
-      adapter.setSubtitle(index, subtitle);
+    editingSubtitle.setStartTime(binding.tieStartTime.getText().toString());
+    editingSubtitle.setEndTime(binding.tieEndTime.getText().toString());
+    editingSubtitle.setText(binding.tieText.getText().toString());
+
+    if (index >= 0) {
+      viewModel.setSubtitle(index, editingSubtitle);
     } else {
-      adapter.addSubtitle(getIndexForNewSubtitle(), subtitle);
+      viewModel.addSubtitle(getIndexForNewSubtitle(), editingSubtitle);
     }
+    dismiss();
   }
 
   private int getIndexForNewSubtitle() {
-    List<Subtitle> subtitles = adapter.getSubtitles();
+    List<Subtitle> subtitles = viewModel.getSubtitles();
     int index = subtitles.size();
     for (int i = 0; i < subtitles.size(); i++) {
       Subtitle sub = subtitles.get(i);

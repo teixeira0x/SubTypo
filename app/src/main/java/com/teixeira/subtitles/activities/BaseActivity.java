@@ -43,7 +43,7 @@ abstract class BaseActivity extends AppCompatActivity {
   }
 
   private void requestPermissions() {
-    if (!isPermissionsGranted()) {
+    if (!isPermissionsGranted() && getClass() != CrashActivity.class) {
       new MaterialAlertDialogBuilder(this)
           .setTitle(R.string.msg_permission_request)
           .setMessage(R.string.msg_permission_request_detail)

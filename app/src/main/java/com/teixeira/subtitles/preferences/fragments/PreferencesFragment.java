@@ -32,7 +32,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
     Preference githubPref = findPreference("pref_github");
     githubPref.setOnPreferenceClickListener(
         pref -> {
-          App.getInstance().openUrl("https://github.com/teixeira0x/subtitles");
+          App.getInstance().openUrl(App.APP_REPO_URL);
           return true;
         });
 

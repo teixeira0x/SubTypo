@@ -32,27 +32,21 @@ public class VideoViewModel extends ViewModel {
   }
 
   public void back5sec() {
-    boolean hasVideoPlaying = isVideoPlaying();
-    if (hasVideoPlaying) pauseVideo();
     int seek = getCurrentVideoPosition() - 5000;
     if (getCurrentVideoPosition() <= 5000) {
       seek = 0;
     }
 
     setCurrentVideoPosition(seek, true);
-    if (hasVideoPlaying) playVideo();
   }
 
   public void skip5sec() {
-    boolean hasVideoPlaying = isVideoPlaying();
-    if (hasVideoPlaying) pauseVideo();
     int seek = getCurrentVideoPosition() + 5000;
     if (seek > videoDurationLiveData.getValue()) {
       seek = videoDurationLiveData.getValue();
     }
 
     setCurrentVideoPosition(seek, true);
-    if (hasVideoPlaying) playVideo();
   }
 
   public void playVideo() {

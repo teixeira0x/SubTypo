@@ -7,18 +7,15 @@ public class Subtitle implements Parcelable {
   private String startTime;
   private String endTime;
   private String text;
-  private boolean inScreen;
 
   public Subtitle(String startTime, String endTime, String text) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.text = text;
-    this.inScreen = false;
   }
 
   public Subtitle(Parcel parcel) {
     this(parcel.readString(), parcel.readString(), parcel.readString());
-    this.inScreen = parcel.readBoolean();
   }
 
   public String getStartTime() {
@@ -45,14 +42,6 @@ public class Subtitle implements Parcelable {
     this.text = text;
   }
 
-  public boolean isInScreen() {
-    return this.inScreen;
-  }
-
-  public void setInScreen(boolean inScreen) {
-    this.inScreen = inScreen;
-  }
-
   public Subtitle clone() {
     return new Subtitle(startTime, endTime, text);
   }
@@ -70,8 +59,7 @@ public class Subtitle implements Parcelable {
   }
 
   public boolean equalsData(Subtitle subtitle) {
-    return inScreen == subtitle.inScreen
-        && startTime.equals(subtitle.startTime)
+    return startTime.equals(subtitle.startTime)
         && endTime.equals(subtitle.endTime)
         && text.equals(subtitle.text);
   }
@@ -86,7 +74,6 @@ public class Subtitle implements Parcelable {
     parcel.writeString(startTime);
     parcel.writeString(endTime);
     parcel.writeString(text);
-    parcel.writeBoolean(inScreen);
   }
 
   public static final Creator<Subtitle> CREATOR =
@@ -101,4 +88,9 @@ public class Subtitle implements Parcelable {
           return new Subtitle[size];
         }
       };
+
+  @Override
+  public String toString() {
+    return "Subtitle[startTime=" + startTime + ", endTime=" + endTime + ", text=" + text + "]";
+  }
 }

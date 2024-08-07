@@ -163,8 +163,7 @@ public class TimeLineView extends View {
   }
 
   /**
-   * Sets the current position of the video to the specified current position and
-   * redraws the view.
+   * Sets the current position of the video to the specified current position and redraws the view.
    *
    * @param currentVideoPosition New video current position.
    */
@@ -256,7 +255,7 @@ public class TimeLineView extends View {
   }
 
   /**
-   * Draws yellow rectangles for the subtitles.
+   * Draws rectangles for the subtitles.
    *
    * @param canvas The canvas for drawing the rectangles.
    */
@@ -269,22 +268,20 @@ public class TimeLineView extends View {
     int width = canvas.getWidth();
     int height = canvas.getHeight();
 
-    paint.setColor(Color.YELLOW);
+    int colorOnSurfaceInverse =
+        MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurfaceInverse);
+    paint.setColor(colorOnSurfaceInverse);
 
     for (Subtitle subtitle : subtitles) {
-      try {
-        long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
-        long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
+      long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
+      long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
-        float left = ((float) startTime / videoDuration * width) * zoom - scrollX;
-        float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
+      float left = ((float) startTime / videoDuration * width) * zoom - scrollX;
+      float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
 
-        paint.setAlpha(subtitle.isInScreen() ? 90 : 80);
+      paint.setAlpha(subtitle.isInScreen() ? 90 : 80);
 
-        canvas.drawRect(new RectF(left, 0, right, height), paint);
-      } catch (Exception e) {
-        // Ignore
-      }
+      canvas.drawRect(new RectF(left, 0, right, height), paint);
     }
   }
 

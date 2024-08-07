@@ -22,7 +22,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
 import com.google.android.material.color.MaterialColors;
@@ -79,22 +78,26 @@ public class TimeLineView extends View {
 
     drawSubtitles(canvas);
     drawTimeLine(canvas);
-    drawCurrentVideoPositionHandler(canvas);
+    drawCurrentVideoPositionIndicator(canvas);
   }
 
-  @Override
+  /*@Override
   public boolean onTouchEvent(MotionEvent event) {
 
-    /*float touchX = Math.max(0, Math.min(event.getX(), getWidth()));
+    float touchX = Math.max(0, Math.min(event.getX(), getWidth()));
+    int width = getWidth();
 
-    int newCurrentVideoPosition = (touchX / getWidth() * videoDuration) - zoom - scrollX;
+    int centerX = width / 2;
+
+    int newCurrentVideoPosition =
+        (int) (centerX * videoDuration - touchX - zoom - scrollX);
 
     switch (event.getAction()) {
       case MotionEvent.ACTION_DOWN:
         isTouching = true;
         setCurrentVideoPosition(newCurrentVideoPosition);
         if (handlerMotionListener != null) {
-          handlerMotionListener.handlerMotionListener(newCurrentVideoPosition);
+          handlerMotionListener.onMoveHandler(newCurrentVideoPosition);
           handlerMotionListener.onStartTouch();
         }
         break;
@@ -103,7 +106,7 @@ public class TimeLineView extends View {
         if (isTouching) {
           setCurrentVideoPosition(newCurrentVideoPosition);
           if (handlerMotionListener != null) {
-            handlerMotionListener.handlerMotionListener(newCurrentVideoPosition);
+            handlerMotionListener.onMoveHandler(newCurrentVideoPosition);
           }
         }
         break;
@@ -115,10 +118,10 @@ public class TimeLineView extends View {
           handlerMotionListener.onStopTouch();
         }
         break;
-    }*/
+    }
 
     return true;
-  }
+  }*/
 
   @Override
   public void computeScroll() {
@@ -188,9 +191,9 @@ public class TimeLineView extends View {
    */
   private void drawTimeLine(Canvas canvas) {
 
-    int colorControlNormal =
+    int colorSecondaryVariant =
         MaterialColors.getColor(this, com.google.android.material.R.attr.colorSecondaryVariant);
-    paint.setColor(colorControlNormal);
+    paint.setColor(colorSecondaryVariant);
 
     int width = canvas.getWidth();
     int height = canvas.getHeight();
@@ -221,12 +224,11 @@ public class TimeLineView extends View {
   }
 
   /**
-   * Draws a simple manipulator for the current position of the video.
+   * Draws a simple indicator for the current position of the video.
    *
-   * @param canvas The screen for drawing the handler.
+   * @param canvas The screen for drawing the indicator.
    */
-  private void drawCurrentVideoPositionHandler(Canvas canvas) {
-
+  private void drawCurrentVideoPositionIndicator(Canvas canvas) {
     int colorControlNormal =
         MaterialColors.getColor(this, com.google.android.material.R.attr.colorControlNormal);
     paint.setColor(colorControlNormal);
@@ -234,7 +236,7 @@ public class TimeLineView extends View {
     int width = canvas.getWidth();
     int height = canvas.getHeight();
 
-    float x = ((float) currentVideoPosition / videoDuration * width) * zoom - scrollX;
+    float x = width / 2;
     canvas.drawLine(x, 0, x, height / 2, paint);
 
     float size = 8;
@@ -243,14 +245,10 @@ public class TimeLineView extends View {
     path.lineTo(x - size, 0);
     path.lineTo(x + size, 0);
     path.close();
-
     canvas.drawPath(path, paint);
 
-    String currentVideoPositionText = VideoUtils.getTime(currentVideoPosition);
-    paint.getTextBounds(currentVideoPositionText, 0, currentVideoPositionText.length(), bounds);
-    canvas.drawText(currentVideoPositionText, x - (bounds.width() / 2), height / 2, paint);
-
-    startScroll(scrollX, x, 200);
+    scrollX = ((float) currentVideoPosition / videoDuration) * width * zoom - (width / 2);
+    startScroll(scroller.getCurrX(), scrollX, 200);
   }
 
   /**
@@ -286,7 +284,7 @@ public class TimeLineView extends View {
   public interface HandlerMotionListener {
 
     /** This method is called when moving the current video position handler. */
-    void handlerMotionListener(int position);
+    void onMoveHandler(int position);
 
     /** This method is called when you touch the view. */
     void onStartTouch();

@@ -17,7 +17,6 @@ package com.teixeira.subtitles.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -278,8 +277,6 @@ public class TimeLineView extends View {
 
       float left = ((float) startTime / videoDuration * width) * zoom - scrollX;
       float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
-
-      paint.setAlpha(subtitle.isInScreen() ? 90 : 80);
 
       canvas.drawRect(new RectF(left, 0, right, height), paint);
     }

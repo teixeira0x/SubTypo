@@ -275,8 +275,8 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
           binding.videoControllerContent.undo.setClickable(undoManager.canUndo());
         });
 
-    subtitlesViewModel.observeInScreenSubtitleIndex(
-        this, index -> subtitleListAdapter.setInScreenSubtitleIndex(index));
+    subtitlesViewModel.observeVideoSubtitleIndex(
+        this, index -> subtitleListAdapter.setVideoSubtitleIndex(index));
 
     subtitlesViewModel.observeScrollTo(
         this, position -> binding.subtitles.scrollToPosition(position));
@@ -377,7 +377,7 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
       if (currentVideoPosition >= startTime && currentVideoPosition <= endTime) {
         binding.videoContent.subtitleView.setSubtitle(subtitle);
         binding.videoContent.subtitleView.setVisibility(View.VISIBLE);
-        subtitlesViewModel.setInScreenSubtitleIndex(i);
+        subtitlesViewModel.setVideoSubtitleIndex(i);
         subtitleFound = true;
         break;
       }
@@ -385,7 +385,7 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
 
     if (!subtitleFound) {
       binding.videoContent.subtitleView.setVisibility(View.GONE);
-      subtitlesViewModel.setInScreenSubtitleIndex(-1);
+      subtitlesViewModel.setVideoSubtitleIndex(-1);
     }
   }
 

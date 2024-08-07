@@ -75,8 +75,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
   class ProjectDiffCallback extends DiffUtil.Callback {
 
-    private final List<Project> oldList;
-    private final List<Project> newList;
+    private final List<Project> oldList, newList;
 
     private ProjectDiffCallback(List<Project> oldList, List<Project> newList) {
       this.oldList = oldList;

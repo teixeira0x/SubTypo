@@ -1,17 +1,22 @@
 package com.teixeira.subtitles.fragments.sheets;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import androidx.annotation.NonNull;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import androidx.core.os.BundleCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.ClipboardUtils;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.databinding.FragmentSubtitleEditorBinding;
 import com.teixeira.subtitles.models.Subtitle;
@@ -20,7 +25,7 @@ import com.teixeira.subtitles.utils.VideoUtils;
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel;
 import java.util.List;
 
-public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
+public class SubtitleEditorSheetFragment extends DialogFragment {
 
   public static final String KEY_CURRENT_VIDEO_POSITION = "current_video_position";
   public static final String KEY_SELECTED_SUBTITLE = "selected_subtitle";
@@ -32,17 +37,17 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
   private Subtitle previewSubtitile;
   private Subtitle editingSubtitle;
   private int index = -1;
-  private long currentVideoPosition;
+  private int currentVideoPosition;
 
-  public static SubtitleEditorSheetFragment newInstance(long currentVideoPosition) {
+  public static SubtitleEditorSheetFragment newInstance(int currentVideoPosition) {
     return newInstance(currentVideoPosition, -1, null);
   }
 
   public static SubtitleEditorSheetFragment newInstance(
-      long currentVideoPosition, int index, Subtitle editingSubtitle) {
+      int currentVideoPosition, int index, Subtitle editingSubtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
     Bundle args = new Bundle();
-    args.putLong(KEY_CURRENT_VIDEO_POSITION, currentVideoPosition);
+    args.putInt(KEY_CURRENT_VIDEO_POSITION, currentVideoPosition);
     if (editingSubtitle != null) {
       args.putParcelable(KEY_SELECTED_SUBTITLE, editingSubtitle);
       args.putInt(KEY_SELECTED_SUBTITLE_INDEX, index);
@@ -58,16 +63,21 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
     viewModel = new ViewModelProvider(getActivity()).get(SubtitlesViewModel.class);
   }
 
-  @NonNull
   @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    binding = FragmentSubtitleEditorBinding.inflate(inflater, container, false);
-    return binding.getRoot();
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    BottomSheetDialog sheetDialog = new BottomSheetDialog(requireContext());
+    binding = FragmentSubtitleEditorBinding.inflate(sheetDialog.getLayoutInflater());
+    sheetDialog.setContentView(binding.getRoot());
+
+    BottomSheetBehavior<FrameLayout> behavior = sheetDialog.getBehavior();
+    behavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
+    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+    init(savedInstanceState);
+    return sheetDialog;
   }
 
-  @Override
-  public void onViewCreated(View view, Bundle savedInstanceState) {
+  public void init(Bundle savedInstanceState) {
 
     Bundle args = getArguments();
 
@@ -75,7 +85,7 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
       throw new IllegalArgumentException("Arguments cannot be null");
     }
 
-    currentVideoPosition = args.getLong(KEY_CURRENT_VIDEO_POSITION);
+    currentVideoPosition = args.getInt(KEY_CURRENT_VIDEO_POSITION);
 
     if (args.containsKey(KEY_SELECTED_SUBTITLE) && args.containsKey(KEY_SELECTED_SUBTITLE_INDEX)) {
       editingSubtitle = BundleCompat.getParcelable(args, KEY_SELECTED_SUBTITLE, Subtitle.class);
@@ -137,6 +147,8 @@ public class SubtitleEditorSheetFragment extends BottomSheetDialogFragment {
             validateFields();
           }
         });
+
+    binding.tieText.requestFocus();
   }
 
   private void validateFields() {

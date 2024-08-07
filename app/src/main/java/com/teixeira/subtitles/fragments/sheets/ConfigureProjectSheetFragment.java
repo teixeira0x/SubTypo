@@ -1,18 +1,19 @@
 package com.teixeira.subtitles.fragments.sheets;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.os.BundleCompat;
+import androidx.fragment.app.DialogFragment;
 import com.blankj.utilcode.util.UriUtils;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.activities.ProjectActivity;
 import com.teixeira.subtitles.callbacks.UpdateProjectsCallback;
@@ -25,14 +26,14 @@ import com.teixeira.subtitles.utils.ToastUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.io.File;
 
-public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
+public class ConfigureProjectSheetFragment extends DialogFragment {
 
-  public static CreateProjectSheetFragment newInstance() {
+  public static ConfigureProjectSheetFragment newInstance() {
     return newInstance(null);
   }
 
-  public static CreateProjectSheetFragment newInstance(Project project) {
-    CreateProjectSheetFragment fragment = new CreateProjectSheetFragment();
+  public static ConfigureProjectSheetFragment newInstance(Project project) {
+    ConfigureProjectSheetFragment fragment = new ConfigureProjectSheetFragment();
     if (project != null) {
       Bundle args = new Bundle();
       args.putParcelable(ProjectActivity.KEY_PROJECT, project);
@@ -69,19 +70,27 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
   }
 
   @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    binding = FragmentConfigureProjectBinding.inflate(inflater, container, false);
-    return binding.getRoot();
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    BottomSheetDialog sheetDialog = new BottomSheetDialog(requireContext());
+    binding = FragmentConfigureProjectBinding.inflate(sheetDialog.getLayoutInflater());
+    sheetDialog.setContentView(binding.getRoot());
+
+    BottomSheetBehavior<FrameLayout> behavior = sheetDialog.getBehavior();
+    behavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
+    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+    init(savedInstanceState);
+    return sheetDialog;
   }
 
-  @Override
-  public void onViewCreated(View view, Bundle savedInstanceState) {
+  public void init(Bundle savedInstanceState) {
     videoDocumentPicker =
         registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::onChooseVideo);
 
     configureDetails();
     setListeners();
+
+    binding.tieName.requestFocus();
   }
 
   @Override
@@ -135,7 +144,13 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
     binding.dialogButtons.cancel.setClickable(false);
     binding.dialogButtons.save.setClickable(false);
     TaskExecutor.executeAsyncProvideError(
-        () -> saveProjectInternal(), (result, throwable) -> dismiss());
+        () -> saveProjectInternal(),
+        (result, throwable) -> {
+          if (callback != null) {
+            callback.updateProjects();
+          }
+          dismiss();
+        });
   }
 
   private Void saveProjectInternal() {
@@ -158,10 +173,6 @@ public class CreateProjectSheetFragment extends BottomSheetDialogFragment {
               videoFile.getAbsolutePath(),
               binding.tieName.getText().toString()));
       startActivity(intent);
-    }
-
-    if (callback != null) {
-      callback.updateProjects();
     }
 
     return null;

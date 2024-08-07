@@ -59,8 +59,6 @@ import java.util.List;
 public class ProjectActivity extends BaseActivity implements SubtitleListAdapter.SubtitleListener {
 
   public static final String KEY_PROJECT = "project";
-  public static final String KEY_VIDEO_INFO = "video_info";
-  public static final String KEY_UNDO_MANAGER = "undo_manager";
 
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 

@@ -10,7 +10,7 @@ import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.callbacks.UpdateProjectsCallback;
 import com.teixeira.subtitles.databinding.ActivityMainBinding;
 import com.teixeira.subtitles.fragments.ProjectsFragment;
-import com.teixeira.subtitles.fragments.sheets.CreateProjectSheetFragment;
+import com.teixeira.subtitles.fragments.sheets.ConfigureProjectSheetFragment;
 
 public class MainActivity extends BaseActivity implements UpdateProjectsCallback {
 
@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity implements UpdateProjectsCallback
     setSupportActionBar(binding.toolbar);
 
     binding.fabNewProject.setOnClickListener(
-        v -> CreateProjectSheetFragment.newInstance().show(getSupportFragmentManager(), null));
+        v -> ConfigureProjectSheetFragment.newInstance().show(getSupportFragmentManager(), null));
   }
 
   @Override

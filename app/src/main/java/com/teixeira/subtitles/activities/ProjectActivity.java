@@ -42,6 +42,7 @@ import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
 import com.teixeira.subtitles.databinding.ActivityProjectBinding;
 import com.teixeira.subtitles.fragments.sheets.SubtitleEditorSheetFragment;
+import com.teixeira.subtitles.managers.UndoManager;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.preferences.Preferences;
@@ -254,6 +255,19 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
           updateVideoUI(videoViewModel.getCurrentVideoPosition());
         });
 
+    subtitlesViewModel.observeUpdateUndoButtons(
+        this,
+        unused -> {
+          UndoManager undoManager = subtitlesViewModel.getUndoManager();
+          binding.videoControllerContent.redo.animate().alpha(undoManager.canRedo() ? 1.0f : 0.5f).start();
+          binding.videoControllerContent.redo.setClickable(undoManager.canRedo());
+          binding.videoControllerContent.undo.animate().alpha(undoManager.canUndo() ? 1.0f : 0.5f).start();
+          binding.videoControllerContent.undo.setClickable(undoManager.canUndo());
+        });
+
+    subtitlesViewModel.observeInScreenSubtitleIndex(
+        this, index -> subtitleListAdapter.setInScreenSubtitleIndex(index));
+
     subtitlesViewModel.observeScrollTo(
         this, position -> binding.subtitles.scrollToPosition(position));
 
@@ -328,9 +342,11 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
 
     if (width > height) {
       binding.videoContent.videoView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+      binding.videoContent.videoView.requestLayout();
     } else if (height > width
         && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
       binding.videoContent.getRoot().getLayoutParams().height = SizeUtils.dp2px(350f);
+      binding.videoContent.getRoot().requestLayout();
     }
     updateVideoUI(videoViewModel.getCurrentVideoPosition());
   }

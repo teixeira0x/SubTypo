@@ -60,7 +60,7 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    viewModel = new ViewModelProvider(getActivity()).get(SubtitlesViewModel.class);
+    viewModel = new ViewModelProvider(requireActivity()).get(SubtitlesViewModel.class);
   }
 
   @Override
@@ -147,8 +147,6 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
             validateFields();
           }
         });
-
-    binding.tieText.requestFocus();
   }
 
   private void validateFields() {

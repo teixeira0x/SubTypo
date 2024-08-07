@@ -23,6 +23,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   private ItemTouchHelper touchHelper;
 
   private boolean isVideoPlaying;
+  private int inScreenSubtitleIndex;
 
   public SubtitleListAdapter(@NonNull SubtitleListener listener) {
     Objects.requireNonNull(listener);
@@ -41,7 +42,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     Subtitle subtitle = subtitles.get(position);
 
     binding.text.setText(subtitle.getText());
-    binding.inScreen.setVisibility(subtitle.isInScreen() ? View.VISIBLE : View.INVISIBLE);
+    binding.inScreen.setVisibility(position == inScreenSubtitleIndex ? View.VISIBLE : View.INVISIBLE);
     binding.startAndEnd.setText(subtitle.getStartTime() + " | " + subtitle.getEndTime());
 
     binding.dragHandler.setOnTouchListener(
@@ -77,6 +78,11 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
 
   public void setVideoPlaying(boolean isVideoPlaying) {
     this.isVideoPlaying = isVideoPlaying;
+  }
+  
+  public void setInScreenSubtitleIndex(int index) {
+    this.inScreenSubtitleIndex = index;
+    notifyDataSetChanged();
   }
 
   public interface SubtitleListener {

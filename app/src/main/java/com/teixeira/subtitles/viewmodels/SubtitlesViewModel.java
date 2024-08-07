@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import com.teixeira.subtitles.managers.UndoManager;
 import com.teixeira.subtitles.models.Subtitle;
+import com.teixeira.subtitles.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +14,16 @@ public class SubtitlesViewModel extends ViewModel {
 
   private final MutableLiveData<UndoManager> undoManagerLiveData =
       new MutableLiveData<>(new UndoManager(15));
+  private final MutableLiveData<Boolean> updateUndoButtonsLiveData = new MutableLiveData<>();
   private final MutableLiveData<List<Subtitle>> subtitlesLiveData = new MutableLiveData<>();
   private final MutableLiveData<Integer> inScreenSubtitleIndexLiveData = new MutableLiveData<>(-1);
   private final MutableLiveData<Integer> scrollToLiveData = new MutableLiveData<>(0);
 
   private final MutableLiveData<Boolean> saveSubtitlesLiveData = new MutableLiveData<>();
+  
+  public UndoManager getUndoManager() {
+    return undoManagerLiveData.getValue();
+  }
 
   public void setSubtitles(List<Subtitle> subtitles) {
     setSubtitles(subtitles, true);
@@ -47,9 +53,9 @@ public class SubtitlesViewModel extends ViewModel {
   public void addSubtitle(int index, Subtitle subtitle) {
     List<Subtitle> subtitles = getSubtitles();
     subtitles.add(index, subtitle);
-      pushStackToUndoManager(subtitles);
-      setSubtitles(subtitles);
-      scrollTo(index);
+    pushStackToUndoManager(subtitles);
+    setSubtitles(subtitles);
+    scrollTo(index);
   }
 
   public void setSubtitle(int index, Subtitle subtitle) {
@@ -67,12 +73,7 @@ public class SubtitlesViewModel extends ViewModel {
 
   public void setInScreenSubtitleIndex(int index) {
     if (index != inScreenSubtitleIndexLiveData.getValue()) {
-      List<Subtitle> subtitles = getSubtitles();
-      for (int i = 0; i < subtitles.size(); i++) {
-        subtitles.get(i).setInScreen(i == index);
-      }
       inScreenSubtitleIndexLiveData.setValue(index);
-      setSubtitles(subtitles, false);
       scrollTo(index);
     }
   }
@@ -80,6 +81,11 @@ public class SubtitlesViewModel extends ViewModel {
   public void removeSubtitle(int index) {
     if (index >= 0) {
       List<Subtitle> subtitles = getSubtitles();
+      
+      Subtitle sub = subtitles.get(index);
+      if (sub != null) {
+        ToastUtils.showShort(sub.toString());
+      }
       if (index < subtitles.size()) {
         subtitles.remove(index);
         pushStackToUndoManager(subtitles);
@@ -104,6 +110,7 @@ public class SubtitlesViewModel extends ViewModel {
       setSubtitles(subtitles);
     }
     undoManagerLiveData.setValue(undoManager);
+    updateUndoButtons();
   }
 
   public void redo() {
@@ -113,12 +120,18 @@ public class SubtitlesViewModel extends ViewModel {
       setSubtitles(subtitles);
     }
     undoManagerLiveData.setValue(undoManager);
+    updateUndoButtons();
   }
 
   public void pushStackToUndoManager(List<Subtitle> subtitles) {
     UndoManager undoManager = undoManagerLiveData.getValue();
     undoManager.pushStack(subtitles);
     undoManagerLiveData.setValue(undoManager);
+    updateUndoButtons();
+  }
+  
+  public void updateUndoButtons() {
+    updateUndoButtonsLiveData.setValue(true);
   }
 
   public void scrollTo(int position) {
@@ -128,9 +141,18 @@ public class SubtitlesViewModel extends ViewModel {
   public void saveSubtitles() {
     saveSubtitlesLiveData.setValue(true);
   }
+  
+  public void observeUpdateUndoButtons(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+    updateUndoButtonsLiveData.observe(lifecycleOwner, observer);
+  }
 
   public void observeSubtitles(LifecycleOwner lifecycleOwner, Observer<List<Subtitle>> observer) {
     subtitlesLiveData.observe(lifecycleOwner, observer);
+  }
+
+  public void observeInScreenSubtitleIndex(
+      LifecycleOwner lifecycleOwner, Observer<Integer> observer) {
+    inScreenSubtitleIndexLiveData.observe(lifecycleOwner, observer);
   }
 
   public void observeScrollTo(LifecycleOwner lifecycleOwner, Observer<Integer> observer) {

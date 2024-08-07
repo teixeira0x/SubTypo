@@ -20,7 +20,7 @@ public class SubtitlesViewModel extends ViewModel {
   private final MutableLiveData<Integer> scrollToLiveData = new MutableLiveData<>(0);
 
   private final MutableLiveData<Boolean> saveSubtitlesLiveData = new MutableLiveData<>();
-  
+
   public UndoManager getUndoManager() {
     return undoManagerLiveData.getValue();
   }
@@ -63,7 +63,9 @@ public class SubtitlesViewModel extends ViewModel {
       List<Subtitle> subtitles = getSubtitles();
 
       if (index < subtitles.size()) {
-        subtitles.set(index, subtitle);
+        subtitles.remove(index);
+        subtitles.add(index, subtitle);
+
         pushStackToUndoManager(subtitles);
         setSubtitles(subtitles);
         scrollTo(index);
@@ -81,7 +83,7 @@ public class SubtitlesViewModel extends ViewModel {
   public void removeSubtitle(int index) {
     if (index >= 0) {
       List<Subtitle> subtitles = getSubtitles();
-      
+
       Subtitle sub = subtitles.get(index);
       if (sub != null) {
         ToastUtils.showShort(sub.toString());
@@ -129,7 +131,7 @@ public class SubtitlesViewModel extends ViewModel {
     undoManagerLiveData.setValue(undoManager);
     updateUndoButtons();
   }
-  
+
   public void updateUndoButtons() {
     updateUndoButtonsLiveData.setValue(true);
   }
@@ -141,7 +143,7 @@ public class SubtitlesViewModel extends ViewModel {
   public void saveSubtitles() {
     saveSubtitlesLiveData.setValue(true);
   }
-  
+
   public void observeUpdateUndoButtons(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
     updateUndoButtonsLiveData.observe(lifecycleOwner, observer);
   }

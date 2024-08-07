@@ -217,7 +217,11 @@ public class UndoManager implements Parcelable {
     }
 
     public List<Subtitle> toList() {
-      return Arrays.asList(subtitles);
+      List<Subtitle> subtitleList = new ArrayList<>();
+      for (Subtitle subtitle : subtitles) {
+        subtitleList.add(subtitle);
+      }
+      return subtitleList;
     }
 
     public boolean equals(List<Subtitle> subtitlesList) {

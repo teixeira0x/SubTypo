@@ -259,9 +259,19 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
         this,
         unused -> {
           UndoManager undoManager = subtitlesViewModel.getUndoManager();
-          binding.videoControllerContent.redo.animate().alpha(undoManager.canRedo() ? 1.0f : 0.5f).start();
+          binding
+              .videoControllerContent
+              .redo
+              .animate()
+              .alpha(undoManager.canRedo() ? 1.0f : 0.5f)
+              .start();
           binding.videoControllerContent.redo.setClickable(undoManager.canRedo());
-          binding.videoControllerContent.undo.animate().alpha(undoManager.canUndo() ? 1.0f : 0.5f).start();
+          binding
+              .videoControllerContent
+              .undo
+              .animate()
+              .alpha(undoManager.canUndo() ? 1.0f : 0.5f)
+              .start();
           binding.videoControllerContent.undo.setClickable(undoManager.canUndo());
         });
 
@@ -406,7 +416,8 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
                       .show();
                   return;
                 }
-                subtitlesViewModel.setSubtitles(result, false);
+                subtitlesViewModel.pushStackToUndoManager(result);
+                subtitlesViewModel.setSubtitles(result, true);
               });
         });
     builder.show();

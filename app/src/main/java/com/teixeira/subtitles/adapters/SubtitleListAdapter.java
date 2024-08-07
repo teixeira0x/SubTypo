@@ -1,7 +1,6 @@
 package com.teixeira.subtitles.adapters;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -42,14 +41,13 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     Subtitle subtitle = subtitles.get(position);
 
     binding.text.setText(subtitle.getText());
-    binding.inScreen.setVisibility(position == inScreenSubtitleIndex ? View.VISIBLE : View.INVISIBLE);
+    binding.inScreen.setVisibility(
+        position == inScreenSubtitleIndex ? View.VISIBLE : View.INVISIBLE);
     binding.startAndEnd.setText(subtitle.getStartTime() + " | " + subtitle.getEndTime());
 
-    binding.dragHandler.setOnTouchListener(
-        (v, event) -> {
-          if (!isVideoPlaying
-              && touchHelper != null
-              && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+    binding.dragHandler.setOnLongClickListener(
+        v -> {
+          if (!isVideoPlaying && touchHelper != null) {
             touchHelper.startDrag(holder);
           }
           return false;
@@ -79,7 +77,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   public void setVideoPlaying(boolean isVideoPlaying) {
     this.isVideoPlaying = isVideoPlaying;
   }
-  
+
   public void setInScreenSubtitleIndex(int index) {
     this.inScreenSubtitleIndex = index;
     notifyDataSetChanged();

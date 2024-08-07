@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import com.teixeira.subtitles.managers.UndoManager;
 import com.teixeira.subtitles.models.Subtitle;
-import com.teixeira.subtitles.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +14,10 @@ public class SubtitlesViewModel extends ViewModel {
   private final MutableLiveData<UndoManager> undoManagerLiveData =
       new MutableLiveData<>(new UndoManager(15));
   private final MutableLiveData<Boolean> updateUndoButtonsLiveData = new MutableLiveData<>();
-  private final MutableLiveData<List<Subtitle>> subtitlesLiveData = new MutableLiveData<>();
-  private final MutableLiveData<Integer> inScreenSubtitleIndexLiveData = new MutableLiveData<>(-1);
+
+  private final MutableLiveData<List<Subtitle>> subtitlesLiveData =
+      new MutableLiveData<>();
+  private final MutableLiveData<Integer> videoSubtitleIndexLiveData = new MutableLiveData<>(-1);
   private final MutableLiveData<Integer> scrollToLiveData = new MutableLiveData<>(0);
 
   private final MutableLiveData<Boolean> saveSubtitlesLiveData = new MutableLiveData<>();
@@ -24,7 +25,7 @@ public class SubtitlesViewModel extends ViewModel {
   public UndoManager getUndoManager() {
     return undoManagerLiveData.getValue();
   }
-
+  
   public void setSubtitles(List<Subtitle> subtitles) {
     setSubtitles(subtitles, true);
   }
@@ -73,9 +74,9 @@ public class SubtitlesViewModel extends ViewModel {
     }
   }
 
-  public void setInScreenSubtitleIndex(int index) {
-    if (index != inScreenSubtitleIndexLiveData.getValue()) {
-      inScreenSubtitleIndexLiveData.setValue(index);
+  public void setVideoSubtitleIndex(int index) {
+    if (index != videoSubtitleIndexLiveData.getValue()) {
+      videoSubtitleIndexLiveData.setValue(index);
       scrollTo(index);
     }
   }
@@ -83,11 +84,6 @@ public class SubtitlesViewModel extends ViewModel {
   public void removeSubtitle(int index) {
     if (index >= 0) {
       List<Subtitle> subtitles = getSubtitles();
-
-      Subtitle sub = subtitles.get(index);
-      if (sub != null) {
-        ToastUtils.showShort(sub.toString());
-      }
       if (index < subtitles.size()) {
         subtitles.remove(index);
         pushStackToUndoManager(subtitles);
@@ -152,9 +148,8 @@ public class SubtitlesViewModel extends ViewModel {
     subtitlesLiveData.observe(lifecycleOwner, observer);
   }
 
-  public void observeInScreenSubtitleIndex(
-      LifecycleOwner lifecycleOwner, Observer<Integer> observer) {
-    inScreenSubtitleIndexLiveData.observe(lifecycleOwner, observer);
+  public void observeVideoSubtitleIndex(LifecycleOwner lifecycleOwner, Observer<Integer> observer) {
+    videoSubtitleIndexLiveData.observe(lifecycleOwner, observer);
   }
 
   public void observeScrollTo(LifecycleOwner lifecycleOwner, Observer<Integer> observer) {

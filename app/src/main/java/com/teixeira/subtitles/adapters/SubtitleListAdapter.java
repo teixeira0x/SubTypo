@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.teixeira.subtitles.databinding.LayoutSubtitleItemBinding;
 import com.teixeira.subtitles.models.Subtitle;
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
   private ItemTouchHelper touchHelper;
 
   private boolean isVideoPlaying;
-  private int inScreenSubtitleIndex;
+  private int videoSubtitleIndex;
 
   public SubtitleListAdapter(@NonNull SubtitleListener listener) {
     Objects.requireNonNull(listener);
@@ -41,8 +42,7 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     Subtitle subtitle = subtitles.get(position);
 
     binding.text.setText(subtitle.getText());
-    binding.inScreen.setVisibility(
-        position == inScreenSubtitleIndex ? View.VISIBLE : View.INVISIBLE);
+    binding.inScreen.setVisibility(position == videoSubtitleIndex ? View.VISIBLE : View.INVISIBLE);
     binding.startAndEnd.setText(subtitle.getStartTime() + " | " + subtitle.getEndTime());
 
     binding.dragHandler.setOnLongClickListener(
@@ -69,8 +69,8 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     this.touchHelper = touchHelper;
   }
 
-  public void setSubtitles(List<Subtitle> subtitles) {
-    this.subtitles = subtitles;
+  public void setSubtitles(List<Subtitle> newList) {
+    this.subtitles = newList;
     notifyDataSetChanged();
   }
 
@@ -78,9 +78,19 @@ public class SubtitleListAdapter extends RecyclerView.Adapter<SubtitleListAdapte
     this.isVideoPlaying = isVideoPlaying;
   }
 
-  public void setInScreenSubtitleIndex(int index) {
-    this.inScreenSubtitleIndex = index;
-    notifyDataSetChanged();
+  public void setVideoSubtitleIndex(int index) {
+    if (this.videoSubtitleIndex != index) {
+      int lastVideoSubtitleIndex = this.videoSubtitleIndex;
+      this.videoSubtitleIndex = index;
+
+      if (lastVideoSubtitleIndex >= 0) {
+        notifyItemChanged(lastVideoSubtitleIndex);
+      }
+
+      if (index >= 0) {
+        notifyItemChanged(index);
+      }
+    }
   }
 
   public interface SubtitleListener {

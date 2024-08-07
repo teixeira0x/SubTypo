@@ -32,6 +32,9 @@
         <activity
             android:name=".activities.PreferencesActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.CrashActivity"
+            android:exported="false" />
 
     </application>
 </manifest>

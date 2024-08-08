@@ -11,10 +11,12 @@
 <img width="150" height="350" src="./screenshots/screenshot1.png">
 <img width="150" height="350" src="./screenshots/screenshot2.png">
 <img width="150" height="350" src="./screenshots/screenshot3.png">
+<img width="150" height="350" src="./screenshots/screenshot4.png">
+<img width="150" height="350" src="./screenshots/screenshot5.png">
 
 </p>
 
-<b>Advantages of using SubTypo 📽</b>
+<b>📽 Advantages of using SubTypo</b>
 
 * Does not collect any of your data
 * Completely free
@@ -23,7 +25,7 @@
 
 <hr/>
 
-## Contributors 🌐
+## 🌐 Contributors
 
 Commits should always be made to the `dev` branch, the `main` branch is protected and will only contain release commits. 
 

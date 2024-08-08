@@ -18,15 +18,18 @@ package com.teixeira.subtitles.ui;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.widget.VideoView;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.Player;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import com.blankj.utilcode.util.ThreadUtils;
 
-public class SubVideoView extends VideoView {
+public class SubVideoView extends PlayerView {
 
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 
-  private OnEveryMilliSecondListener onEveryMilliSecondListener;
-  private Runnable onEveryMilliSecondCallback;
+  private Player.Listener listener;
+  private ExoPlayer player;
 
   public SubVideoView(Context context) {
     this(context, null);
@@ -39,36 +42,66 @@ public class SubVideoView extends VideoView {
   public SubVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
-    onEveryMilliSecondCallback = this::onEveryMilliSecond;
+    player = new ExoPlayer.Builder(context).build();
+    setUseController(false);
+    setPlayer(player);
   }
 
-  @Override
-  public void start() {
-    super.start();
+  public void setPlayerListener(Player.Listener listener) {
+    this.listener = listener;
 
-    if (onEveryMilliSecondListener != null) {
-      mainHandler.removeCallbacks(onEveryMilliSecondCallback);
-      mainHandler.post(onEveryMilliSecondCallback);
+    if (listener != null) {
+      player.addListener(listener);
     }
   }
 
-  public void setOnEveryMilliSecondListener(OnEveryMilliSecondListener onEveryMilliSecondListener) {
-    this.onEveryMilliSecondListener = onEveryMilliSecondListener;
+  public void setVideoPath(String path) {
+    player.setMediaItem(MediaItem.fromUri(path));
+    player.prepare();
   }
 
-  private void onEveryMilliSecond() {
-
-    if (onEveryMilliSecondListener != null) {
-      onEveryMilliSecondListener.onEveryMilliSecond(getCurrentPosition());
-    }
-
-    if (isPlaying()) {
-      mainHandler.removeCallbacks(onEveryMilliSecondCallback);
-      mainHandler.postDelayed(onEveryMilliSecondCallback, 1L);
+  public void setPlaying(boolean isPlaying) {
+    if (isPlaying) {
+      play();
+    } else {
+      pause();
     }
   }
 
-  public interface OnEveryMilliSecondListener {
-    void onEveryMilliSecond(int currentVideoPosition);
+  public void play() {
+    player.play();
+  }
+
+  public void pause() {
+    player.pause();
+  }
+
+  public void stop() {
+    player.stop();
+  }
+
+  public void seekBackward() {
+    player.seekBack();
+  }
+
+  public void seekFoward() {
+    player.seekForward();
+  }
+
+  public void seekTo(long position) {
+    player.seekTo(position);
+  }
+
+  public long getCurrentPosition() {
+    return player.getCurrentPosition();
+  }
+
+  public void release() {
+    if (listener != null) {
+      player.removeListener(listener);
+    }
+    player.release();
+    listener = null;
+    player = null;
   }
 }

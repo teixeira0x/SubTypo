@@ -16,7 +16,6 @@
 package com.teixeira.subtitles.activities;
 
 import android.content.res.Configuration;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +30,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.os.BundleCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.Player;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileIOUtils;
@@ -52,14 +52,17 @@ import com.teixeira.subtitles.ui.ExportWindow;
 import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
+import com.teixeira.subtitles.utils.UiUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel;
 import com.teixeira.subtitles.viewmodels.VideoViewModel;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ProjectActivity extends BaseActivity implements SubtitleListAdapter.SubtitleListener {
 
   public static final String KEY_PROJECT = "project";
+  public static final String KEY_UNDO_MANAGER = "undo_manager";
 
   private static final Handler mainHandler = ThreadUtils.getMainHandler();
 
@@ -70,10 +73,13 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
   private VideoViewModel videoViewModel;
   private SubtitlesViewModel subtitlesViewModel;
   private SubtitleListAdapter subtitleListAdapter;
+  private ProgressTracker progressTracker;
   private Runnable saveProjectCallback;
 
   private ActivityResultLauncher<String[]> subtitleDocumentPicker;
   private ExportWindow exportWindow;
+
+  private boolean isDestroying = false;
 
   @Override
   protected View bindView() {
@@ -102,12 +108,19 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
         registerForActivityResult(
             new ActivityResultContracts.OpenDocument(), this::onPickSubtitleFile);
     exportWindow = new ExportWindow(this, subtitlesViewModel);
+    progressTracker = new ProgressTracker();
     saveProjectCallback = this::saveProjectAsync;
+
+    if (savedInstanceState != null) {
+      subtitlesViewModel.setUndoManager(
+          BundleCompat.getParcelable(savedInstanceState, KEY_UNDO_MANAGER, UndoManager.class));
+    }
 
     if (!Preferences.isDevelopmentUndoAndRedoEnabled()) {
       binding.videoControllerContent.redo.setVisibility(View.GONE);
       binding.videoControllerContent.undo.setVisibility(View.GONE);
     }
+    subtitlesViewModel.setUndoManagerEnabled(Preferences.isDevelopmentUndoAndRedoEnabled());
     setVideoViewModelObservers();
     setSubtitlesViewModelObservers();
   }
@@ -121,13 +134,12 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
     AlertDialog dialog = builder.show();
 
     TaskExecutor.executeAsyncProvideError(
-        () -> {
-          setListeners();
-
-          return project.getSubtitles();
-        },
+        () -> project.getSubtitles(),
         (result, throwable) -> {
           dialog.dismiss();
+          if (isDestroying) {
+            return;
+          }
           if (throwable != null) {
             DialogUtils.createSimpleDialog(
                     this, getString(R.string.error_loading_project), throwable.toString())
@@ -137,6 +149,7 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
             return;
           }
           binding.videoContent.videoView.setVideoPath(project.getVideoPath());
+          binding.videoContent.videoView.seekTo(videoViewModel.getCurrentPosition());
           subtitlesViewModel.pushStackToUndoManager(result);
           subtitlesViewModel.setSubtitles(result, false);
           binding.subtitles.setLayoutManager(new LinearLayoutManager(this));
@@ -149,7 +162,15 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
           touchHelper.attachToRecyclerView(binding.subtitles);
 
           subtitleListAdapter.setTouchHelper(touchHelper);
+          setListeners();
         });
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outputState) {
+    super.onSaveInstanceState(outputState);
+
+    outputState.putParcelable(KEY_UNDO_MANAGER, subtitlesViewModel.getUndoManager());
   }
 
   @Override
@@ -177,36 +198,29 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-
-    mainHandler.removeCallbacks(saveProjectCallback);
-    saveProjectCallback = null;
-
+    isDestroying = true;
+    videoViewModel.setPrepared(false);
+    binding.videoContent.videoView.release();
     projectManager.destroy();
     exportWindow.destroy();
+    super.onDestroy();
+
+    mainHandler.removeCallbacks(progressTracker, saveProjectCallback);
+    progressTracker = null;
+    saveProjectCallback = null;
     binding = null;
   }
 
   @Override
   protected void onPause() {
-    videoViewModel.setCurrentVideoPosition(
-        binding.videoContent.videoView.getCurrentPosition(), false);
     videoViewModel.pauseVideo();
     super.onPause();
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
-
-    videoViewModel.setCurrentVideoPosition(videoViewModel.getCurrentVideoPosition(), true);
-  }
-
-  @Override
   public void onSubtitleClickListener(View view, int index, Subtitle subtitle) {
     videoViewModel.pauseVideo();
-    SubtitleEditorSheetFragment.newInstance(
-            binding.videoContent.videoView.getCurrentPosition(), index, subtitle)
+    SubtitleEditorSheetFragment.newInstance(videoViewModel.getCurrentPosition(), index, subtitle)
         .show(getSupportFragmentManager(), null);
   }
 
@@ -217,28 +231,35 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
   }
 
   private void setVideoViewModelObservers() {
-    videoViewModel.observeCurrentVideoPosition(
+    videoViewModel.observeIsPrepared(
         this,
-        currentVideoPositionPair -> {
-          int currentVideoPosition = currentVideoPositionPair.first;
-          boolean seekTo = currentVideoPositionPair.second;
+        isPrepared -> {
+          UiUtils.setImageEnabled(binding.videoControllerContent.skipBackward, isPrepared);
+          UiUtils.setImageEnabled(binding.videoControllerContent.play, isPrepared);
+          UiUtils.setImageEnabled(binding.videoControllerContent.skipFoward, isPrepared);
+          UiUtils.setImageEnabled(binding.videoControllerContent.addSubtitle, isPrepared);
+        });
+    videoViewModel.observeCurrentPosition(
+        this,
+        currentPositionPair -> {
+          long currentVideoPosition = currentPositionPair.first;
+          boolean seekTo = currentPositionPair.second;
           if (seekTo) {
             binding.videoContent.videoView.seekTo(currentVideoPosition);
           }
           updateVideoUI(currentVideoPosition);
         });
 
-    videoViewModel.observeIsVideoPlaying(
+    videoViewModel.observeIsPlaying(
         this,
-        isVideoPlaying -> {
-          if (isVideoPlaying) {
-            binding.videoControllerContent.play.setImageResource(R.drawable.ic_pause);
-            binding.videoContent.videoView.start();
-          } else {
-            binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
-            binding.videoContent.videoView.pause();
+        isPlaying -> {
+          if (isDestroying) {
+            return;
           }
-          subtitleListAdapter.setVideoPlaying(isVideoPlaying);
+          binding.videoControllerContent.play.setImageResource(
+              isPlaying ? R.drawable.ic_pause : R.drawable.ic_play);
+          binding.videoContent.videoView.setPlaying(isPlaying);
+          subtitleListAdapter.setVideoPlaying(isPlaying);
         });
   }
 
@@ -252,27 +273,15 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
           binding.noSubtitles.setVisibility(subtitles.isEmpty() ? View.VISIBLE : View.GONE);
           subtitleListAdapter.setSubtitles(subtitles);
           binding.timeLine.setSubtitles(subtitles);
-          updateVideoUI(videoViewModel.getCurrentVideoPosition());
+          updateVideoUI(videoViewModel.getCurrentPosition());
         });
 
     subtitlesViewModel.observeUpdateUndoButtons(
         this,
         unused -> {
           UndoManager undoManager = subtitlesViewModel.getUndoManager();
-          binding
-              .videoControllerContent
-              .redo
-              .animate()
-              .alpha(undoManager.canRedo() ? 1.0f : 0.5f)
-              .start();
-          binding.videoControllerContent.redo.setClickable(undoManager.canRedo());
-          binding
-              .videoControllerContent
-              .undo
-              .animate()
-              .alpha(undoManager.canUndo() ? 1.0f : 0.5f)
-              .start();
-          binding.videoControllerContent.undo.setClickable(undoManager.canUndo());
+          UiUtils.setImageEnabled(binding.videoControllerContent.redo, undoManager.canRedo());
+          UiUtils.setImageEnabled(binding.videoControllerContent.undo, undoManager.canUndo());
         });
 
     subtitlesViewModel.observeVideoSubtitleIndex(
@@ -292,13 +301,30 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
   }
 
   private void setListeners() {
-    binding.videoContent.videoView.setOnPreparedListener(this::onVideoPrepared);
-    binding.videoContent.videoView.setOnCompletionListener(
-        player -> binding.videoControllerContent.play.setImageResource(R.drawable.ic_play));
+    binding.videoContent.videoView.setPlayerListener(
+        new Player.Listener() {
+          @Override
+          public void onPlaybackStateChanged(int state) {
+            if (state == Player.STATE_READY) {
+              onVideoPrepared(binding.videoContent.videoView.getPlayer());
+            } else if (state == Player.STATE_ENDED) {
+              binding.videoControllerContent.play.setImageResource(R.drawable.ic_play);
+            }
+          }
 
-    binding.videoContent.videoView.setOnEveryMilliSecondListener(
-        currentVideoPosition ->
-            videoViewModel.setCurrentVideoPosition(currentVideoPosition, false));
+          @Override
+          public void onPositionDiscontinuity(
+              Player.PositionInfo oldPosition, Player.PositionInfo newPosition, int reason) {
+            videoViewModel.setCurrentPosition(newPosition.contentPositionMs, false);
+          }
+
+          @Override
+          public void onIsPlayingChanged(boolean isPlaying) {
+            if (isPlaying && progressTracker != null) {
+              mainHandler.post(progressTracker);
+            }
+          }
+        });
 
     binding.videoControllerContent.seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
@@ -308,13 +334,13 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-              videoViewModel.setCurrentVideoPosition(progress, true);
+              videoViewModel.setCurrentPosition(progress, true);
             }
           }
 
           @Override
           public void onStartTrackingTouch(SeekBar seekBar) {
-            wasPlaying = videoViewModel.isVideoPlaying();
+            wasPlaying = videoViewModel.isPlaying();
             if (wasPlaying) videoViewModel.pauseVideo();
           }
 
@@ -325,30 +351,32 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
         });
 
     binding.videoControllerContent.play.setOnClickListener(
-        v -> videoViewModel.setVideoPlaying(!videoViewModel.isVideoPlaying()));
+        v -> videoViewModel.setPlaying(!videoViewModel.isPlaying()));
 
     binding.videoControllerContent.undo.setOnClickListener(v -> subtitlesViewModel.undo());
     binding.videoControllerContent.redo.setOnClickListener(v -> subtitlesViewModel.redo());
-    binding.videoControllerContent.skipBackward.setOnClickListener(v -> videoViewModel.back5sec());
-    binding.videoControllerContent.skipFoward.setOnClickListener(v -> videoViewModel.skip5sec());
+    binding.videoControllerContent.skipBackward.setOnClickListener(
+        v -> binding.videoContent.videoView.seekBackward());
+    binding.videoControllerContent.skipFoward.setOnClickListener(
+        v -> binding.videoContent.videoView.seekFoward());
     binding.videoControllerContent.addSubtitle.setOnClickListener(
         v -> {
           videoViewModel.pauseVideo();
-          SubtitleEditorSheetFragment.newInstance(
-                  binding.videoContent.videoView.getCurrentPosition())
+          SubtitleEditorSheetFragment.newInstance(videoViewModel.getCurrentPosition())
               .show(getSupportFragmentManager(), null);
         });
   }
 
-  private void onVideoPrepared(MediaPlayer player) {
-    int videoDuration = player.getDuration();
-    binding.videoControllerContent.videoDuration.setText(VideoUtils.getTime(videoDuration));
-    binding.timeLine.setVideoDuration(videoDuration);
-    binding.videoControllerContent.seekBar.setMax(videoDuration);
-    videoViewModel.setVideoDuration(videoDuration);
+  private void onVideoPrepared(Player player) {
+    long duration = player.getDuration();
 
-    int width = player.getVideoWidth();
-    int height = player.getVideoHeight();
+    binding.videoControllerContent.videoDuration.setText(VideoUtils.getTime(duration));
+    binding.videoControllerContent.seekBar.setMax((int) duration);
+    binding.timeLine.setDuration(duration);
+    videoViewModel.setDuration(duration);
+
+    int width = player.getVideoSize().width;
+    int height = player.getVideoSize().height;
 
     if (width > height) {
       binding.videoContent.videoView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -358,14 +386,15 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
       binding.videoContent.getRoot().getLayoutParams().height = SizeUtils.dp2px(350f);
       binding.videoContent.getRoot().requestLayout();
     }
-    updateVideoUI(videoViewModel.getCurrentVideoPosition());
+    updateVideoUI(videoViewModel.getCurrentPosition());
+    videoViewModel.setPrepared(true);
   }
 
-  private void updateVideoUI(int currentVideoPosition) {
+  private void updateVideoUI(long currentPosition) {
     binding.videoControllerContent.currentVideoPosition.setText(
-        VideoUtils.getTime(currentVideoPosition));
-    binding.videoControllerContent.seekBar.setProgress(currentVideoPosition);
-    binding.timeLine.setCurrentVideoPosition(currentVideoPosition);
+        VideoUtils.getTime(currentPosition));
+    binding.videoControllerContent.seekBar.setProgress((int) currentPosition);
+    binding.timeLine.setCurrentPosition(currentPosition);
 
     List<Subtitle> subtitles = subtitlesViewModel.getSubtitles();
     boolean subtitleFound = false;
@@ -374,7 +403,7 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
       long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
       long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
-      if (currentVideoPosition >= startTime && currentVideoPosition <= endTime) {
+      if (currentPosition >= startTime && currentPosition <= endTime) {
         binding.videoContent.subtitleView.setSubtitle(subtitle);
         binding.videoContent.subtitleView.setVisibility(View.VISIBLE);
         subtitlesViewModel.setVideoSubtitleIndex(i);
@@ -409,6 +438,9 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
               () -> project.getSubtitleFormat().toList(FileUtil.readFileContent(uri)),
               (result, throwable) -> {
                 dialog.dismiss();
+                if (isDestroying) {
+                  return;
+                }
                 if (throwable != null) {
                   DialogUtils.createSimpleDialog(
                           this, getString(R.string.error_reading_subtitles), throwable.toString())
@@ -439,5 +471,22 @@ public class ProjectActivity extends BaseActivity implements SubtitleListAdapter
                 .show();
           }
         });
+  }
+
+  class ProgressTracker implements Runnable {
+
+    @Override
+    public void run() {
+
+      if (isDestroying) {
+        return;
+      }
+
+      videoViewModel.setCurrentPosition(binding.videoContent.videoView.getCurrentPosition(), false);
+
+      if (videoViewModel.isPlaying() && progressTracker != null) {
+        mainHandler.post(progressTracker);
+      }
+    }
   }
 }

@@ -20,8 +20,6 @@ import android.os.Parcelable;
 import androidx.core.os.ParcelCompat;
 import com.teixeira.subtitles.models.Subtitle;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -187,10 +185,14 @@ public class UndoManager implements Parcelable {
           @Override
           public StackItem createFromParcel(Parcel parcel) {
             StackItem item = new StackItem();
-            item.subtitles =
-                (Subtitle[])
-                    ParcelCompat.readArray(
-                        parcel, StackItem.class.getClassLoader(), Subtitle.class);
+            int length = parcel.readInt();
+            Subtitle[] subtitles = new Subtitle[length];
+            for (int i = 0; i < length; i++) {
+              subtitles[i] =
+                  ParcelCompat.readParcelable(
+                      parcel, StackItem.class.getClassLoader(), Subtitle.class);
+            }
+            item.subtitles = subtitles;
             return item;
           }
 
@@ -239,7 +241,11 @@ public class UndoManager implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-      parcel.writeArray(subtitles);
+      int length = subtitles.length;
+      parcel.writeInt(length);
+      for (int i = 0; i < length; i++) {
+        parcel.writeParcelable(subtitles[i], flags);
+      }
     }
   }
 }

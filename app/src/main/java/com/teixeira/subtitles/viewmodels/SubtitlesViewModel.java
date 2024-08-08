@@ -11,21 +11,34 @@ import java.util.List;
 
 public class SubtitlesViewModel extends ViewModel {
 
-  private final MutableLiveData<UndoManager> undoManagerLiveData =
-      new MutableLiveData<>(new UndoManager(15));
+  private final MutableLiveData<UndoManager> undoManagerLiveData = new MutableLiveData<>();
   private final MutableLiveData<Boolean> updateUndoButtonsLiveData = new MutableLiveData<>();
 
-  private final MutableLiveData<List<Subtitle>> subtitlesLiveData =
-      new MutableLiveData<>();
+  private final MutableLiveData<List<Subtitle>> subtitlesLiveData = new MutableLiveData<>();
   private final MutableLiveData<Integer> videoSubtitleIndexLiveData = new MutableLiveData<>(-1);
   private final MutableLiveData<Integer> scrollToLiveData = new MutableLiveData<>(0);
 
   private final MutableLiveData<Boolean> saveSubtitlesLiveData = new MutableLiveData<>();
 
   public UndoManager getUndoManager() {
-    return undoManagerLiveData.getValue();
+    UndoManager undoManager = undoManagerLiveData.getValue();
+    if (undoManager == null) {
+      undoManager = new UndoManager(15);
+      setUndoManager(undoManager);
+    }
+    return undoManager;
+  }
+
+  public void setUndoManager(UndoManager undoManager) {
+    undoManagerLiveData.setValue(undoManager);
   }
   
+  public void setUndoManagerEnabled(boolean enabled) {
+    UndoManager undoManager = getUndoManager();
+    undoManager.setEnabled(enabled);
+    setUndoManager(undoManager);
+  }
+
   public void setSubtitles(List<Subtitle> subtitles) {
     setSubtitles(subtitles, true);
   }
@@ -107,7 +120,7 @@ public class SubtitlesViewModel extends ViewModel {
     if (subtitles != null) {
       setSubtitles(subtitles);
     }
-    undoManagerLiveData.setValue(undoManager);
+    setUndoManager(undoManager);
     updateUndoButtons();
   }
 
@@ -117,14 +130,14 @@ public class SubtitlesViewModel extends ViewModel {
     if (subtitles != null) {
       setSubtitles(subtitles);
     }
-    undoManagerLiveData.setValue(undoManager);
+    setUndoManager(undoManager);
     updateUndoButtons();
   }
 
   public void pushStackToUndoManager(List<Subtitle> subtitles) {
-    UndoManager undoManager = undoManagerLiveData.getValue();
+    UndoManager undoManager = getUndoManager();
     undoManager.pushStack(subtitles);
-    undoManagerLiveData.setValue(undoManager);
+    setUndoManager(undoManager);
     updateUndoButtons();
   }
 

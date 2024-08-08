@@ -1,5 +1,7 @@
 [versions]
 
+exoplayer-version = "1.4.0"
+
 [libraries]
 
 # Android
@@ -10,6 +12,9 @@ androidx-annotation = { module = "androidx.annotation:annotation", version = "1.
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-core = { module = "androidx.core:core", version = "1.13.1" }
 androidx-preference = { module = "androidx.preference:preference", version = "1.2.1" }
+androidx-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "exoplayer-version" }
+androidx-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "exoplayer-version" }
+androidx-exoplayer-ui = { module = "androidx.media3:media3-ui", version.ref = "exoplayer-version" }
 
 # Google
 google-gson = { module = "com.google.code.gson:gson", version = "2.10.1" }

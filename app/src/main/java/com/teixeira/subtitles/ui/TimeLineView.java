@@ -45,8 +45,8 @@ public class TimeLineView extends View {
   private float scrollX;
 
   private HandlerMotionListener handlerMotionListener;
-  private int videoDuration;
-  private int currentVideoPosition;
+  private long duration;
+  private long currentPosition;
   private List<Subtitle> subtitles;
 
   public TimeLineView(Context context) {
@@ -67,8 +67,8 @@ public class TimeLineView extends View {
     scroller = new Scroller(context);
     scrollX = 0;
 
-    videoDuration = 0;
-    currentVideoPosition = 0;
+    duration = 0;
+    currentPosition = 0;
     subtitles = null;
   }
 
@@ -159,8 +159,8 @@ public class TimeLineView extends View {
    *
    * @param duration The new duration.
    */
-  public void setVideoDuration(int duration) {
-    this.videoDuration = duration;
+  public void setDuration(long duration) {
+    this.duration = duration;
     invalidate();
   }
 
@@ -169,8 +169,8 @@ public class TimeLineView extends View {
    *
    * @param currentVideoPosition New video current position.
    */
-  public void setCurrentVideoPosition(int currentVideoPosition) {
-    this.currentVideoPosition = currentVideoPosition;
+  public void setCurrentPosition(long currentPosition) {
+    this.currentPosition = currentPosition;
     invalidate();
   }
 
@@ -204,7 +204,7 @@ public class TimeLineView extends View {
     float x = 0;
     float y = 0;
 
-    long seconds = videoDuration / 1000;
+    long seconds = duration / 1000;
     for (int i = 0; i <= seconds; i++) {
 
       x = ((float) i / seconds * width) * zoom - scrollX;
@@ -247,7 +247,7 @@ public class TimeLineView extends View {
     path.close();
     canvas.drawPath(path, paint);
 
-    scrollX = ((float) currentVideoPosition / videoDuration) * width * zoom - (width / 2);
+    scrollX = ((float) currentPosition / duration) * width * zoom - (width / 2);
     startScroll(scroller.getCurrX(), scrollX, 200);
   }
 
@@ -273,8 +273,8 @@ public class TimeLineView extends View {
       long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
       long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
 
-      float left = ((float) startTime / videoDuration * width) * zoom - scrollX;
-      float right = ((float) endTime / videoDuration * width) * zoom - scrollX;
+      float left = ((float) startTime / duration * width) * zoom - scrollX;
+      float right = ((float) endTime / duration * width) * zoom - scrollX;
 
       canvas.drawRect(new RectF(left, 0, right, height), paint);
     }

@@ -80,7 +80,8 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
     pm.setOnMenuItemClickListener(
         item -> {
           if (item.getItemId() == 0) {
-            ConfigureProjectSheetFragment.newInstance(project).show(getChildFragmentManager(), null);
+            ConfigureProjectSheetFragment.newInstance(project)
+                .show(getChildFragmentManager(), null);
           } else deleteProject(project);
           return true;
         });
@@ -91,6 +92,9 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
     TaskExecutor.executeAsync(
         () -> ProjectRepository.fetchProjects(),
         (result) -> {
+          if (binding == null) {
+            return;
+          }
           List<Project> projects = (List<Project>) result;
           binding.noProjects.setVisibility(projects.isEmpty() ? View.VISIBLE : View.GONE);
           adapter.setProjects(projects);

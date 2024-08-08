@@ -9,71 +9,66 @@ import androidx.lifecycle.ViewModel;
 
 public class VideoViewModel extends ViewModel {
 
-  private final MutableLiveData<Pair<Integer, Boolean>> currentVideoPositionLiveData =
-      new MutableLiveData<>(Pair.create(0, false));
-  private final MutableLiveData<Integer> videoDurationLiveData = new MutableLiveData<>(0);
-  private final MutableLiveData<Boolean> isVideoPlayingLiveData = new MutableLiveData<>(false);
+  private final MutableLiveData<Boolean> isPreparedLiveData = new MutableLiveData<>(false);
+  private final MutableLiveData<Pair<Long, Boolean>> currentPositionLiveData =
+      new MutableLiveData<>(Pair.create(Long.valueOf(0), false));
+  private final MutableLiveData<Long> durationLiveData = new MutableLiveData<>(Long.valueOf(0));
+  private final MutableLiveData<Boolean> isPlayingLiveData = new MutableLiveData<>(false);
 
-  public void setCurrentVideoPosition(int currentVideoPosition, boolean seekTo) {
-    currentVideoPositionLiveData.setValue(Pair.create(currentVideoPosition, seekTo));
+  public void setPrepared(boolean isPrepared) {
+    isPreparedLiveData.setValue(isPrepared);
   }
 
-  public int getCurrentVideoPosition() {
-    return this.currentVideoPositionLiveData.getValue().first;
+  public boolean isPrepared() {
+    return isPreparedLiveData.getValue();
   }
 
-  public LiveData<Pair<Integer, Boolean>> getCurrentVideoPositionLiveData() {
-    return this.currentVideoPositionLiveData;
+  public void setCurrentPosition(long currentPosition, boolean seekTo) {
+    currentPositionLiveData.setValue(Pair.create(currentPosition, seekTo));
   }
 
-  public void observeCurrentVideoPosition(
-      LifecycleOwner lifecycleOwner, Observer<Pair<Integer, Boolean>> observer) {
-    currentVideoPositionLiveData.observe(lifecycleOwner, observer);
+  public long getCurrentPosition() {
+    return this.currentPositionLiveData.getValue().first;
   }
 
-  public void back5sec() {
-    int seek = getCurrentVideoPosition() - 5000;
-    if (getCurrentVideoPosition() <= 5000) {
-      seek = 0;
-    }
-
-    setCurrentVideoPosition(seek, true);
+  public LiveData<Pair<Long, Boolean>> getCurrentPositionLiveData() {
+    return this.currentPositionLiveData;
   }
 
-  public void skip5sec() {
-    int seek = getCurrentVideoPosition() + 5000;
-    if (seek > videoDurationLiveData.getValue()) {
-      seek = videoDurationLiveData.getValue();
-    }
-
-    setCurrentVideoPosition(seek, true);
+  public void observeCurrentPosition(
+      LifecycleOwner lifecycleOwner, Observer<Pair<Long, Boolean>> observer) {
+    currentPositionLiveData.observe(lifecycleOwner, observer);
   }
 
   public void playVideo() {
-    setVideoPlaying(true);
+    setPlaying(true);
   }
 
   public void pauseVideo() {
-    setVideoPlaying(false);
+    setPlaying(false);
   }
 
-  public boolean isVideoPlaying() {
-    return this.isVideoPlayingLiveData.getValue();
+  public boolean isPlaying() {
+    return this.isPlayingLiveData.getValue();
   }
 
   public LiveData<Boolean> isVideoPlayingLiveData() {
-    return this.isVideoPlayingLiveData;
+    return this.isPlayingLiveData;
   }
 
-  public void setVideoPlaying(boolean isVideoPlaying) {
-    isVideoPlayingLiveData.setValue(isVideoPlaying);
+  public void setPlaying(boolean isVideoPlaying) {
+    isPlayingLiveData.setValue(isVideoPlaying);
+  }
+  
+  public void observeIsPrepared(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+    isPreparedLiveData.observe(lifecycleOwner, observer);
   }
 
-  public void observeIsVideoPlaying(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
-    isVideoPlayingLiveData.observe(lifecycleOwner, observer);
+  public void observeIsPlaying(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+    isPlayingLiveData.observe(lifecycleOwner, observer);
   }
 
-  public void setVideoDuration(int videoDuration) {
-    videoDurationLiveData.setValue(videoDuration);
+  public void setDuration(long videoDuration) {
+    durationLiveData.setValue(videoDuration);
   }
 }

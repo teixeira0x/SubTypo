@@ -57,9 +57,12 @@ dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core)
   implementation(libs.androidx.preference)
+  implementation(libs.androidx.exoplayer)
+  implementation(libs.androidx.exoplayer.dash)
+  implementation(libs.androidx.exoplayer.ui)
 
   implementation(libs.google.material)
-  implementation(libs.google.gson)
-
+  //implementation(libs.google.gson)
+  
   implementation(libs.common.utilcode)
 }

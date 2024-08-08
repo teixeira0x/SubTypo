@@ -1,13 +1,10 @@
 package com.teixeira.subtitles.fragments.sheets;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import androidx.core.os.BundleCompat;
 import androidx.fragment.app.DialogFragment;
@@ -16,7 +13,6 @@ import com.blankj.utilcode.util.ClipboardUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.databinding.FragmentSubtitleEditorBinding;
 import com.teixeira.subtitles.models.Subtitle;
@@ -36,18 +32,18 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
 
   private Subtitle previewSubtitile;
   private Subtitle editingSubtitle;
+  private long currentPosition;
   private int index = -1;
-  private int currentVideoPosition;
 
-  public static SubtitleEditorSheetFragment newInstance(int currentVideoPosition) {
-    return newInstance(currentVideoPosition, -1, null);
+  public static SubtitleEditorSheetFragment newInstance(long currentPosition) {
+    return newInstance(currentPosition, -1, null);
   }
 
   public static SubtitleEditorSheetFragment newInstance(
-      int currentVideoPosition, int index, Subtitle editingSubtitle) {
+      long currentPosition, int index, Subtitle editingSubtitle) {
     SubtitleEditorSheetFragment fragment = new SubtitleEditorSheetFragment();
     Bundle args = new Bundle();
-    args.putInt(KEY_CURRENT_VIDEO_POSITION, currentVideoPosition);
+    args.putLong(KEY_CURRENT_VIDEO_POSITION, currentPosition);
     if (editingSubtitle != null) {
       args.putParcelable(KEY_SELECTED_SUBTITLE, editingSubtitle);
       args.putInt(KEY_SELECTED_SUBTITLE_INDEX, index);
@@ -85,7 +81,7 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
       throw new IllegalArgumentException("Arguments cannot be null");
     }
 
-    currentVideoPosition = args.getInt(KEY_CURRENT_VIDEO_POSITION);
+    currentPosition = args.getLong(KEY_CURRENT_VIDEO_POSITION);
 
     if (args.containsKey(KEY_SELECTED_SUBTITLE) && args.containsKey(KEY_SELECTED_SUBTITLE_INDEX)) {
       editingSubtitle = BundleCompat.getParcelable(args, KEY_SELECTED_SUBTITLE, Subtitle.class);
@@ -93,8 +89,8 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
     } else {
       editingSubtitle =
           new Subtitle(
-              VideoUtils.getTime(currentVideoPosition),
-              VideoUtils.getTime(currentVideoPosition + 2000),
+              VideoUtils.getTime(currentPosition),
+              VideoUtils.getTime(currentPosition + 2000),
               "");
       index = -1;
 
@@ -103,9 +99,9 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
     previewSubtitile = editingSubtitle.clone();
 
     binding.currentVideoPosition.setText(
-        getString(R.string.proj_current_video_position, VideoUtils.getTime(currentVideoPosition)));
+        getString(R.string.proj_current_video_position, VideoUtils.getTime(currentPosition)));
     binding.currentVideoPosition.setOnClickListener(
-        v -> ClipboardUtils.copyText(VideoUtils.getTime(currentVideoPosition)));
+        v -> ClipboardUtils.copyText(VideoUtils.getTime(currentPosition)));
     binding.deleteSubtitle.setOnClickListener(v -> showAlertToDeleteSubtitle());
 
     binding.tieStartTime.setText(editingSubtitle.getStartTime());
@@ -209,7 +205,7 @@ public class SubtitleEditorSheetFragment extends DialogFragment {
 
       long subStartTime = VideoUtils.getMilliSeconds(sub.getStartTime());
 
-      if (subStartTime >= currentVideoPosition) {
+      if (subStartTime >= currentPosition) {
         index = i;
         break;
       }

@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.UriUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.teixeira.subtitles.R;
-import com.teixeira.subtitles.activities.ProjectActivity;
+import com.teixeira.subtitles.activities.project.ProjectActivity;
 import com.teixeira.subtitles.callbacks.UpdateProjectsCallback;
 import com.teixeira.subtitles.databinding.FragmentConfigureProjectBinding;
 import com.teixeira.subtitles.models.Project;

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
-import com.teixeira.subtitles.activities.ProjectActivity;
+import com.teixeira.subtitles.activities.project.ProjectActivity;
 import com.teixeira.subtitles.adapters.ProjectListAdapter;
 import com.teixeira.subtitles.databinding.FragmentProjectsBinding;
 import com.teixeira.subtitles.fragments.sheets.ConfigureProjectSheetFragment;

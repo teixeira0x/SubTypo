@@ -15,6 +15,10 @@ public class FileUtil {
       new File(App.getInstance().getExternalFilesDir(null).getAbsolutePath());
   public static final File PROJECTS_DIR = new File(DATA_DIR, "projects");
 
+  public static String getFileName(String path) {
+    return path.substring(path.lastIndexOf("/") + 1);
+  }
+
   public static String readFileContent(Uri uri) throws IOException {
     InputStream inputStream = App.getInstance().getContentResolver().openInputStream(uri);
     StringBuilder sb = new StringBuilder();

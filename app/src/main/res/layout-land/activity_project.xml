@@ -46,7 +46,7 @@
 
         <include
             layout="@layout/layout_video_controller_content"
-            android:id="@+id/video_controller_content" />
+            android:id="@+id/controller_content" />
 
     </FrameLayout>
 

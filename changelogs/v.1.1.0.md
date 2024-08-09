@@ -28,6 +28,6 @@ The subtitle saving system has been updated from (.json) to project subtitle for
 - Video from an existing project does not change when choosing a new one.
 - VideoView covering the entire screen in "portrait" videos.
 
-**Full Changelog**: https://github.com/teixeira0x/subtitles/commits/v1.1.0
-
 <hr/>
+
+**Full Changelog**: https://github.com/teixeira0x/SubTypo/compare/v1.0...v1.1.0

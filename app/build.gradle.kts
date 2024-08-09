@@ -7,12 +7,19 @@ android {
   namespace = "com.teixeira.subtitles"
   compileSdk = 34
 
+  dependenciesInfo {
+    // Disables dependency metadata when building APKs.
+    includeInApk = false
+    // Disables dependency metadata when building Android App Bundles.
+    includeInBundle = false
+  }
+
   defaultConfig {
     applicationId = "com.teixeira.subtitles"
     minSdk = 24
     targetSdk = 34
-    versionCode = 1
-    versionName = "1.1.0"
+    versionCode = 2
+    versionName = "1.1.1"
 
     vectorDrawables { useSupportLibrary = true }
   }
@@ -50,7 +57,6 @@ android {
     buildConfig = true
   }
 }
-
 
 dependencies {
   coreLibraryDesugaring(libs.android.desugar)

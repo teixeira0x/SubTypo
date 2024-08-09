@@ -58,7 +58,6 @@ android {
   }
 }
 
-
 dependencies {
   coreLibraryDesugaring(libs.android.desugar)
   implementation(libs.androidx.appcompat)

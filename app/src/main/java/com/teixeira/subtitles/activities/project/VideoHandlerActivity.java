@@ -83,6 +83,8 @@ abstract class VideoHandlerActivity extends BaseProjectActivity {
               onVideoPrepared(binding.videoContent.videoView.getPlayer());
             } else if (state == Player.STATE_ENDED) {
               binding.controllerContent.play.setImageResource(R.drawable.ic_play);
+              videoViewModel.setCurrentPosition(0, true);
+              videoViewModel.pauseVideo();
             }
           }
 

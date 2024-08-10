@@ -21,7 +21,6 @@ import com.teixeira.subtitles.databinding.FragmentConfigureProjectBinding;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectRepository;
 import com.teixeira.subtitles.tasks.TaskExecutor;
-import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.io.File;
@@ -44,8 +43,11 @@ public class ConfigureProjectSheetFragment extends DialogFragment {
 
   private ActivityResultLauncher<String[]> videoDocumentPicker;
   private FragmentConfigureProjectBinding binding;
+
   private Project project = null;
   private File videoFile = null;
+
+  private boolean isExistingProject = false;
 
   private UpdateProjectsCallback callback;
 
@@ -66,6 +68,10 @@ public class ConfigureProjectSheetFragment extends DialogFragment {
     if (args != null && args.containsKey(ProjectActivity.KEY_PROJECT)) {
       project = BundleCompat.getParcelable(args, ProjectActivity.KEY_PROJECT, Project.class);
       videoFile = new File(project.getVideoPath());
+
+      isExistingProject = true;
+    } else {
+      project = new Project("", "");
     }
   }
 
@@ -110,7 +116,7 @@ public class ConfigureProjectSheetFragment extends DialogFragment {
   }
 
   private void configureDetails() {
-    if (project != null) {
+    if (isExistingProject) {
       binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(videoFile.getAbsolutePath()));
       binding.videoName.setText(videoFile.getName());
       binding.tieName.setText(project.getName());
@@ -140,41 +146,25 @@ public class ConfigureProjectSheetFragment extends DialogFragment {
       return;
     }
 
+    project.setName(binding.tieName.getText().toString());
+    project.setVideoPath(videoFile.getAbsolutePath());
+
     setCancelable(false);
     binding.dialogButtons.cancel.setClickable(false);
     binding.dialogButtons.save.setClickable(false);
     TaskExecutor.executeAsyncProvideError(
-        () -> saveProjectInternal(),
+        () -> ProjectRepository.writeProject(project),
         (result, throwable) -> {
+          dismiss();
+          if (!isExistingProject) {
+            Intent intent = new Intent(requireContext(), ProjectActivity.class);
+            intent.putExtra(ProjectActivity.KEY_PROJECT, project);
+            startActivity(intent);
+          }
           if (callback != null) {
             callback.updateProjects();
           }
           dismiss();
         });
-  }
-
-  private Void saveProjectInternal() {
-    if (project != null) {
-      ProjectRepository.writeProject(
-          project.getProjectId(),
-          binding.tieName.getText().toString(),
-          videoFile.getAbsolutePath());
-
-    } else {
-      String projectId =
-          ProjectRepository.writeProject(
-              binding.tieName.getText().toString(), videoFile.getAbsolutePath());
-      Intent intent = new Intent(requireContext(), ProjectActivity.class);
-      intent.putExtra(
-          ProjectActivity.KEY_PROJECT,
-          new Project(
-              projectId,
-              FileUtil.PROJECTS_DIR + "/" + projectId,
-              videoFile.getAbsolutePath(),
-              binding.tieName.getText().toString()));
-      startActivity(intent);
-    }
-
-    return null;
   }
 }

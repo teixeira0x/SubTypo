@@ -2,32 +2,26 @@ package com.teixeira.subtitles.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.blankj.utilcode.util.FileIOUtils;
-import com.teixeira.subtitles.subtitle.file.SubtitleFile;
-import com.teixeira.subtitles.subtitle.format.SubtitleFormat;
-import java.io.File;
-import java.util.List;
+import com.teixeira.subtitles.utils.FileUtil;
 
 public class Project implements Parcelable, Comparable<Project> {
 
   private String projectId;
-  private String projectPath;
-  private String videoPath;
   private String name;
+  private String videoPath;
 
-  private SubtitleFile subtitleFile;
+  public Project(String name, String videoPath) {
+    this(null, name, videoPath);
+  }
 
-  public Project(String projectId, String projectPath, String videoPath, String name) {
+  public Project(String projectId, String name, String videoPath) {
     this.projectId = projectId;
-    this.projectPath = projectPath;
-    this.videoPath = videoPath;
     this.name = name;
-
-    this.subtitleFile = new SubtitleFile(SubtitleFormat.FORMAT_SUBRIP, "subtitle");
+    this.videoPath = videoPath;
   }
 
   public Project(Parcel parcel) {
-    this(parcel.readString(), parcel.readString(), parcel.readString(), parcel.readString());
+    this(parcel.readString(), parcel.readString(), parcel.readString());
   }
 
   public String getProjectId() {
@@ -38,12 +32,12 @@ public class Project implements Parcelable, Comparable<Project> {
     this.projectId = projectId;
   }
 
-  public String getProjectPath() {
-    return this.projectPath;
+  public String getName() {
+    return this.name;
   }
 
-  public void setProjectPath(String projectPath) {
-    this.projectPath = projectPath;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getVideoPath() {
@@ -54,32 +48,18 @@ public class Project implements Parcelable, Comparable<Project> {
     this.videoPath = videoPath;
   }
 
-  public SubtitleFile getSubtitleFile() {
-    return this.subtitleFile;
-  }
-
-  public String getName() {
-    return this.name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public List<Subtitle> getSubtitles() throws Exception {
-    File subtitleFile = new File(projectPath + "/" + this.subtitleFile.getNameWithExtension());
-    if (!subtitleFile.exists()) {
-      subtitleFile.createNewFile();
+  public String getProjectPath() {
+    if (projectId == null) {
+      throw new NullPointerException("Unable to get path of a project with null id!");
     }
-    return this.getSubtitleFormat().toList(FileIOUtils.readFile2String(subtitleFile));
-  }
-
-  public SubtitleFormat getSubtitleFormat() {
-    return this.subtitleFile.getSubtitleFormat();
+    return FileUtil.PROJECTS_DIR + "/" + projectId;
   }
 
   @Override
   public int compareTo(Project project) {
+    if (projectId == null || project.projectId == null) {
+      throw new NullPointerException("Cannot compare projects with null id!");
+    }
     if (Integer.parseInt(projectId) > Integer.parseInt(project.projectId)) {
       return -1;
     }
@@ -94,9 +74,8 @@ public class Project implements Parcelable, Comparable<Project> {
   @Override
   public void writeToParcel(Parcel parcel, int flags) {
     parcel.writeString(projectId);
-    parcel.writeString(projectPath);
-    parcel.writeString(videoPath);
     parcel.writeString(name);
+    parcel.writeString(videoPath);
   }
 
   public static final Creator<Project> CREATOR =

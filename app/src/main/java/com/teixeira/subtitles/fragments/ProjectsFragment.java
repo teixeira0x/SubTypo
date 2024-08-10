@@ -19,6 +19,7 @@ import com.teixeira.subtitles.fragments.sheets.ConfigureProjectSheetFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectRepository;
 import com.teixeira.subtitles.tasks.TaskExecutor;
+import com.teixeira.subtitles.utils.DialogUtils;
 import java.util.List;
 
 public class ProjectsFragment extends Fragment implements ProjectListAdapter.ProjectListener {
@@ -89,15 +90,25 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
   }
 
   public void loadProjects() {
-    TaskExecutor.executeAsync(
+    TaskExecutor.executeAsyncProvideError(
         () -> ProjectRepository.fetchProjects(),
-        (result) -> {
+        (result, throwable) -> {
           if (binding == null) {
             return;
           }
-          List<Project> projects = (List<Project>) result;
-          binding.noProjects.setVisibility(projects.isEmpty() ? View.VISIBLE : View.GONE);
-          adapter.setProjects(projects);
+
+          if (throwable != null) {
+            DialogUtils.createSimpleDialog(
+                    requireContext(),
+                    getString(R.string.error_loading_project),
+                    throwable.toString())
+                .setPositiveButton(R.string.ok, null)
+                .show();
+            return;
+          }
+
+          binding.noProjects.setVisibility(result.isEmpty() ? View.VISIBLE : View.GONE);
+          adapter.setProjects(result);
         });
   }
 

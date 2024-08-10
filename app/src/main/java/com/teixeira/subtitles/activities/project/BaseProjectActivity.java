@@ -1,6 +1,20 @@
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.teixeira.subtitles.activities.project;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,12 +25,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.os.BundleCompat;
 import androidx.lifecycle.ViewModelProvider;
-import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ThreadUtils;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.activities.BaseActivity;
 import com.teixeira.subtitles.adapters.SubtitleListAdapter;
@@ -24,14 +35,22 @@ import com.teixeira.subtitles.databinding.ActivityProjectBinding;
 import com.teixeira.subtitles.managers.UndoManager;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectManager;
+import com.teixeira.subtitles.project.ProjectRepository;
+import com.teixeira.subtitles.subtitle.file.SubtitleFile;
 import com.teixeira.subtitles.tasks.TaskExecutor;
 import com.teixeira.subtitles.ui.ExportWindow;
 import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
 import com.teixeira.subtitles.utils.ToastUtils;
+import com.teixeira.subtitles.viewmodels.ProjectViewModel;
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel;
 import com.teixeira.subtitles.viewmodels.VideoViewModel;
 
+/**
+ * Base class for ProjectActivity that handles most project related things.
+ *
+ * @author Felipe Teixeira
+ */
 abstract class BaseProjectActivity extends BaseActivity {
 
   public static final String KEY_PROJECT = "project";
@@ -41,6 +60,7 @@ abstract class BaseProjectActivity extends BaseActivity {
   protected ProjectManager projectManager;
   protected Project project;
 
+  protected ProjectViewModel projectViewModel;
   protected VideoViewModel videoViewModel;
   protected SubtitlesViewModel subtitlesViewModel;
 
@@ -65,11 +85,12 @@ abstract class BaseProjectActivity extends BaseActivity {
     }
 
     projectManager = ProjectManager.getInstance();
-    project =
-        projectManager.setupProject(BundleCompat.getParcelable(extras, KEY_PROJECT, Project.class));
+    project = BundleCompat.getParcelable(extras, KEY_PROJECT, Project.class);
+    projectManager.openProject(project);
 
     saveProjectCallback = this::saveProjectAsync;
 
+    projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
     videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
     subtitlesViewModel = new ViewModelProvider(this).get(SubtitlesViewModel.class);
     subtitleFilePicker =
@@ -87,6 +108,8 @@ abstract class BaseProjectActivity extends BaseActivity {
     getSupportActionBar().setTitle(project.getName());
     getSupportActionBar().setSubtitle(FileUtil.getFileName(project.getVideoPath()));
     binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
+    observeProjectViewModel();
     configureListeners();
   }
 
@@ -94,30 +117,7 @@ abstract class BaseProjectActivity extends BaseActivity {
   protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
 
-    MaterialAlertDialogBuilder builder =
-        DialogUtils.createProgressDialog(this, getString(R.string.proj_loading), false);
-    AlertDialog dialog = builder.show();
-
-    TaskExecutor.executeAsyncProvideError(
-        () -> project.getSubtitles(),
-        (result, throwable) -> {
-          dialog.dismiss();
-          if (isDestroying) {
-            return;
-          }
-          if (throwable != null) {
-            DialogUtils.createSimpleDialog(
-                    this, getString(R.string.error_loading_project), throwable.toString())
-                .setPositiveButton(R.string.proj_close, (d, w) -> finish())
-                .setCancelable(false)
-                .show();
-            return;
-          }
-          binding.videoContent.videoView.setVideoPath(project.getVideoPath());
-          binding.videoContent.videoView.seekTo(videoViewModel.getCurrentPosition());
-          subtitlesViewModel.pushStackToUndoManager(result);
-          subtitlesViewModel.setSubtitles(result, false);
-        });
+    projectViewModel.setSelectedSubtitleFile(projectManager.getSubtitleFiles().get(0));
   }
 
   @Override
@@ -177,6 +177,10 @@ abstract class BaseProjectActivity extends BaseActivity {
 
   protected void onPickSubtitleFile(@Nullable Uri uri) {}
 
+  protected void onSelectSubtitleFile(SubtitleFile subtitleFile) {
+    exportWindow.setSubtitleFile(subtitleFile);
+  }
+
   @NonNull
   protected abstract SubtitleListAdapter requireSubtitleListAdapter();
 
@@ -187,13 +191,25 @@ abstract class BaseProjectActivity extends BaseActivity {
     }
   }
 
+  private void observeProjectViewModel() {
+    projectViewModel.observeSelectedSubtitleFile(
+        this,
+        subtitleFile -> {
+          if (subtitleFile != null) onSelectSubtitleFile(subtitleFile);
+        });
+  }
+
   private void saveProjectAsync() {
     getSupportActionBar().setSubtitle(R.string.proj_saving);
     TaskExecutor.executeAsyncProvideError(
-        () ->
-            FileIOUtils.writeFileFromString(
-                project.getProjectPath() + "/" + project.getSubtitleFile().getNameWithExtension(),
-                project.getSubtitleFormat().toText(subtitlesViewModel.getSubtitles())),
+        () -> {
+          SubtitleFile subtitleFile = projectViewModel.getSelectedSubtitleFile();
+          subtitleFile.setContent(
+              subtitleFile.getSubtitleFormat().toText(subtitlesViewModel.getSubtitles()));
+
+          ProjectRepository.writeSubtitleDataFile(project, projectManager.getSubtitleFiles());
+          return null;
+        },
         (r, throwable) -> {
           getSupportActionBar().setSubtitle(FileUtil.getFileName(project.getVideoPath()));
           if (throwable != null) {

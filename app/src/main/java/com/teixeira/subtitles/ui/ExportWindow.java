@@ -27,10 +27,7 @@ import com.blankj.utilcode.util.UriUtils;
 import com.google.android.material.color.MaterialColors;
 import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.adapters.ExportFormatListAdapter;
-import com.teixeira.subtitles.adapters.SubtitleListAdapter;
 import com.teixeira.subtitles.databinding.LayoutExportWindowBinding;
-import com.teixeira.subtitles.models.Project;
-import com.teixeira.subtitles.project.ProjectManager;
 import com.teixeira.subtitles.subtitle.file.SubtitleFile;
 import com.teixeira.subtitles.utils.DialogUtils;
 import com.teixeira.subtitles.utils.FileUtil;
@@ -70,9 +67,6 @@ public class ExportWindow extends PopupWindow {
     binding.export.setOnClickListener(
         v -> subtitleFileSaver.launch(subtitleFile.getNameWithExtension()));
 
-    Project project = ProjectManager.getInstance().getProject();
-    this.subtitleFile = project.getSubtitleFile();
-
     exportFormatListAdapter = new ExportFormatListAdapter(activity);
     binding.exportFormats.setLayoutManager(new LinearLayoutManager(activity));
     binding.exportFormats.setAdapter(exportFormatListAdapter);
@@ -82,6 +76,10 @@ public class ExportWindow extends PopupWindow {
     setContentView(binding.getRoot());
     setBackgroundDrawable(createWindowBackground());
     setFocusable(true);
+  }
+
+  public void setSubtitleFile(SubtitleFile subtitleFile) {
+    this.subtitleFile = subtitleFile;
   }
 
   /** Called when the activity is destroyed. */

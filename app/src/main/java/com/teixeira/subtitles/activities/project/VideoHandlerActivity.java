@@ -1,3 +1,18 @@
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.teixeira.subtitles.activities.project;
 
 import android.content.res.Configuration;
@@ -16,6 +31,11 @@ import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.List;
 
+/**
+ * Base class for ProjectActivity that handles most video related things.
+ *
+ * @author Felipe Teixeira
+ */
 abstract class VideoHandlerActivity extends BaseProjectActivity {
 
   private Runnable progressTracker;
@@ -31,6 +51,9 @@ abstract class VideoHandlerActivity extends BaseProjectActivity {
       binding.controllerContent.undo.setVisibility(View.GONE);
     }
     subtitlesViewModel.setUndoManagerEnabled(Preferences.isDevelopmentUndoAndRedoEnabled());
+
+    binding.videoContent.videoView.setVideoPath(project.getVideoPath());
+    binding.videoContent.videoView.seekTo(videoViewModel.getCurrentPosition());
     setVideoViewModelObservers();
   }
 
@@ -164,6 +187,7 @@ abstract class VideoHandlerActivity extends BaseProjectActivity {
       binding.videoContent.getRoot().getLayoutParams().height = SizeUtils.dp2px(350f);
       binding.videoContent.getRoot().requestLayout();
     }
+    
     updateVideoUI(videoViewModel.getCurrentPosition());
     videoViewModel.setPrepared(true);
   }

@@ -68,6 +68,12 @@
             android:id="@+id/play" />
 
         <ImageView
+            android:src="@drawable/ic_translate"
+            android:layout_toStartOf="@id/add_subtitle"
+            style="@style/ControllerImageStyle"
+            android:id="@+id/change_language" />
+
+        <ImageView
             android:src="@drawable/ic_plus"
             android:layout_alignParentEnd="true"
             style="@style/ControllerImageStyle"

@@ -8,6 +8,14 @@ public abstract class SubtitleFormat {
 
   public static final SubtitleFormat FORMAT_SUBRIP = new SubRipFormat();
 
+  public static SubtitleFormat getExtensionFormat(String extension) {
+    if (extension.equals(".srt")) {
+      return FORMAT_SUBRIP;
+    }
+
+    return null;
+  }
+
   private String extension;
 
   /**

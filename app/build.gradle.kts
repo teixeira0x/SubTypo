@@ -5,23 +5,18 @@ plugins {
 
 android {
   namespace = "com.teixeira.subtitles"
-  compileSdk = 34
+
+  defaultConfig {
+    applicationId = "com.teixeira.subtitles"
+
+    vectorDrawables { useSupportLibrary = true }
+  }
 
   dependenciesInfo {
     // Disables dependency metadata when building APKs.
     includeInApk = false
     // Disables dependency metadata when building Android App Bundles.
     includeInBundle = false
-  }
-
-  defaultConfig {
-    applicationId = "com.teixeira.subtitles"
-    minSdk = 24
-    targetSdk = 34
-    versionCode = 2
-    versionName = "1.1.1"
-
-    vectorDrawables { useSupportLibrary = true }
   }
 
   signingConfigs {
@@ -34,8 +29,6 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
     isCoreLibraryDesugaringEnabled = true
   }
 

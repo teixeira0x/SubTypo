@@ -1,14 +1,18 @@
 package com.teixeira.subtitles.adapters;
 
+import android.animation.LayoutTransition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.FileUtils;
 import com.teixeira.subtitles.databinding.LayoutProjectItemBinding;
 import com.teixeira.subtitles.models.Project;
+import com.teixeira.subtitles.utils.UiUtils;
 import com.teixeira.subtitles.utils.VideoUtils;
 import java.util.Collections;
 import java.util.List;
@@ -39,8 +43,25 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
     binding.videoName.setText(FileUtils.getFileName(project.getVideoPath()));
 
     binding.getRoot().setOnClickListener(v -> listener.onProjectClickListener(v, project));
-    binding.getRoot().setOnLongClickListener(v -> listener.onProjectLongClickListener(v, project));
-    binding.menu.setOnClickListener(v -> listener.onProjectMenuClickListener(v, project));
+    binding
+        .getRoot()
+        .setOnLongClickListener(
+            v -> {
+              toggleOptionsVisibility(binding.optionsContainer, binding.chevron);
+              return true;
+            });
+    binding.chevron.setOnClickListener(
+        v -> toggleOptionsVisibility(binding.optionsContainer, binding.chevron));
+
+    binding.options.editOption.setOnClickListener(
+        v -> listener.onProjectOptionClickListener(v, project));
+
+    binding.options.deleteOption.setOnClickListener(
+        v -> listener.onProjectOptionClickListener(v, project));
+
+    LayoutTransition layoutTransition = new LayoutTransition();
+    layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
+    binding.getRoot().setLayoutTransition(layoutTransition);
   }
 
   @Override
@@ -55,13 +76,17 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
     result.dispatchUpdatesTo(this);
   }
 
+  private void toggleOptionsVisibility(FrameLayout optionsContainer, ImageView chevron) {
+    optionsContainer.setVisibility(
+        optionsContainer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    UiUtils.rotateView(chevron, optionsContainer.getVisibility() == View.VISIBLE ? 0.0f : -90.0f);
+  }
+
   public interface ProjectListener {
 
     void onProjectClickListener(View view, Project project);
 
-    boolean onProjectLongClickListener(View view, Project project);
-
-    void onProjectMenuClickListener(View view, Project project);
+    void onProjectOptionClickListener(View view, Project project);
   }
 
   class VH extends RecyclerView.ViewHolder {
@@ -94,10 +119,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
     @Override
     public boolean areItemsTheSame(int oldPosition, int newPosition) {
-      Project oldProject = oldList.get(oldPosition);
-      Project newProject = newList.get(newPosition);
-
-      return oldProject.getProjectId().equals(newProject.getProjectId());
+      return areContentsTheSame(oldPosition, newPosition);
     }
 
     @Override

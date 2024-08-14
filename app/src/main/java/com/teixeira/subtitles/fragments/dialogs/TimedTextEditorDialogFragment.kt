@@ -17,7 +17,6 @@ import com.teixeira.subtitles.subtitle.models.TimedTextInfo
 import com.teixeira.subtitles.subtitle.models.TimedTextObject
 import com.teixeira.subtitles.utils.OnTextChangedListener
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
-import java.util.Locale
 
 class TimedTextEditorDialogFragment : DialogFragment() {
 

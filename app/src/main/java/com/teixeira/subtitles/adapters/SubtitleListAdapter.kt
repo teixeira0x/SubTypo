@@ -16,7 +16,7 @@ class SubtitleListAdapter(
   val onLongClickListener: (view: View, position: Int, subtitle: Subtitle) -> Boolean
 ) : RecyclerView.Adapter<SubtitleListAdapter.VH>() {
 
-  var subtitles: MutableList<Subtitle>? = null
+  var subtitles: List<Subtitle>? = null
   var isVideoPlaying: Boolean = false
 
   var videoSubtitleIndex: Int = -1

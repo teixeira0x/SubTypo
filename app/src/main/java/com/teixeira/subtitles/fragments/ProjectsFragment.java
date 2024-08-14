@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.blankj.utilcode.util.FileUtils;
@@ -67,25 +66,27 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
   }
 
   @Override
-  public boolean onProjectLongClickListener(View view, Project project) {
-    return true;
+  public void onProjectOptionClickListener(View view, Project project) {
+
+    if (view.getId() == R.id.edit_option) {
+      ConfigureProjectDialogFragment.newInstance(project).show(getChildFragmentManager(), null);
+    } else if (view.getId() == R.id.delete_option) {
+      deleteProject(project);
+    }
   }
 
-  @Override
-  public void onProjectMenuClickListener(View view, Project project) {
-    PopupMenu pm = new PopupMenu(requireContext(), view);
-    pm.getMenu().add(0, 0, 0, R.string.edit);
-    pm.getMenu().add(0, 1, 0, R.string.delete);
+  private void deleteProject(Project project) {
+    new MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.delete)
+        .setMessage(getString(R.string.msg_delete_confirmation, project.getName()))
+        .setPositiveButton(R.string.yes, (d, w) -> deleteProjectAsync(project))
+        .setNegativeButton(R.string.no, null)
+        .show();
+  }
 
-    pm.setOnMenuItemClickListener(
-        item -> {
-          if (item.getItemId() == 0) {
-            ConfigureProjectDialogFragment.newInstance(project)
-                .show(getChildFragmentManager(), null);
-          } else deleteProject(project);
-          return true;
-        });
-    pm.show();
+  private void deleteProjectAsync(Project project) {
+    TaskExecutor.executeAsync(
+        () -> FileUtils.delete(project.getProjectPath()), result -> loadProjects());
   }
 
   public void loadProjects() {
@@ -109,19 +110,5 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
           binding.noProjects.setVisibility(result.isEmpty() ? View.VISIBLE : View.GONE);
           adapter.setProjects(result);
         });
-  }
-
-  private void deleteProject(Project project) {
-    new MaterialAlertDialogBuilder(requireContext())
-        .setTitle(R.string.delete)
-        .setMessage(getString(R.string.msg_delete_confirmation, project.getName()))
-        .setPositiveButton(R.string.yes, (d, w) -> deleteProjectAsync(project))
-        .setNegativeButton(R.string.no, null)
-        .show();
-  }
-
-  private void deleteProjectAsync(Project project) {
-    TaskExecutor.executeAsync(
-        () -> FileUtils.delete(project.getProjectPath()), result -> loadProjects());
   }
 }

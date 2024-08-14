@@ -1,48 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_marginBottom="5dp"
     android:layout_marginHorizontal="5dp"
-    android:padding="5dp"
     android:foreground="@drawable/ripple_effect">
 
-    <ImageView
-        android:layout_height="180px"
-        android:layout_width="360px"
-        android:scaleType="fitCenter"
-        android:background="@android:color/black"
-        android:id="@+id/video_icon" />
-
-    <TextView
+    <RelativeLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_toEndOf="@id/video_icon"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:ellipsize="end"
-        android:layout_toLeftOf="@id/menu"
-        android:textSize="14sp"
-        android:singleLine="true"
-        android:layout_marginLeft="5dp"
-        android:id="@+id/name" />
+        android:layout_width="match_parent"
+        android:padding="5dp">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_toEndOf="@id/video_icon"
-        android:layout_below="@id/name"
-        android:layout_toLeftOf="@id/menu"
-        android:textSize="12sp"
-        android:layout_marginLeft="5dp"
-        android:id="@+id/video_name" />
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/container">
 
-    <ImageView
-        android:layout_height="20dp"
-        android:layout_width="20dp"
-        android:src="@drawable/ic_menu"
-        android:layout_marginHorizontal="2dp"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/menu" />
+            <ImageView
+                android:layout_height="180px"
+                android:layout_width="360px"
+                android:scaleType="fitCenter"
+                android:background="@android:color/black"
+                android:id="@+id/video_icon" />
 
-</RelativeLayout>
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_toEndOf="@id/video_icon"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                android:ellipsize="end"
+                android:layout_toLeftOf="@id/chevron"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/name" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_toEndOf="@id/video_icon"
+                android:layout_below="@id/name"
+                android:layout_toLeftOf="@id/chevron"
+                android:textSize="12sp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/video_name" />
+
+            <ImageView
+                android:layout_height="24dp"
+                android:layout_width="24dp"
+                android:src="@drawable/ic_chevron_down"
+                android:rotation="-90"
+                android:layout_marginHorizontal="2dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/chevron" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_below="@id/container"
+            android:layout_marginTop="4dp"
+            android:id="@+id/options_container">
+
+            <View
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:background="?attr/colorOutlineVariant" />
+
+            <include
+                layout="@layout/layout_project_item_options"
+                android:id="@+id/options" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

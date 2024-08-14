@@ -1,15 +1,34 @@
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.teixeira.subtitles.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.R
+import com.google.android.material.color.MaterialColors
 import com.teixeira.subtitles.databinding.LayoutLanguageItemBinding
 import com.teixeira.subtitles.subtitle.models.TimedTextObject
 
 class LanguageListAdapter(
   val languages: List<TimedTextObject>,
-  val onClickListener: (index: Int, timedTextObject: TimedTextObject) -> Unit,
+  val selectedIndex: Int,
+  val onClickListener: (view: View, index: Int, timedTextObject: TimedTextObject) -> Unit,
   val onLongClickListener: (index: Int, timedTextObject: TimedTextObject) -> Boolean
 ) : RecyclerView.Adapter<LanguageListAdapter.VH>() {
 
@@ -24,11 +43,19 @@ class LanguageListAdapter(
       val timedTextObject = languages[position]
       val timedTextInfo = timedTextObject.timedTextInfo
 
-      name.text = timedTextInfo.name
+      name.text = timedTextInfo.name + timedTextInfo.format.extension
       language.text = timedTextInfo.language
-      format.text = timedTextInfo.format.extension
+
+      if (selectedIndex == position) {
+        root.setCardBackgroundColor(MaterialColors.getColor(root, R.attr.colorOutlineVariant))
+      }
+
+      edit.setOnClickListener {
+        onClickListener(it, languages.indexOf(timedTextObject), timedTextObject)
+      }
+
       root.setOnClickListener {
-        onClickListener(languages.indexOf(timedTextObject), timedTextObject)
+        onClickListener(it, languages.indexOf(timedTextObject), timedTextObject)
       }
       root.setOnLongClickListener {
         onLongClickListener(languages.indexOf(timedTextObject), timedTextObject)

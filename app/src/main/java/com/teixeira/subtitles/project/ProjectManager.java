@@ -16,9 +16,6 @@
 package com.teixeira.subtitles.project;
 
 import com.teixeira.subtitles.models.Project;
-import com.teixeira.subtitles.subtitle.file.SubtitleFile;
-import java.util.List;
-import org.json.JSONException;
 
 /**
  * Class to manipulate project data.
@@ -38,7 +35,6 @@ public class ProjectManager {
     return sInstance;
   }
 
-  private List<SubtitleFile> subtitleFiles = null;
   private Project project = null;
 
   private ProjectManager() {}
@@ -50,21 +46,6 @@ public class ProjectManager {
    */
   public void openProject(Project project) {
     this.project = project;
-
-    try {
-      subtitleFiles = ProjectRepository.getProjectSubtitleFiles(project);
-    } catch (JSONException jsone) {
-      jsone.printStackTrace();
-    }
-  }
-
-  /**
-   * Returns the list of subtitle files for the current project.
-   *
-   * @return The list of subtitle files.
-   */
-  public List<SubtitleFile> getSubtitleFiles() {
-    return this.subtitleFiles;
   }
 
   /**
@@ -78,7 +59,6 @@ public class ProjectManager {
 
   /** Destroy and close the open project. */
   public void destroy() {
-    this.subtitleFiles = null;
     this.project = null;
   }
 }

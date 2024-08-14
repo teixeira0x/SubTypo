@@ -15,12 +15,11 @@ import com.teixeira.subtitles.R;
 import com.teixeira.subtitles.activities.project.ProjectActivity;
 import com.teixeira.subtitles.adapters.ProjectListAdapter;
 import com.teixeira.subtitles.databinding.FragmentProjectsBinding;
-import com.teixeira.subtitles.fragments.sheets.ConfigureProjectSheetFragment;
+import com.teixeira.subtitles.fragments.dialogs.ConfigureProjectDialogFragment;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.project.ProjectRepository;
 import com.teixeira.subtitles.tasks.TaskExecutor;
 import com.teixeira.subtitles.utils.DialogUtils;
-import java.util.List;
 
 public class ProjectsFragment extends Fragment implements ProjectListAdapter.ProjectListener {
 
@@ -81,7 +80,7 @@ public class ProjectsFragment extends Fragment implements ProjectListAdapter.Pro
     pm.setOnMenuItemClickListener(
         item -> {
           if (item.getItemId() == 0) {
-            ConfigureProjectSheetFragment.newInstance(project)
+            ConfigureProjectDialogFragment.newInstance(project)
                 .show(getChildFragmentManager(), null);
           } else deleteProject(project);
           return true;

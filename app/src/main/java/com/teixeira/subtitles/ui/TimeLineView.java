@@ -25,8 +25,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Scroller;
 import com.google.android.material.color.MaterialColors;
-import com.teixeira.subtitles.models.Subtitle;
-import com.teixeira.subtitles.utils.VideoUtils;
+import com.teixeira.subtitles.subtitle.models.Subtitle;
 import java.util.List;
 
 /**
@@ -270,8 +269,8 @@ public class TimeLineView extends View {
     paint.setColor(colorOnSurfaceInverse);
 
     for (Subtitle subtitle : subtitles) {
-      long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
-      long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
+      long startTime = subtitle.getStartTime().getMilliseconds();
+      long endTime = subtitle.getEndTime().getMilliseconds();
 
       float left = ((float) startTime / duration * width) * zoom - scrollX;
       float right = ((float) endTime / duration * width) * zoom - scrollX;

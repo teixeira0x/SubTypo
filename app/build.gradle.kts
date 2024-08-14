@@ -28,9 +28,7 @@ android {
     }
   }
 
-  compileOptions {
-    isCoreLibraryDesugaringEnabled = true
-  }
+  compileOptions { isCoreLibraryDesugaringEnabled = true }
 
   buildTypes {
     release {
@@ -55,6 +53,8 @@ dependencies {
   coreLibraryDesugaring(libs.android.desugar)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.fragment.ktx)
   implementation(libs.androidx.preference)
   implementation(libs.androidx.exoplayer)
   implementation(libs.androidx.exoplayer.dash)
@@ -63,4 +63,7 @@ dependencies {
   implementation(libs.google.material)
 
   implementation(libs.common.utilcode)
+  implementation(libs.common.android.coroutines)
+
+  implementation(project(":core:subtitles"))
 }

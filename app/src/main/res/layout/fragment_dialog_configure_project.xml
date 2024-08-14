@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="@dimen/dialog_padding"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:text="@string/proj_new"
+        android:id="@+id/title" />
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:id="@+id/choose_video">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:clickable="false"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/choose_video_text"
+            android:text="@string/proj_click_choose_video" />
+
+        <ImageView
+            android:layout_height="280px"
+            android:layout_width="560px"
+            android:layout_below="@id/choose_video_text"
+            android:scaleType="fitCenter"
+            android:background="@android:color/black"
+            android:clickable="false"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/video_icon" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/video_icon"
+            android:clickable="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="@string/msg_video_not_chosen"
+            android:id="@+id/video_name" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/proj_enter_name"
+        android:layout_marginTop="5dp"
+        style="@style/AppTheme.TextInputLayout"
+        android:id="@+id/til_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:singleLine="true"
+            android:id="@+id/tie_name" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <include
+        layout="@layout/layout_dialog_buttons"
+        android:id="@+id/dialog_buttons" />
+
+</LinearLayout>

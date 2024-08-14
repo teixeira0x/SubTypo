@@ -12,7 +12,7 @@ import com.teixeira.subtitles.activities.CrashActivity;
 import com.teixeira.subtitles.preferences.Preferences;
 
 public class App extends Application {
-  
+
   public static final String APP_REPO_URL = "https://github.com/teixeira0x/SubTypo";
   public static final String APP_REPO_OPEN_ISSUE = APP_REPO_URL + "/issues/new";
 

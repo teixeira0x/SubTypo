@@ -12,6 +12,10 @@
     <item name="android:widgetLayout">@layout/layout_material_switch_style</item>
   </style>
 
+  <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox" />
+
+  <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu" />
+
   <style name="ControllerImageStyle">
     <item name="android:layout_width">35dp</item>
     <item name="android:layout_height">35dp</item>

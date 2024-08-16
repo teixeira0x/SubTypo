@@ -117,6 +117,9 @@ public class ProjectRepository {
         projectDir.mkdirs();
       }
       writeConfigFile(projectDir, project);
+      writeSubtitleDataFile(
+          project,
+          List.of(new TimedTextObject(new TimedTextInfo(SubtitleFormat.SUBRIP, "subtitle", "en"))));
     } catch (JSONException jsone) {
       jsone.printStackTrace();
     }

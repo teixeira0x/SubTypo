@@ -20,7 +20,8 @@
     <!-- Messages -->
     <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
     <string name="msg_permission_request">Permission Request</string>
-    <string name="msg_permission_request_detail">By granting the permissions, you will have a better experience with the app.</string>
+    <string name="msg_permission_request_detail">Permissions are required as the app work with video and subtitle files.</string>
+    <string name="msg_permission_request_settings_detail">You must grant the permissions manually in the settings.</string>
     <string name="msg_video_not_chosen">Video not chosen</string>
     <string name="msg_import_subtitles_warning">Warning! When importing a subtitle file, the project\'s current subtitles will be replaced and lost forever.</string>
 

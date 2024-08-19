@@ -19,7 +19,8 @@
     <!-- Messages -->
     <string name="msg_delete_confirmation">Você tem certeza que deseja excluir: %1$s</string>
     <string name="msg_permission_request">Solicitação de permissão</string>
-    <string name="msg_permission_request_detail">Ao conceder permissões, você terá uma melhor experiência com o aplicativo.</string>
+    <string name="msg_permission_request_detail">Permissões são necessárias, pois o aplicativo trabalha com arquivos de vídeo e legendas.</string>
+    <string name="msg_permission_request_settings_detail">Você deve conceder as permissões manualmente nas configurações.</string>
     <string name="msg_video_not_chosen">Vídeo não escolhido</string>
     <string name="msg_import_subtitles_warning">Aviso! Ao importar um arquivo de legenda, as legendas atuais do projeto serão substituídas e perdidas permanentemente.</string>
     <!-- Preferences -->

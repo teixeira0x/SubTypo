@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SubTypo</string>
+    <string name="close_app">إغلاق التطبيق</string>
+    <string name="about">حول</string>
+    <string name="settings">الإعدادات</string>
+    <string name="delete">حذف</string>
+    <string name="rename">إعادة تسمية</string>
+    <string name="edit">تعديل</string>
+    <string name="ok">حسناً</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="copy">نسخ</string>
+    <string name="grant">منح</string>
+    <string name="export">تصدير</string>
+    <string name="open_issue">فتح مشكلة</string>
+
+    <!-- Messages -->
+    <string name="msg_delete_confirmation">هل أنت متأكد من حذف: %1$s</string>
+    <string name="msg_permission_request">طلب إذن</string>
+    <string name="msg_permission_request_detail">تُطلب الأذونات لأن التطبيق يعمل مع ملفات الفيديو والترجمة.</string>
+    <string name="msg_permission_request_settings_detail">يجب عليك منح الأذونات يدويًا في الإعدادات.</string>
+    <string name="msg_video_not_chosen">لم يتم اختيار فيديو</string>
+    <string name="msg_import_subtitles_warning">تحذير! عند استيراد ملف ترجمة، ستُستبدل الترجمات الحالية للمشروع وتفقد إلى الأبد.</string>
+
+    <!-- Warn -->
+    <string name="warn_text_field_cannot_empty">لا يمكن أن يكون هذا الحقل النصي فارغًا</string>
+    <string name="warn_name_already_existing">الاسم موجود بالفعل</string>
+
+    <!-- Preferences -->
+    <string name="pref_general">عام</string>
+    <string name="pref_general_summary">إعدادات التطبيق العامة.</string>
+    <string name="pref_category_aparence">المظهر</string>
+    <string name="pref_ui_mode">وضع واجهة المستخدم</string>
+    <string name="pref_ui_mode_summary">اختر الوضع الفاتح أو الداكن</string>
+    <string name="pref_ui_mode_value_light">فاتح</string>
+    <string name="pref_ui_mode_value_dark">داكن</string>
+    <string name="pref_ui_mode_value_follow">اتباع النظام</string>
+    <string name="pref_development">التطوير</string>
+    <string name="pref_development_summary">ميزات قيد التطوير</string>
+    <string name="pref_category_development">التطوير</string>
+    <string name="pref_development_undo_and_redo">تمكين التراجع وإعادة التفعيل</string>
+    <string name="pref_development_prefs_summary">هذه الوظيفة قيد التطوير وقد تحدث أخطاء غير متوقعة أو مشاكل عند استخدامها.</string>
+    <string name="pref_version">الإصدار</string>
+    <string name="pref_github">GitHub</string>
+    <string name="pref_github_summary">هذا التطبيق مفتوح المصدر!</string>
+    <string name="pref_open_source_license">تراخيص مفتوحة المصدر</string>
+
+    <!-- Project -->
+    <string name="proj_initializing">جارٍ تهيئة المشروع..</string>
+    <string name="proj_loading">جارٍ تحميل المشروع..</string>
+    <string name="proj_saving">جارٍ حفظ المشروع..</string>
+    <string name="proj_close">إغلاق المشروع</string>
+    <string name="proj_no_projects">بدون مشاريع، اضغط "+" لإنشاء مشاريع!</string>
+    <string name="proj_new">مشروع جديد</string>
+    <string name="proj_edit">تعديل المشروع</string>
+    <string name="proj_enter_name">أدخل اسمًا</string>
+    <string name="proj_choose_video">اختر فيديو</string>
+    <string name="proj_click_choose_video">اضغط لاختيار فيديو</string>
+    <string name="proj_total_subtitles">إجمالي الترجمات: %1$s</string>
+    <string name="proj_current_video_position">موضع الفيديو الحالي: %1$s</string>
+    <string name="proj_no_subtitles">بدون ترجمات، اضغط "+" لإضافة ترجمات!</string>
+
+    <string name="proj_subtitle_lang_add">إضافة لغة ترجمة</string>
+    <string name="proj_subtitle_lang_edit">تعديل لغة الترجمة</string>
+    <string name="proj_subtitle_lang_list">لغات الترجمة</string>
+    <string name="proj_subtitle_lang_list_empty">لا توجد لغات، اضغط "+" لإضافة لغات</string>
+    <string name="proj_subtitle_lang_enter_name">أدخل اسم الملف</string>
+    <string name="proj_subtitle_lang_enter_language">أدخل لغة</string>
+    <string name="proj_subtitle_lang_enter_format">أدخل تنسيق</string>
+
+    <string name="proj_export_subtitles">تصدير الترجمات</string>
+    <string name="proj_export_file_format">اختر تنسيق الملف للتصدير</string>
+    <string name="proj_export_format_subrip">تصدير بتنسيق SubRip (.srt)</string>
+    <string name="proj_export_saved">تم الحفظ في المسار: %1$s</string>
+
+    <string name="proj_import_subtitles">استيراد الترجمات</string>
+    <!-- Errors -->
+    <string name="error_choose_video">يرجى اختيار فيديو</string>
+    <string name="error_enter_name">يرجى إدخال اسم</string>
+    <string name="error_loading_project">حدث خطأ أثناء محاولة تحميل المشروع:</string>
+    <string name="error_saving_project">حدث خطأ أثناء محاولة حفظ المشروع:</string>
+    <string name="error_exporting_subtitles">حدث خطأ أثناء محاولة تصدير الترجمات:</string>
+    <string name="error_reading_subtitles">حدث خطأ أثناء محاولة قراءة ملف الترجمة:</string>
+    <string name="error_no_subtitles_to_export">أضف ترجمات لتتمكن من التصدير.</string>
+
+    <!-- Subtitles -->
+    <string name="subtitles">ترجمات</string>
+    <string name="subtitle_loading">جارٍ تحميل الترجمات..</string>
+    <string name="subtitle_enter_start_time">أدخل وقت بدء الترجمة</string>
+    <string name="subtitle_enter_end_time">أدخل وقت انتهاء الترجمة</string>
+    <string name="subtitle_enter_text">أدخل نص الترجمة</string>
+</resources>

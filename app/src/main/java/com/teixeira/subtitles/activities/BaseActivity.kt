@@ -21,7 +21,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.color.MaterialColors
 import com.teixeira.subtitles.R
-import com.teixeira.subtitles.handlers.PermissionsHandler
 
 /**
  * Base activity for all application activities.
@@ -51,7 +50,5 @@ abstract class BaseActivity : AppCompatActivity() {
     }
     super.onCreate(savedInstanceState)
     setContentView(bindView())
-
-    lifecycle.addObserver(PermissionsHandler(this, activityResultRegistry))
   }
 }

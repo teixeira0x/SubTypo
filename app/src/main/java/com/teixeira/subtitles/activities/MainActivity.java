@@ -11,6 +11,7 @@ import com.teixeira.subtitles.callbacks.UpdateProjectsCallback;
 import com.teixeira.subtitles.databinding.ActivityMainBinding;
 import com.teixeira.subtitles.fragments.ProjectsFragment;
 import com.teixeira.subtitles.fragments.dialogs.ConfigureProjectDialogFragment;
+import com.teixeira.subtitles.handlers.PermissionsHandler;
 
 public class MainActivity extends BaseActivity implements UpdateProjectsCallback {
 
@@ -27,6 +28,8 @@ public class MainActivity extends BaseActivity implements UpdateProjectsCallback
     super.onCreate(savedInstanceState);
 
     setSupportActionBar(binding.toolbar);
+    
+    getLifecycle().addObserver(new PermissionsHandler(this, getActivityResultRegistry()));
 
     binding.fabNewProject.setOnClickListener(
         v -> ConfigureProjectDialogFragment.newInstance().show(getSupportFragmentManager(), null));

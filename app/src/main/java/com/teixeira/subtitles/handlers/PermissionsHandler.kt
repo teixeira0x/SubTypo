@@ -16,8 +16,8 @@
 package com.teixeira.subtitles.handlers
 
 import android.Manifest
-import android.content.Context
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -92,14 +92,16 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
    * @param permissions Result of requested permissions.
    */
   private fun onResultCallback(permissions: Map<String, Boolean>) {
-    val permission =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        permissions.entries.elementAt(1)
-      } else {
-        permissions.entries.elementAt(0)
-      }
+    if (permissions.isNotEmpty()) {
+      val permission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          permissions.entries.elementAt(1)
+        } else {
+          permissions.entries.elementAt(0)
+        }
 
-    checkPermission(permission)
+      checkPermission(permission)
+    }
   }
 
   /**
@@ -131,7 +133,7 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
     MaterialAlertDialogBuilder(activity).apply {
       setTitle(R.string.msg_permission_request)
       setMessage(R.string.msg_permission_request_detail)
-      setPositiveButton(R.string.grant) { d, w -> requestPermissions() }
+      setPositiveButton(R.string.grant) { _, _ -> requestPermissions() }
       setNegativeButton(R.string.no, null)
       show()
     }

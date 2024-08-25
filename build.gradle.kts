@@ -1,4 +1,5 @@
 import com.android.build.gradle.BaseExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
@@ -29,6 +30,10 @@ fun Project.configureBaseExtension() {
 subprojects {
   plugins.withId("com.android.application") { configureBaseExtension() }
   plugins.withId("com.android.library") { configureBaseExtension() }
+
+  tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
+  }
 }
 
 tasks.register<Delete>("clean") { delete(rootProject.buildDir) }

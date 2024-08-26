@@ -79,7 +79,7 @@ class TimedTextEditorDialogFragment : DialogFragment() {
           { _, _ ->
             dismiss()
             subtitlesViewModel.removeTimedTextObject(timedTextObject)
-          }
+          },
         )
         .setNegativeButton(R.string.no, null)
         .show()
@@ -94,7 +94,7 @@ class TimedTextEditorDialogFragment : DialogFragment() {
       ArrayAdapter<String>(
         requireContext(),
         android.R.layout.simple_list_item_1,
-        arrayOf(SubtitleFormat.SUBRIP.extension)
+        arrayOf(SubtitleFormat.SUBRIP.extension),
       )
     )
     setTextWatchers()

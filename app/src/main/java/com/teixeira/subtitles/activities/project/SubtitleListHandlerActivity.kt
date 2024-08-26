@@ -56,7 +56,7 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
         videoViewModel.pauseVideo()
         SubtitleEditorDialogFragment.newInstance(videoViewModel.currentPosition, index, subtitle)
           .show(supportFragmentManager, null)
-      }
+      },
     ) { _, _, _ ->
       true
     }
@@ -95,7 +95,7 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
       DialogUtils.createSimpleDialog(
         this,
         getString(R.string.proj_import_subtitles),
-        getString(R.string.msg_import_subtitles_warning)
+        getString(R.string.msg_import_subtitles_warning),
       )
 
     builder.setNegativeButton(R.string.cancel, null)
@@ -116,7 +116,7 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
             DialogUtils.createSimpleDialog(
                 this@SubtitleListHandlerActivity,
                 getString(R.string.error_reading_subtitles),
-                e.toString()
+                e.toString(),
               )
               .setPositiveButton(R.string.ok, null)
               .show()
@@ -131,7 +131,7 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
               DialogUtils.createSimpleDialog(
                   this@SubtitleListHandlerActivity,
                   getString(R.string.error_reading_subtitles),
-                  it.errors.toString()
+                  it.errors.toString(),
                 )
                 .setPositiveButton(R.string.ok, null)
                 .show()
@@ -155,13 +155,13 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
       FileUtil.writeFileContent(uri, timedTextObject.toFile())
       ToastUtils.showLong(
         R.string.proj_export_saved,
-        UriUtils.uri2FileNoCacheCopy(uri).getAbsolutePath()
+        UriUtils.uri2FileNoCacheCopy(uri).getAbsolutePath(),
       )
     } catch (e: Exception) {
       DialogUtils.createSimpleDialog(
           this,
           getString(R.string.error_exporting_subtitles),
-          e.toString()
+          e.toString(),
         )
         .setPositiveButton(R.string.ok, null)
         .show()
@@ -216,7 +216,7 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
     override fun onMove(
       recyclerView: RecyclerView,
       holder: ViewHolder,
-      target: ViewHolder
+      target: ViewHolder,
     ): Boolean {
       Collections.swap(subtitlesViewModel.subtitles!!, holder.layoutPosition, target.layoutPosition)
       subtitleListAdapter.notifyItemMoved(holder.layoutPosition, target.layoutPosition)

@@ -29,7 +29,7 @@ class LanguageListAdapter(
   val languages: List<TimedTextObject>,
   val selectedIndex: Int,
   val onClickListener: (view: View, index: Int, timedTextObject: TimedTextObject) -> Unit,
-  val onLongClickListener: (index: Int, timedTextObject: TimedTextObject) -> Boolean
+  val onLongClickListener: (index: Int, timedTextObject: TimedTextObject) -> Boolean,
 ) : RecyclerView.Adapter<LanguageListAdapter.VH>() {
 
   inner class VH(val binding: LayoutLanguageItemBinding) : RecyclerView.ViewHolder(binding.root)

@@ -54,7 +54,7 @@ abstract class BaseProjectActivity : BaseActivity() {
   private val subtitleFileExporter =
     registerForActivityResult(
       ActivityResultContracts.CreateDocument("text/*"),
-      this::onExportSubtitleFile
+      this::onExportSubtitleFile,
     )
 
   protected val binding: ActivityProjectBinding

@@ -172,7 +172,7 @@ class SubtitlesViewModel : ViewModel() {
 
   fun observeSelectedTimedTextObject(
     lifecycleOwner: LifecycleOwner,
-    observer: Observer<Pair<Int, TimedTextObject?>>
+    observer: Observer<Pair<Int, TimedTextObject?>>,
   ) {
     selectedTimedTextObjectLiveData.observe(lifecycleOwner, observer)
   }

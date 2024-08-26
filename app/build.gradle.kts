@@ -1,6 +1,7 @@
 plugins {
   id("com.android.application")
   id("kotlin-android")
+  id("kotlin-parcelize")
 }
 
 android {
@@ -55,6 +56,8 @@ dependencies {
   implementation(libs.androidx.core)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.fragment.ktx)
+  implementation(libs.androidx.lifecycle.runtime)
+  implementation(libs.androidx.lifecycle.viewmodel)
   implementation(libs.androidx.preference)
   implementation(libs.androidx.exoplayer)
   implementation(libs.androidx.exoplayer.dash)

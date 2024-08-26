@@ -13,7 +13,7 @@ import com.teixeira.subtitles.subtitle.models.Subtitle
 class SubtitleListAdapter(
   val touchHelper: ItemTouchHelper,
   val onClickListener: (view: View, position: Int, subtitle: Subtitle) -> Unit,
-  val onLongClickListener: (view: View, position: Int, subtitle: Subtitle) -> Boolean
+  val onLongClickListener: (view: View, position: Int, subtitle: Subtitle) -> Boolean,
 ) : RecyclerView.Adapter<SubtitleListAdapter.VH>() {
 
   var subtitles: List<Subtitle>? = null

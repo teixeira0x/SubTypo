@@ -28,7 +28,6 @@ import com.teixeira.subtitles.project.ProjectManager
 import com.teixeira.subtitles.project.ProjectRepository
 import com.teixeira.subtitles.subtitle.models.TimedTextObject
 import com.teixeira.subtitles.utils.DialogUtils
-import com.teixeira.subtitles.utils.FileUtil
 import com.teixeira.subtitles.utils.getParcelableCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,7 +59,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
     projectManager.openProject(project)
 
     supportActionBar?.title = project.name
-    supportActionBar?.subtitle = FileUtil.getFileName(project.videoPath)
+    supportActionBar?.subtitle = project.videoName
     initializeProject()
   }
 
@@ -87,7 +86,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
           DialogUtils.createSimpleDialog(
               this@ProjectHandlerActivity,
               "An error ocurred",
-              e.toString()
+              e.toString(),
             )
             .setPositiveButton(R.string.ok, null)
             .show()
@@ -95,7 +94,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
       }
 
       withContext(Dispatchers.Main) {
-        supportActionBar?.subtitle = FileUtil.getFileName(project.videoPath)
+        supportActionBar?.subtitle = project.videoName
 
         subtitlesViewModel.timedTextObjects = timedTextObjects
         onInitializeProject()
@@ -144,7 +143,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
               R.id.edit -> showTimedTextEditorDialog(index)
               else -> subtitlesViewModel.setSelectedTimedTextObject(index, timedTextObject)
             }
-          }
+          },
         ) { index, _ ->
           dialog.dismiss()
           showTimedTextEditorDialog(index)
@@ -158,22 +157,20 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
 
     coroutineScope.launch(Dispatchers.IO) {
       try {
-        ProjectRepository.writeSubtitleDataFile(project, subtitlesViewModel.timedTextObjects)
+        ProjectRepository.writeSubtitleDataFile(project.path, subtitlesViewModel.timedTextObjects)
       } catch (e: Exception) {
         withContext(Dispatchers.Main) {
           DialogUtils.createSimpleDialog(
               this@ProjectHandlerActivity,
               getString(R.string.error_saving_project),
-              e.toString()
+              e.toString(),
             )
             .setPositiveButton(R.string.ok, null)
             .show()
         }
       }
 
-      withContext(Dispatchers.Main) {
-        supportActionBar?.subtitle = FileUtil.getFileName(project.videoPath)
-      }
+      withContext(Dispatchers.Main) { supportActionBar?.subtitle = project.videoName }
     }
   }
 }

@@ -62,7 +62,7 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
       Manifest.permission
         .READ_EXTERNAL_STORAGE, // [READ_EXTERNAL_STORAGE] For devices below api 33 (Android 13).
       Manifest.permission
-        .READ_MEDIA_VIDEO // [READ_MEDIA_VIDEO] For devices with api 33 (Android 13) or above.
+        .READ_MEDIA_VIDEO, // [READ_MEDIA_VIDEO] For devices with api 33 (Android 13) or above.
     )
 
   override fun onCreate(owner: LifecycleOwner) {
@@ -71,7 +71,7 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
         PERMISSION_KEY,
         owner,
         ActivityResultContracts.RequestMultiplePermissions(),
-        this::onResultCallback
+        this::onResultCallback,
       )
 
     requestPermissions()

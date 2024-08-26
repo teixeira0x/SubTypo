@@ -83,7 +83,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
         override fun onPositionDiscontinuity(
           oldPosition: Player.PositionInfo,
           newPosition: Player.PositionInfo,
-          reason: Int
+          reason: Int,
         ) {
           videoViewModel.setCurrentPosition(newPosition.contentPositionMs, false)
         }

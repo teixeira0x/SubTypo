@@ -55,8 +55,8 @@ public class SubVideoView extends PlayerView {
     }
   }
 
-  public void setVideoPath(String path) {
-    player.setMediaItem(MediaItem.fromUri(path));
+  public void setVideoPath(String videoPath) {
+    player.setMediaItem(MediaItem.fromUri(videoPath));
     player.prepare();
   }
 

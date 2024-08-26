@@ -51,7 +51,7 @@ class VideoViewModel : ViewModel() {
 
   fun observeCurrentPosition(
     lifecycleOwner: LifecycleOwner,
-    observer: Observer<Pair<Long, Boolean>>
+    observer: Observer<Pair<Long, Boolean>>,
   ) {
     _currentPosition.observe(lifecycleOwner, observer)
   }

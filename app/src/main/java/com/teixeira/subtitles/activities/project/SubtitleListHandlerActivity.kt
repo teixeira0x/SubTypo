@@ -110,7 +110,7 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
           val file = UriUtils.uri2File(uri)
           val timedTextInfo = TimedTextInfo(SubtitleFormat.SUBRIP, file.name, "en")
           timedTextObject =
-            timedTextInfo.getFormat().parseFile(timedTextInfo, FileUtil.readFileContent(uri))
+            timedTextInfo.getFormat().parseFile(timedTextInfo, FileUtil.readFileFromUri(uri))
         } catch (e: Exception) {
           withContext(Dispatchers.Main) {
             DialogUtils.createSimpleDialog(
@@ -147,24 +147,24 @@ abstract class SubtitleListHandlerActivity : VideoHandlerActivity() {
 
   override fun onExportSubtitleFile(uri: Uri?) {
     super.onExportSubtitleFile(uri)
-
-    uri ?: return
-
-    try {
-      val timedTextObject = subtitlesViewModel.selectedTimedTextObject!!
-      FileUtil.writeFileContent(uri, timedTextObject.toFile())
-      ToastUtils.showLong(
-        R.string.proj_export_saved,
-        UriUtils.uri2FileNoCacheCopy(uri).getAbsolutePath(),
-      )
-    } catch (e: Exception) {
-      DialogUtils.createSimpleDialog(
-          this,
-          getString(R.string.error_exporting_subtitles),
-          e.toString(),
+    
+    if (uri != null) {
+      try {
+        val timedTextObject = subtitlesViewModel.selectedTimedTextObject!!
+        FileUtil.writeFileFromUri(uri, timedTextObject.toFile())
+        ToastUtils.showLong(
+          R.string.proj_export_saved,
+          UriUtils.uri2File(uri).getAbsolutePath(),
         )
-        .setPositiveButton(R.string.ok, null)
-        .show()
+      } catch (e: Exception) {
+        DialogUtils.createSimpleDialog(
+            this,
+            getString(R.string.error_exporting_subtitles),
+            e.toString(),
+          )
+          .setPositiveButton(R.string.ok, null)
+          .show()
+      }
     }
   }
 

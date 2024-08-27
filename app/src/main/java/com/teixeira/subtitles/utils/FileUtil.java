@@ -36,7 +36,7 @@ public class FileUtil {
     return sb.toString();
   }
 
-  public static String readFileContent(Uri uri) throws IOException {
+  public static String readFileFromUri(Uri uri) throws IOException {
     InputStream inputStream = App.getInstance().getContentResolver().openInputStream(uri);
     StringBuilder sb = new StringBuilder();
     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -49,7 +49,7 @@ public class FileUtil {
     return sb.toString();
   }
 
-  public static void writeFileContent(Uri uri, String content) throws IOException {
+  public static void writeFileFromUri(Uri uri, String content) throws IOException {
     OutputStream outputStream = App.getInstance().getContentResolver().openOutputStream(uri);
     if (outputStream != null) {
       outputStream.write(content.getBytes());

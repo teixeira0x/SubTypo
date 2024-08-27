@@ -68,5 +68,5 @@ dependencies {
   implementation(libs.common.utilcode)
   implementation(libs.common.android.coroutines)
 
-  implementation(project(":core:subtitles"))
+  implementation(project(":subtitle"))
 }

@@ -19,7 +19,7 @@ plugins {
 }
 
 android {
-  namespace = "com.teixeira.subtitles.subtitles"
+  namespace = "com.teixeira.subtitles.subtitle"
 
   buildTypes {
     release {

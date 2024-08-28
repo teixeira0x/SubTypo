@@ -7,13 +7,6 @@
         app:iconSpaceReserved="false"
         app:title="@string/pref_category_development">
 
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"
-            app:key="pref_development_undo_redo"
-            app:title="@string/pref_development_undo_and_redo"
-            app:summary="@string/pref_development_prefs_summary" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

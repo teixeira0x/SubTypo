@@ -9,7 +9,7 @@ import androidx.preference.PreferenceManager;
 import com.blankj.utilcode.util.ThrowableUtils;
 import com.google.android.material.color.DynamicColors;
 import com.teixeira.subtitles.activities.CrashActivity;
-import com.teixeira.subtitles.preferences.Preferences;
+import com.teixeira.subtitles.preferences.PreferencesKt;
 
 public class App extends Application {
 
@@ -35,7 +35,7 @@ public class App extends Application {
   }
 
   public void updateUIMode() {
-    AppCompatDelegate.setDefaultNightMode(Preferences.getUIModeValue());
+    AppCompatDelegate.setDefaultNightMode(PreferencesKt.getAparenceUIModeValue());
   }
 
   public void openUrl(String url) {

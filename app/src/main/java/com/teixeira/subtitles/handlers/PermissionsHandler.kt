@@ -41,7 +41,7 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
   DefaultLifecycleObserver {
 
   companion object {
-    const val PERMISSION_KEY = "read_media_video_files"
+    const val KEY_PERMISSION = "key_read_media_video_files"
 
     @JvmStatic
     fun Context.isPermissionsGranted(): Boolean {
@@ -68,7 +68,7 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
   override fun onCreate(owner: LifecycleOwner) {
     reqPermissions =
       registry.register(
-        PERMISSION_KEY,
+        KEY_PERMISSION,
         owner,
         ActivityResultContracts.RequestMultiplePermissions(),
         this::onResultCallback,

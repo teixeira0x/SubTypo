@@ -15,4 +15,4 @@
 
 package com.teixeira.subtitles.activities.project
 
-class ProjectActivity : SubtitleListHandlerActivity()
+class ProjectActivity : ParagraphListHandlerActivity()

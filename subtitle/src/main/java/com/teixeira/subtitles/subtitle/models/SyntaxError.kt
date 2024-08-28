@@ -13,18 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira.subtitles.subtitle.exceptions;
+package com.teixeira.subtitles.subtitle.models
 
-/**
- * @author Felipe Teixeira
- */
-public class ParsingException extends Exception {
-
-  public ParsingException(String message) {
-    super(message);
-  }
-
-  public ParsingException(String message, Exception cause) {
-    super(message, cause);
-  }
-}
+/** @author Felipe Teixeira */
+data class SyntaxError(val message: String, val line: Int)

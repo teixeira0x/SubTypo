@@ -16,18 +16,19 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/delete_subtitle"
+            android:layout_toLeftOf="@id/delete"
             android:textSize="14sp"
-            android:id="@+id/current_video_position" />
+            android:id="@+id/title" />
 
         <ImageView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:visibility="invisible"
             android:src="@drawable/ic_delete"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             style="@style/ControllerImageStyle"
-            android:id="@+id/delete_subtitle" />
+            android:id="@+id/delete" />
 
     </RelativeLayout>
 
@@ -51,74 +52,36 @@
             android:paddingHorizontal="@dimen/dialog_padding"
             android:paddingTop="@dimen/dialog_padding">
 
-            <FrameLayout
-                android:layout_height="100dp"
-                android:layout_width="match_parent"
-                android:background="@drawable/transparent_background"
-                android:paddingHorizontal="5dp"
-                android:id="@+id/preview_container">
-
-                <com.teixeira.subtitles.subtitle.SubtitleView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/preview" />
-
-            </FrameLayout>
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_marginVertical="5dp">
+                android:hint="@string/proj_subtitle_enter_name"
+                style="@style/AppTheme.TextInputLayout"
+                android:id="@+id/til_name">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:hint="@string/subtitle_enter_start_time"
-                    android:layout_weight="1.0"
-                    style="@style/AppTheme.TextInputLayout"
-                    android:id="@+id/til_start_time">
+                    android:layout_width="match_parent"
+                    android:singleLine="true"
+                    android:id="@+id/tie_name" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:singleLine="true"
-                        android:id="@+id/tie_start_time" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:hint="@string/subtitle_enter_end_time"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1.0"
-                    style="@style/AppTheme.TextInputLayout"
-                    android:id="@+id/til_end_time">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:singleLine="true"
-                        android:id="@+id/tie_end_time" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/subtitle_enter_text"
-                android:layout_marginTop="5dp"
-                style="@style/AppTheme.TextInputLayout"
-                android:id="@+id/til_text">
+                android:hint="@string/proj_subtitle_enter_format"
+                style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+                android:layout_marginTop="10dp"
+                android:id="@+id/til_format">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:maxLines="3"
-                    android:id="@+id/tie_text" />
+                    android:singleLine="true"
+                    android:inputType="none"
+                    android:id="@+id/tie_format" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

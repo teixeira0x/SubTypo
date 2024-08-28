@@ -56,7 +56,7 @@
         android:background="?attr/colorOutlineVariant"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/subtitles_container"
+        app:layout_constraintBottom_toTopOf="@id/paragraphs_container"
         app:layout_constraintTop_toBottomOf="@id/controller_container"
         android:id="@+id/divider" />
 
@@ -67,14 +67,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_divider"
         app:layout_constraintTop_toBottomOf="@id/divider"
-        android:id="@+id/subtitles_container">
+        android:id="@+id/paragraphs_container">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_below="@id/controller_container"
             android:padding="5dp"
-            android:id="@+id/subtitles" />
+            android:id="@+id/paragraphs" />
 
         <TextView
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:textSize="14sp"
             android:layout_gravity="center"
             android:text="@string/proj_no_subtitles"
-            android:id="@+id/no_subtitles" />
+            android:id="@+id/no_paragraphs" />
 
     </FrameLayout>
 
@@ -93,7 +93,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/time_line"
-        app:layout_constraintTop_toBottomOf="@id/subtitles_container"
+        app:layout_constraintTop_toBottomOf="@id/paragraphs_container"
         android:id="@+id/bottom_divider" />
 
     <com.teixeira.subtitles.ui.TimeLineView

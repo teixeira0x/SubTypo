@@ -22,9 +22,9 @@ import android.text.TextUtils;
 import com.blankj.utilcode.util.EncodeUtils;
 import com.blankj.utilcode.util.UriUtils;
 import com.teixeira.subtitles.models.Project;
+import com.teixeira.subtitles.subtitle.formats.SubRipFormat;
 import com.teixeira.subtitles.subtitle.formats.SubtitleFormat;
-import com.teixeira.subtitles.subtitle.models.TimedTextInfo;
-import com.teixeira.subtitles.subtitle.models.TimedTextObject;
+import com.teixeira.subtitles.subtitle.models.Subtitle;
 import com.teixeira.subtitles.utils.FileUtil;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -144,9 +144,7 @@ public class ProjectRepository {
       File videoFile = UriUtils.uri2File(videoUri);
 
       writeConfigFile(projectDir.getPath(), name, videoFile, PROJECT_CREATOR_VERSION);
-      writeSubtitleDataFile(
-          projectDir.getAbsolutePath(),
-          List.of(new TimedTextObject(new TimedTextInfo(SubtitleFormat.SUBRIP, "subtitle", "en"))));
+      writeSubtitleDataFile(projectDir.getAbsolutePath(), List.of(new Subtitle("subtitle", new SubRipFormat(), new ArrayList<>())));
       return new Project(
           projectId, projectDir.getPath(), name, videoFile.getPath(), PROJECT_CREATOR_VERSION);
     } catch (JSONException jsone) {
@@ -204,24 +202,20 @@ public class ProjectRepository {
    * @param projectDir The project directory to write the subtitle data file to.
    * @param project The project to write the subtitle data file.
    */
-  public static void writeSubtitleDataFile(
-      String projectDir, List<TimedTextObject> timedTextObjects) throws JSONException {
-    JSONArray subtitleFilesArr = new JSONArray();
-    for (TimedTextObject timedTextObject : timedTextObjects) {
-
-      TimedTextInfo timedTextInfo = timedTextObject.getTimedTextInfo();
-
-      JSONObject subtitleFileObj = new JSONObject();
-      subtitleFileObj.put("name", timedTextInfo.getName());
-      subtitleFileObj.put("lang", timedTextInfo.getLanguage());
-      subtitleFileObj.put("format", timedTextInfo.getFormat().getExtension());
-      subtitleFileObj.put("content", timedTextObject.toFile());
-      subtitleFilesArr.put(subtitleFileObj);
+  public static void writeSubtitleDataFile(String projectDir, List<Subtitle> subtitles)
+      throws JSONException {
+    JSONArray subtitleArr = new JSONArray();
+    for (Subtitle subtitle : subtitles) {
+      JSONObject subtitleObj = new JSONObject();
+      subtitleObj.put("name", subtitle.getName());
+      subtitleObj.put("format", subtitle.getSubtitleFormat().getExtension());
+      subtitleObj.put("content", subtitle.toText());
+      subtitleArr.put(subtitleObj);
     }
 
     try (BufferedOutputStream outputStream =
         new BufferedOutputStream(new FileOutputStream(projectDir + "/subtitle.data"))) {
-      outputStream.write(EncodeUtils.base64Encode(subtitleFilesArr.toString()));
+      outputStream.write(EncodeUtils.base64Encode(subtitleArr.toString()));
       outputStream.flush();
     } catch (IOException ioe) {
       ioe.printStackTrace();
@@ -234,47 +228,38 @@ public class ProjectRepository {
    * @param project The project to get the subtitle files.
    * @return The list of subtitle files.
    */
-  public static List<TimedTextObject> getProjectTimedTextObjects(Project project)
-      throws JSONException {
-    List<TimedTextObject> timedTextObjects = new ArrayList<>();
+  public static List<Subtitle> getProjectSubtitles(Project project) throws JSONException {
+    List<Subtitle> subtitles = new ArrayList<>();
 
     File subtitleDataFile = new File(project.getPath(), "subtitle.data");
-
     if (subtitleDataFile.exists() && !subtitleDataFile.isDirectory()) {
 
       String subtitleData =
           new String(EncodeUtils.base64Decode(FileUtil.readFile(subtitleDataFile.getPath())));
 
-      JSONArray timedTextObjArr = new JSONArray(subtitleData);
+      JSONArray subtitleArr = new JSONArray(subtitleData);
 
-      if (timedTextObjArr != null) {
-
-        for (int i = 0; i < timedTextObjArr.length(); i++) {
-          JSONObject timedTextJsonObj = timedTextObjArr.getJSONObject(i);
-          if (!isValidTimedTextJsonObj(timedTextJsonObj)) {
+      if (subtitleArr != null) {
+        for (int i = 0; i < subtitleArr.length(); i++) {
+          JSONObject subtitleObj = subtitleArr.getJSONObject(i);
+          if (!isValidSubtitleJsonObj(subtitleObj)) {
             continue;
           }
 
           SubtitleFormat format =
-              SubtitleFormat.getExtensionFormat(timedTextJsonObj.getString("format"));
-          String name = timedTextJsonObj.getString("name");
-          String language = timedTextJsonObj.getString("lang");
-          String content = timedTextJsonObj.getString("content");
+              SubtitleFormat.getExtensionFormat(subtitleObj.getString("format"));
 
-          TimedTextInfo timedTextInfo = new TimedTextInfo(format, name, language);
+          String name = subtitleObj.getString("name");
+          String content = subtitleObj.getString("content");
 
-          try {
-            TimedTextObject timedTextObject =
-                timedTextInfo.getFormat().parseFile(timedTextInfo, content);
+          Subtitle subtitle = new Subtitle(name, format, format.parseText(content));
 
-            timedTextObjects.add(timedTextObject);
-          } catch (Exception e) {
-          }
+          subtitles.add(subtitle);
         }
       }
     }
 
-    return timedTextObjects;
+    return subtitles;
   }
 
   /**
@@ -315,20 +300,18 @@ public class ProjectRepository {
     return true;
   }
 
-  private static boolean isValidTimedTextJsonObj(JSONObject timedTextJsonObj) throws JSONException {
-    if (timedTextJsonObj == null) {
+  private static boolean isValidSubtitleJsonObj(JSONObject subtitleJsonObj) throws JSONException {
+    if (subtitleJsonObj == null) {
       return false;
     }
 
-    if (!(timedTextJsonObj.has("name")
-        && timedTextJsonObj.has("lang")
-        && timedTextJsonObj.has("format"))) {
+    if (!(subtitleJsonObj.has("name")
+        && subtitleJsonObj.has("format")&& subtitleJsonObj.has("content"))) {
       return false;
     }
 
-    if (!(timedTextJsonObj.get("name") instanceof String
-        && timedTextJsonObj.get("lang") instanceof String
-        && timedTextJsonObj.get("format") instanceof String)) {
+    if (!(subtitleJsonObj.get("name") instanceof String
+        && subtitleJsonObj.get("format") instanceof String && subtitleJsonObj.has("content"))) {
       return false;
     }
 

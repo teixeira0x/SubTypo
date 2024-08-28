@@ -29,7 +29,7 @@ import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.annotation.Nullable;
-import com.teixeira.subtitles.subtitle.models.Subtitle;
+import com.teixeira.subtitles.subtitle.models.Paragraph;
 
 /**
  * @author Felipe Teixeira
@@ -37,7 +37,7 @@ import com.teixeira.subtitles.subtitle.models.Subtitle;
 public class SubtitleView extends View {
 
   private TextPaint textPaint;
-  private Subtitle subtitle;
+  private Paragraph paragraph;
 
   public SubtitleView(Context context) {
     this(context, null);
@@ -63,22 +63,22 @@ public class SubtitleView extends View {
     drawText(canvas);
   }
 
-  public void setSubtitle(@Nullable Subtitle subtitle) {
-    this.subtitle = subtitle;
+  public void setParagraph(@Nullable Paragraph paragraph) {
+    this.paragraph = paragraph;
     invalidate();
   }
 
   private void drawText(Canvas canvas) {
 
-    if (subtitle == null) {
+    if (paragraph == null) {
       return;
     }
 
     Spanned text;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      text = Html.fromHtml(subtitle.getText(), Html.FROM_HTML_MODE_LEGACY);
+      text = Html.fromHtml(paragraph.getText(), Html.FROM_HTML_MODE_LEGACY);
     } else {
-      text = Html.fromHtml(subtitle.getText());
+      text = Html.fromHtml(paragraph.getText());
     }
 
     SpannableString span = new SpannableString(text);

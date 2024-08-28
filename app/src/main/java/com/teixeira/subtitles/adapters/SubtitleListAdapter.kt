@@ -1,67 +1,62 @@
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.teixeira.subtitles.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.teixeira.subtitles.databinding.LayoutSubtitleItemBinding
+import com.google.android.material.R
+import com.google.android.material.color.MaterialColors
+import com.teixeira.subtitles.databinding.LayoutLanguageItemBinding
 import com.teixeira.subtitles.subtitle.models.Subtitle
 
 class SubtitleListAdapter(
-  val touchHelper: ItemTouchHelper,
-  val onClickListener: (view: View, position: Int, subtitle: Subtitle) -> Unit,
-  val onLongClickListener: (view: View, position: Int, subtitle: Subtitle) -> Boolean,
-) : RecyclerView.Adapter<SubtitleListAdapter.VH>() {
+  val subtitles: List<Subtitle>,
+  val selectedIndex: Int,
+  val onClickListener: (view: View, index: Int, subtitle: Subtitle) -> Unit,
+  val onLongClickListener: (index: Int, subtitle: Subtitle) -> Boolean,
+) : RecyclerView.Adapter<SubtitleListAdapter.SubtitleViewHolder>() {
 
-  var subtitles: List<Subtitle>? = null
-  var isVideoPlaying: Boolean = false
+  inner class SubtitleViewHolder(val binding: LayoutLanguageItemBinding) :
+    RecyclerView.ViewHolder(binding.root)
 
-  var videoSubtitleIndex: Int = -1
-    set(value) {
-      if (field != value) {
-        val lastVideoSubtitleIndex = field
-        field = value
-
-        if (lastVideoSubtitleIndex >= 0) {
-          notifyItemChanged(lastVideoSubtitleIndex)
-        }
-
-        if (value >= 0) {
-          notifyItemChanged(value)
-        }
-      }
-    }
-
-  inner class VH(val binding: LayoutSubtitleItemBinding) : RecyclerView.ViewHolder(binding.root)
-
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-    return VH(LayoutSubtitleItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubtitleViewHolder {
+    return SubtitleViewHolder(
+      LayoutLanguageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
   }
 
-  override fun onBindViewHolder(holder: VH, position: Int) {
+  override fun onBindViewHolder(holder: SubtitleViewHolder, position: Int) {
     holder.binding.apply {
-      val subtitle = subtitles!![position]
-      text.text = subtitle.text
-      inScreen.isVisible = position == videoSubtitleIndex
-      startAndEnd.text = "${subtitle.startTime.time} | ${subtitle.endTime.time}"
+      val subtitle = subtitles[position]
 
-      dragHandler.setOnLongClickListener {
-        if (!isVideoPlaying) {
-          touchHelper.startDrag(holder)
-        }
-        true
+      name.text = subtitle.name + subtitle.subtitleFormat.extension
+
+      if (selectedIndex == position) {
+        root.setCardBackgroundColor(MaterialColors.getColor(root, R.attr.colorOutlineVariant))
       }
-      root.setOnClickListener { view ->
-        onClickListener(view, subtitles!!.indexOf(subtitle), subtitle)
-      }
-      root.setOnLongClickListener { view ->
-        onLongClickListener(view, subtitles!!.indexOf(subtitle), subtitle)
-      }
+
+      edit.setOnClickListener { onClickListener(it, subtitles.indexOf(subtitle), subtitle) }
+
+      root.setOnClickListener { onClickListener(it, subtitles.indexOf(subtitle), subtitle) }
+      root.setOnLongClickListener { onLongClickListener(subtitles.indexOf(subtitle), subtitle) }
     }
   }
 
-  override fun getItemCount(): Int = subtitles?.size ?: 0
+  override fun getItemCount(): Int = subtitles.size
 }

@@ -36,9 +36,7 @@ class ProjectEditorDialogFragment : DialogFragment() {
     @JvmStatic
     fun newInstance(project: Project? = null): ProjectEditorDialogFragment {
       return ProjectEditorDialogFragment().also {
-        if (project != null) {
-          it.arguments = Bundle().apply { putParcelable(BaseProjectActivity.KEY_PROJECT, project) }
-        }
+        it.arguments = Bundle().apply { putParcelable(BaseProjectActivity.KEY_PROJECT, project) }
       }
     }
   }
@@ -60,10 +58,8 @@ class ProjectEditorDialogFragment : DialogFragment() {
     super.onCreate(savedInstanceState)
 
     val args = arguments
-    isExistingProject = args?.containsKey(BaseProjectActivity.KEY_PROJECT) ?: false
-    if (isExistingProject) {
-      project = args!!.getParcelableCompat<Project>(BaseProjectActivity.KEY_PROJECT)
-    }
+    project = args?.getParcelableCompat<Project>(BaseProjectActivity.KEY_PROJECT)
+    isExistingProject = project != null
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

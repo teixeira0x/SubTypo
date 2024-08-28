@@ -15,24 +15,22 @@
 
 package com.teixeira.subtitles.activities.project
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.activities.BaseActivity
-import com.teixeira.subtitles.adapters.SubtitleListAdapter
+import com.teixeira.subtitles.adapters.ParagraphListAdapter
 import com.teixeira.subtitles.databinding.ActivityProjectBinding
-import com.teixeira.subtitles.utils.ToastUtils
+import com.teixeira.subtitles.handlers.SubtitlePickerHandler
+import com.teixeira.subtitles.handlers.SubtitleSaverHandler
 import com.teixeira.subtitles.utils.cancelIfActive
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 import com.teixeira.subtitles.viewmodels.VideoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Base class for ProjectActivity that handles most activity related things.
@@ -48,14 +46,12 @@ abstract class BaseProjectActivity : BaseActivity() {
   protected val videoViewModel by viewModels<VideoViewModel>()
   protected val subtitlesViewModel by viewModels<SubtitlesViewModel>()
 
-  private val subtitleFilePicker =
-    registerForActivityResult(ActivityResultContracts.GetContent(), this::onPickSubtitleFile)
-
-  private val subtitleFileExporter =
-    registerForActivityResult(
-      ActivityResultContracts.CreateDocument("text/*"),
-      this::onExportSubtitleFile,
-    )
+  private val subtitlePickerHandler by lazy {
+    SubtitlePickerHandler(this, activityResultRegistry, subtitlesViewModel)
+  }
+  private val subtitleSaverHandler by lazy {
+    SubtitleSaverHandler(this, activityResultRegistry, subtitlesViewModel)
+  }
 
   protected val binding: ActivityProjectBinding
     get() = checkNotNull(_binding) { "Activity has been destroyed!" }
@@ -74,6 +70,12 @@ abstract class BaseProjectActivity : BaseActivity() {
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
+    lifecycle.apply {
+      addObserver(subtitlePickerHandler)
+      addObserver(subtitleSaverHandler)
+    }
+
     configureListeners()
   }
 
@@ -83,30 +85,13 @@ abstract class BaseProjectActivity : BaseActivity() {
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val id = item.itemId
-
-    when (id) {
-      R.id.menu_export -> {
-        if (
-          subtitlesViewModel.subtitles?.isEmpty() ?: true ||
-            subtitlesViewModel.timedTextObjects.isEmpty()
-        ) {
-          ToastUtils.showShort(R.string.error_no_subtitles_to_export)
-          return false
-        }
-        videoViewModel.pauseVideo()
-        val timedTextObject = subtitlesViewModel.selectedTimedTextObject
-        if (timedTextObject != null) {
-          subtitleFileExporter.launch(
-            timedTextObject.timedTextInfo.name + timedTextObject.timedTextInfo.format.extension
-          )
-        }
-      }
-      R.id.menu_import -> subtitleFilePicker.launch("*/*")
+    when (item.itemId) {
+      R.id.menu_export -> subtitleSaverHandler.launchSaver()
+      R.id.menu_import -> subtitlePickerHandler.launchPicker()
       else -> {}
     }
 
-    return super.onOptionsItemSelected(item)
+    return true
   }
 
   override fun onDestroy() {
@@ -125,11 +110,7 @@ abstract class BaseProjectActivity : BaseActivity() {
 
   protected open fun configureListeners() {}
 
-  protected open fun onPickSubtitleFile(uri: Uri?) {}
-
-  protected open fun onExportSubtitleFile(uri: Uri?) {}
-
-  protected abstract fun requireSubtitleListAdapter(): SubtitleListAdapter
+  protected abstract fun requireParagraphListAdapter(): ParagraphListAdapter
 
   companion object {
     const val KEY_PROJECT = "project"

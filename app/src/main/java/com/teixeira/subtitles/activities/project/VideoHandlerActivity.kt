@@ -24,8 +24,7 @@ import androidx.media3.common.Player
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira.subtitles.R
-import com.teixeira.subtitles.fragments.dialogs.SubtitleEditorDialogFragment
-import com.teixeira.subtitles.preferences.Preferences
+import com.teixeira.subtitles.fragments.dialogs.ParagraphEditorDialogFragment
 import com.teixeira.subtitles.subtitle.utils.TimeUtils
 import com.teixeira.subtitles.utils.UiUtils
 
@@ -42,11 +41,6 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     super.onCreate(savedInstanceState)
 
     progressTracker = Runnable { progressTracker() }
-
-    val undoManagerEnabled = Preferences.isDevelopmentUndoAndRedoEnabled()
-    binding.controllerContent.redo.isVisible = undoManagerEnabled
-    binding.controllerContent.undo.isVisible = undoManagerEnabled
-    subtitlesViewModel.isUndoManagerEnabled = undoManagerEnabled
 
     binding.videoContent.videoView.setVideoPath(project.videoPath)
     binding.videoContent.videoView.seekTo(videoViewModel.currentPosition)
@@ -132,11 +126,11 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     binding.controllerContent.changeLanguage.setOnClickListener { showLanguageSelectorDialog() }
     binding.controllerContent.addSubtitle.setOnClickListener {
       videoViewModel.pauseVideo()
-      if (subtitlesViewModel.timedTextObjects.isEmpty()) {
-        showTimedTextEditorDialog()
+      if (subtitlesViewModel.subtitles.isEmpty()) {
+        showSubtitleEditorDialog()
         return@setOnClickListener
       }
-      SubtitleEditorDialogFragment.newInstance(videoViewModel.currentPosition)
+      ParagraphEditorDialogFragment.newInstance(videoViewModel.currentPosition)
         .show(getSupportFragmentManager(), null)
     }
   }
@@ -156,25 +150,23 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     binding.controllerContent.seekBar.setProgress(currentPositionInt)
     binding.timeLine.setCurrentPosition(currentPosition)
 
-    val subtitles = subtitlesViewModel.subtitles
-    var subtitleFound = false
-    subtitles?.let {
-      for (i in subtitles.indices) {
-        val subtitle = it.get(i)
-        val startTime = subtitle.startTime.milliseconds.toInt()
-        val endTime = subtitle.endTime.milliseconds.toInt()
+    val paragraphs = subtitlesViewModel.paragraphs
+    var paragraphFound = false
+    for (i in paragraphs.indices) {
+      val paragraph = paragraphs.get(i)
+      val startTime = paragraph.startTime.milliseconds.toInt()
+      val endTime = paragraph.endTime.milliseconds.toInt()
 
-        if (currentPositionInt >= startTime && currentPositionInt <= endTime) {
-          binding.videoContent.subtitleView.setSubtitle(subtitle)
-          subtitlesViewModel.videoSubtitleIndex = i
-          subtitleFound = true
-          break
-        }
+      if (currentPositionInt >= startTime && currentPositionInt <= endTime) {
+        binding.videoContent.subtitleView.setParagraph(paragraph)
+        subtitlesViewModel.videoParagraphIndex = i
+        paragraphFound = true
+        break
       }
     }
-    binding.videoContent.subtitleView.isVisible = subtitleFound
-    if (!subtitleFound) {
-      subtitlesViewModel.videoSubtitleIndex = -1
+    binding.videoContent.subtitleView.isVisible = paragraphFound
+    if (!paragraphFound) {
+      subtitlesViewModel.videoParagraphIndex = -1
     }
   }
 
@@ -228,7 +220,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
         if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
       )
       binding.videoContent.videoView.setPlaying(isPlaying)
-      requireSubtitleListAdapter().isVideoPlaying = isPlaying
+      requireParagraphListAdapter().isVideoPlaying = isPlaying
     }
   }
 

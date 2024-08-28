@@ -6,7 +6,7 @@ exoplayer-version = "1.4.1"
 [libraries]
 
 # Android
-android-desugar = { module = "com.android.tools:desugar_jdk_libs", version ="2.1.0" }
+android-desugar = { module = "com.android.tools:desugar_jdk_libs", version ="2.1.1" }
 
 # AndroidX
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.8.1" }

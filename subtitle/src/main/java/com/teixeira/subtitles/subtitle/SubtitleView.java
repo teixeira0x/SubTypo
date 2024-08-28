@@ -76,9 +76,9 @@ public class SubtitleView extends View {
 
     Spanned text;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      text = Html.fromHtml(paragraph.getText(), Html.FROM_HTML_MODE_LEGACY);
+      text = Html.fromHtml(paragraph.getText().replaceAll("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY);
     } else {
-      text = Html.fromHtml(paragraph.getText());
+      text = Html.fromHtml(paragraph.getText().replaceAll("\n", "<br/>"));
     }
 
     SpannableString span = new SpannableString(text);
@@ -94,5 +94,13 @@ public class SubtitleView extends View {
     canvas.translate(0, (getHeight() - 60) - staticLayout.getHeight());
     staticLayout.draw(canvas);
     canvas.restore();
+  }
+
+  String formatParagraphText(String text) {
+    String[] lines = text.split("\n");
+    for (String line : lines) {
+      
+    }
+    return text;
   }
 }

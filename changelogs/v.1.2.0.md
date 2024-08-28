@@ -10,7 +10,18 @@ Written by: @teixeira0x
 
 ## Note
 
-The subtitle saving system has been updated again to implement the system of being able to edit multiple subtitle files in a single project. Subtitles from projects created in previous versions will be lost. I apologize again.
+The subtitle saving system has been updated again to implement the system of being able to edit multiple subtitles in a single project. Subtitles from projects created in previous versions will be lost. I apologize again.
+
+## Changes
+- Various interface improvements.
+- Improved permission request.
+- Improve subtitle import and saving.
+
+## Additions
+- Adds option to edit more than one caption in a single project.
+
+## Fixes
+- Undo & Redo.
 
 <hr/>
 

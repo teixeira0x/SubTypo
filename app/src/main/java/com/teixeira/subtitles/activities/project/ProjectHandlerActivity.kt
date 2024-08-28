@@ -101,19 +101,13 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
     }
   }
 
-  protected open fun onInitializeProject() {
-    val subtitles = subtitlesViewModel.subtitles
-    if (subtitles.isNotEmpty()) {
-      subtitlesViewModel.setCurrentSubtitle(0, subtitles[0])
-    }
-    subtitlesViewModel.saveSubtitles = true
-  }
+  protected open fun onInitializeProject() {}
 
   protected fun showSubtitleEditorDialog(index: Int = -1) {
     SubtitleEditorDialogFragment.newInstance(index).show(supportFragmentManager, "")
   }
 
-  protected fun showLanguageSelectorDialog() {
+  protected fun showSubtitleSelectorDialog() {
     val binding = LayoutSubtitlesDialogBinding.inflate(layoutInflater)
     val builder = MaterialAlertDialogBuilder(this)
     builder.setPositiveButton(R.string.cancel, null)

@@ -31,7 +31,7 @@ class SubtitlesViewModel : ViewModel() {
 
   private val _videoParagraphIndex = MutableLiveData<Int>(-1)
   private val _scrollPosition = MutableLiveData<Int>(0)
-  private val _saveSubtitles = MutableLiveData<Boolean>(false)
+  private val _autoSave = MutableLiveData<Boolean>(false)
 
   var subtitles: MutableList<Subtitle>
     get() = _subtitles.value ?: mutableListOf()
@@ -66,10 +66,10 @@ class SubtitlesViewModel : ViewModel() {
       _scrollPosition.value = value
     }
 
-  var saveSubtitles: Boolean
-    get() = _saveSubtitles.value!!
+  var autoSave: Boolean
+    get() = _autoSave.value!!
     set(value) {
-      _saveSubtitles.value = value
+      _autoSave.value = value
     }
 
   fun setCurrentSubtitle(index: Int, subtitle: Subtitle?) {
@@ -207,7 +207,7 @@ class SubtitlesViewModel : ViewModel() {
     _scrollPosition.observe(lifecycleOwner, observer)
   }
 
-  fun observeSaveSubtitles(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
-    _saveSubtitles.observe(lifecycleOwner, observer)
+  fun observeAautoSave(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
+    _autoSave.observe(lifecycleOwner, observer)
   }
 }

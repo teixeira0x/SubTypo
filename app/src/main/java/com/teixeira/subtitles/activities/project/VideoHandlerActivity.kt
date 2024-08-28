@@ -123,7 +123,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
       binding.videoContent.videoView.seekFoward()
     }
 
-    binding.controllerContent.changeLanguage.setOnClickListener { showLanguageSelectorDialog() }
+    binding.controllerContent.changeLanguage.setOnClickListener { showSubtitleSelectorDialog() }
     binding.controllerContent.addSubtitle.setOnClickListener {
       videoViewModel.pauseVideo()
       if (subtitlesViewModel.subtitles.isEmpty()) {
@@ -133,15 +133,6 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
       ParagraphEditorDialogFragment.newInstance(videoViewModel.currentPosition)
         .show(getSupportFragmentManager(), null)
     }
-  }
-
-  override fun onInitializeProject() {
-    super.onInitializeProject()
-    val isPrepared = videoViewModel.isPrepared
-    UiUtils.setImageEnabled(binding.controllerContent.skipBackward, isPrepared)
-    UiUtils.setImageEnabled(binding.controllerContent.play, isPrepared)
-    UiUtils.setImageEnabled(binding.controllerContent.skipFoward, isPrepared)
-    UiUtils.setImageEnabled(binding.controllerContent.addSubtitle, isPrepared)
   }
 
   protected fun updateVideoUI(currentPosition: Long) {

@@ -62,20 +62,29 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     setSubtitlesViewModelObservers()
   }
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-  }
-
   override fun postDestroy() {
     super.postDestroy()
 
     paragraphListAdapter.unregisterAdapterDataObserver(adapterDataObserver)
   }
 
+  override fun onInitializeProject() {
+    super.onInitializeProject()
+    ThreadUtils.getMainHandler().post {
+      val subtitles = subtitlesViewModel.subtitles
+      if (subtitles.isNotEmpty()) {
+        subtitlesViewModel.setCurrentSubtitle(0, subtitles[0])
+      }
+      subtitlesViewModel.autoSave = true
+    }
+  }
+
   override fun requireParagraphListAdapter(): ParagraphListAdapter = paragraphListAdapter
 
   private fun setSubtitlesViewModelObservers() {
-    subtitlesViewModel.observeSubtitles(this) { if (it != null) saveProjectAsync() }
+    subtitlesViewModel.observeSubtitles(this) {
+      if (it != null && subtitlesViewModel.autoSave) saveProjectAsync()
+    }
     subtitlesViewModel.observeCurrentSubtitle(this) { (_, paragraph) ->
       val paragraphs = paragraph?.paragraphs
       paragraphListAdapter.paragraphs = paragraphs
@@ -110,12 +119,13 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     override fun onChanged() {
       super.onChanged()
 
-      if (subtitlesViewModel.saveSubtitles) {
-        ThreadUtils.getMainHandler().apply {
+      val handler = ThreadUtils.getMainHandler()
+      if (subtitlesViewModel.autoSave) {
+        handler.apply {
           removeCallbacks(saveProjectCallback)
           postDelayed(saveProjectCallback, 10L)
         }
-      }
+      } else handler.removeCallbacks(saveProjectCallback)
     }
   }
 

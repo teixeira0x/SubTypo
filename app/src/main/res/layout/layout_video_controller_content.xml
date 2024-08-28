@@ -68,8 +68,8 @@
             android:id="@+id/play" />
 
         <ImageView
-            android:src="@drawable/ic_translate"
-            android:layout_toStartOf="@id/add_subtitle"
+            android:src="@drawable/ic_subtitle"
+            android:layout_toStartOf="@id/add_paragraph"
             style="@style/ControllerImageStyle"
             android:id="@+id/change_language" />
 
@@ -77,7 +77,7 @@
             android:src="@drawable/ic_plus"
             android:layout_alignParentEnd="true"
             style="@style/ControllerImageStyle"
-            android:id="@+id/add_subtitle" />
+            android:id="@+id/add_paragraph" />
 
     </RelativeLayout>
 

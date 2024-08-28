@@ -124,14 +124,14 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     }
 
     binding.controllerContent.changeLanguage.setOnClickListener { showSubtitleSelectorDialog() }
-    binding.controllerContent.addSubtitle.setOnClickListener {
+    binding.controllerContent.addParagraph.setOnClickListener {
       videoViewModel.pauseVideo()
       if (subtitlesViewModel.subtitles.isEmpty()) {
         showSubtitleEditorDialog()
         return@setOnClickListener
       }
       ParagraphEditorDialogFragment.newInstance(videoViewModel.currentPosition)
-        .show(getSupportFragmentManager(), null)
+        .show(supportFragmentManager, null)
     }
   }
 
@@ -194,7 +194,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
       UiUtils.setImageEnabled(binding.controllerContent.skipBackward, isPrepared)
       UiUtils.setImageEnabled(binding.controllerContent.play, isPrepared)
       UiUtils.setImageEnabled(binding.controllerContent.skipFoward, isPrepared)
-      UiUtils.setImageEnabled(binding.controllerContent.addSubtitle, isPrepared)
+      UiUtils.setImageEnabled(binding.controllerContent.addParagraph, isPrepared)
     }
     videoViewModel.observeCurrentPosition(this) { (currentPosition, seekTo) ->
       if (seekTo) {

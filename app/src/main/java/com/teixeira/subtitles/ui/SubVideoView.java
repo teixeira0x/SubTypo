@@ -16,17 +16,16 @@
 package com.teixeira.subtitles.ui;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
-import com.blankj.utilcode.util.ThreadUtils;
 
 public class SubVideoView extends PlayerView {
 
-  private static final Handler mainHandler = ThreadUtils.getMainHandler();
+  private static final long SEEK_BACK_MS = 5_000L;
+  private static final long SEEK_FOWARD_MS = 5_000L;
 
   private Player.Listener listener;
   private ExoPlayer player;
@@ -42,7 +41,11 @@ public class SubVideoView extends PlayerView {
   public SubVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
-    player = new ExoPlayer.Builder(context).build();
+    player =
+        new ExoPlayer.Builder(context)
+            .setSeekBackIncrementMs(SEEK_BACK_MS)
+            .setSeekForwardIncrementMs(SEEK_FOWARD_MS)
+            .build();
     setUseController(false);
     setPlayer(player);
   }

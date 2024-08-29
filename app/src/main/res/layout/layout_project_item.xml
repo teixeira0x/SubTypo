@@ -10,8 +10,7 @@
 
     <RelativeLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:padding="5dp">
+        android:layout_width="match_parent">
 
         <RelativeLayout
             android:layout_height="wrap_content"
@@ -34,6 +33,7 @@
                 android:layout_toLeftOf="@id/chevron"
                 android:textSize="14sp"
                 android:singleLine="true"
+                android:layout_marginTop="2dp"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/name" />
 
@@ -64,7 +64,6 @@
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_below="@id/container"
-            android:layout_marginTop="4dp"
             android:id="@+id/options_container">
 
             <View

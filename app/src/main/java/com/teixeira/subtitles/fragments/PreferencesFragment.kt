@@ -1,6 +1,7 @@
-package com.teixeira.subtitles.preferences.fragments
+package com.teixeira.subtitles.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.preference.Preference
@@ -8,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.teixeira.subtitles.App
 import com.teixeira.subtitles.BuildConfig
 import com.teixeira.subtitles.R
+import com.teixeira.subtitles.viewmodels.MainViewModel
 import com.teixeira.subtitles.viewmodels.PreferencesViewModel
 
 class PreferencesFragment : PreferenceFragmentCompat() {
@@ -16,28 +18,20 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     const val FRAGMENT_TAG = "PreferencesFragment"
   }
 
+  private val mainViewModel by viewModels<MainViewModel>(ownerProducer = { requireActivity() })
   private val preferencesViewModel by viewModels<PreferencesViewModel>()
 
   private val onBackPressedCallback =
     object : OnBackPressedCallback(false) {
       override fun handleOnBackPressed() {
-        val currentPreferencesId = preferencesViewModel.currentPreferencesId
-        if (currentPreferencesId != R.xml.preferences) {
+        if (preferencesViewModel.currentPreferencesId != R.xml.preferences) {
           preferencesViewModel.currentPreferencesId = R.xml.preferences
         }
       }
     }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
-  }
-
-  override fun onResume() {
-    super.onResume()
-    onBackPressedCallback.isEnabled = preferencesViewModel.currentPreferencesId != R.xml.preferences
-  }
+  private val versionSummary: String
+    get() = "${BuildConfig.VERSION_NAME} (${BuildConfig.BUILD_TYPE.uppercase()})"
 
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     preferencesViewModel.observeCurrentPreferencesId(this) {
@@ -47,15 +41,26 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     }
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+
+    mainViewModel.observeCurrentFragmentIndex(this) {
+      onBackPressedCallback.isEnabled =
+        it == MainViewModel.FRAGMENT_SETTINGS_INDEX &&
+          preferencesViewModel.currentPreferencesId != R.xml.preferences
+    }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    onBackPressedCallback.isEnabled = false
+  }
+
   private fun onPreferencesIdChange(preferencesId: Int) {
     if (preferencesId == R.xml.preferences) {
       findPreference<Preference>("pref_general")?.setOnPreferenceClickListener { _ ->
         preferencesViewModel.currentPreferencesId = R.xml.preferences_general
-        true
-      }
-
-      findPreference<Preference>("pref_development")?.setOnPreferenceClickListener { _ ->
-        preferencesViewModel.currentPreferencesId = R.xml.preferences_development
         true
       }
 
@@ -64,13 +69,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         true
       }
 
-      findPreference<Preference>("pref_version")?.setSummary(createVersionText())
+      findPreference<Preference>("pref_version")?.setSummary(versionSummary)
     }
-  }
-
-  private fun createVersionText(): String {
-    val buildVersion = BuildConfig.VERSION_NAME
-    val buildType = BuildConfig.BUILD_TYPE
-    return "$buildVersion ($buildType)"
   }
 }

@@ -37,17 +37,13 @@
     <string name="pref_ui_mode_value_light">Light</string>
     <string name="pref_ui_mode_value_dark">Dark</string>
     <string name="pref_ui_mode_value_follow">Follow System</string>
-    <string name="pref_development">Development</string>
-    <string name="pref_development_summary">Features under development</string>
-    <string name="pref_category_development">Development</string>
-    <string name="pref_development_undo_and_redo">Enable Undo &amp; Redo</string>
-    <string name="pref_development_prefs_summary">This functionality is under development and unexpected errors or bugs may occur when using it.</string>
     <string name="pref_version">Version</string>
     <string name="pref_github">GitHub</string>
     <string name="pref_github_summary">This app is open source!</string>
     <string name="pref_open_source_license">Open source licenses</string>
 
     <!-- Project -->
+    <string name="projects">Projects</string>
     <string name="proj_initializing">Initializing project..</string>
     <string name="proj_loading">Loading project..</string>
     <string name="proj_saving">Saving project..</string>

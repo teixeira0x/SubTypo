@@ -5,30 +5,30 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/settings">
+        app:title="@string/pref_category_configure">
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="pref_general"
-            app:title="@string/pref_general"
-            app:summary="@string/pref_general_summary" />
+            app:key="pref_configure_general_key"
+            app:title="@string/pref_configure_general"
+            app:summary="@string/pref_configure_general_summary" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/about">
+        app:title="@string/pref_category_about">
 
         <Preference
             app:icon="@drawable/ic_github"
-            app:key="pref_github"
-            app:title="@string/pref_github"
-            app:summary="@string/pref_github_summary" />
+            app:key="pref_about_github_key"
+            app:title="@string/pref_about_github"
+            app:summary="@string/pref_about_github_summary" />
 
         <Preference
             app:icon="@drawable/ic_information_outline"
-            app:key="pref_version"
-            app:title="@string/pref_version" />
+            app:key="pref_about_version_key"
+            app:title="@string/pref_about_version" />
 
     </PreferenceCategory>
 

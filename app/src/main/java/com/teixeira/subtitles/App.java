@@ -30,12 +30,14 @@ public class App extends Application {
 
     defaultPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-    DynamicColors.applyToActivitiesIfAvailable(this);
+    if (PreferencesKt.getAparenceMaterialYou()) {
+      DynamicColors.applyToActivitiesIfAvailable(this);
+    }
     updateUIMode();
   }
 
   public void updateUIMode() {
-    AppCompatDelegate.setDefaultNightMode(PreferencesKt.getAparenceUIModeValue());
+    AppCompatDelegate.setDefaultNightMode(PreferencesKt.getAparenceUIMode());
   }
 
   public void openUrl(String url) {

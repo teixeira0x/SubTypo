@@ -9,6 +9,9 @@ import androidx.preference.PreferenceFragmentCompat
 import com.teixeira.subtitles.App
 import com.teixeira.subtitles.BuildConfig
 import com.teixeira.subtitles.R
+import com.teixeira.subtitles.preferences.PREF_ABOUT_GITHUB_KEY
+import com.teixeira.subtitles.preferences.PREF_ABOUT_VERSION_KEY
+import com.teixeira.subtitles.preferences.PREF_CONFIGURE_GENERAL_KEY
 import com.teixeira.subtitles.viewmodels.MainViewModel
 import com.teixeira.subtitles.viewmodels.PreferencesViewModel
 
@@ -59,17 +62,17 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
   private fun onPreferencesIdChange(preferencesId: Int) {
     if (preferencesId == R.xml.preferences) {
-      findPreference<Preference>("pref_general")?.setOnPreferenceClickListener { _ ->
+      findPreference<Preference>(PREF_CONFIGURE_GENERAL_KEY)?.setOnPreferenceClickListener { _ ->
         preferencesViewModel.currentPreferencesId = R.xml.preferences_general
         true
       }
 
-      findPreference<Preference>("pref_github")?.setOnPreferenceClickListener { _ ->
+      findPreference<Preference>(PREF_ABOUT_GITHUB_KEY)?.setOnPreferenceClickListener { _ ->
         App.getInstance().openUrl(App.APP_REPO_URL)
         true
       }
 
-      findPreference<Preference>("pref_version")?.setSummary(versionSummary)
+      findPreference<Preference>(PREF_ABOUT_VERSION_KEY)?.setSummary(versionSummary)
     }
   }
 }

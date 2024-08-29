@@ -76,7 +76,6 @@ class MainActivity : BaseActivity() {
           mainViewModel.currentFragmentIndex = MainViewModel.FRAGMENT_PROJECTS_INDEX
         R.id.item_settings ->
           mainViewModel.currentFragmentIndex = MainViewModel.FRAGMENT_SETTINGS_INDEX
-        else -> false
       }
       true
     }

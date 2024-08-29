@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@android:color/black">
+
+    <com.teixeira.subtitles.ui.SubVideoView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/video_view" />
+
+    <com.teixeira.subtitles.subtitle.SubtitleView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignBottom="@id/video_view"
+        android:visibility="gone"
+        android:id="@+id/subtitle_view" />
+
+</RelativeLayout>

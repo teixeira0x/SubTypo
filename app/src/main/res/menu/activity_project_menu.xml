@@ -10,6 +10,6 @@
     <item
         android:id="@+id/menu_import"
         android:icon="@drawable/ic_export_variant"
-        android:title="@string/proj_import_subtitles" />
+        android:title="@string/proj_import_subtitle" />
 
 </menu>

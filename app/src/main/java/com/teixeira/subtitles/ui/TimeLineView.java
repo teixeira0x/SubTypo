@@ -25,8 +25,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Scroller;
 import com.google.android.material.color.MaterialColors;
-import com.teixeira.subtitles.models.Subtitle;
-import com.teixeira.subtitles.utils.VideoUtils;
+import com.teixeira.subtitles.subtitle.models.Paragraph;
 import java.util.List;
 
 /**
@@ -47,7 +46,7 @@ public class TimeLineView extends View {
   private HandlerMotionListener handlerMotionListener;
   private long duration;
   private long currentPosition;
-  private List<Subtitle> subtitles;
+  private List<Paragraph> paragraphs;
 
   public TimeLineView(Context context) {
     this(context, null);
@@ -69,14 +68,13 @@ public class TimeLineView extends View {
 
     duration = 0;
     currentPosition = 0;
-    subtitles = null;
   }
 
   @Override
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
 
-    drawSubtitles(canvas);
+    drawParagraphs(canvas);
     drawTimeLine(canvas);
     drawCurrentVideoPositionIndicator(canvas);
   }
@@ -179,8 +177,8 @@ public class TimeLineView extends View {
    *
    * @param subtitles New list of captions to draw.
    */
-  public void setSubtitles(List<Subtitle> subtitles) {
-    this.subtitles = subtitles;
+  public void setParagraphs(List<Paragraph> paragraphs) {
+    this.paragraphs = paragraphs;
     invalidate();
   }
 
@@ -251,14 +249,10 @@ public class TimeLineView extends View {
     startScroll(scroller.getCurrX(), scrollX, 200);
   }
 
-  /**
-   * Draws rectangles for the subtitles.
-   *
-   * @param canvas The canvas for drawing the rectangles.
-   */
-  private void drawSubtitles(Canvas canvas) {
 
-    if (subtitles == null) {
+  private void drawParagraphs(Canvas canvas) {
+
+    if (paragraphs == null) {
       return;
     }
 
@@ -269,9 +263,9 @@ public class TimeLineView extends View {
         MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurfaceInverse);
     paint.setColor(colorOnSurfaceInverse);
 
-    for (Subtitle subtitle : subtitles) {
-      long startTime = VideoUtils.getMilliSeconds(subtitle.getStartTime());
-      long endTime = VideoUtils.getMilliSeconds(subtitle.getEndTime());
+    for (Paragraph paragraph : paragraphs) {
+      long startTime = paragraph.getStartTime().getMilliseconds();
+      long endTime = paragraph.getEndTime().getMilliseconds();
 
       float left = ((float) startTime / duration * width) * zoom - scrollX;
       float right = ((float) endTime / duration * width) * zoom - scrollX;

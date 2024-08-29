@@ -1,16 +1,21 @@
 [versions]
 
-exoplayer-version = "1.4.0"
+lifecycle-version = "2.8.4"
+exoplayer-version = "1.4.1"
 
 [libraries]
 
 # Android
-android-desugar = { module = "com.android.tools:desugar_jdk_libs", version ="2.0.4" }
+android-desugar = { module = "com.android.tools:desugar_jdk_libs", version ="2.1.1" }
 
 # AndroidX
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.8.1" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-core = { module = "androidx.core:core", version = "1.13.1" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.13.1" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.8.2" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-version" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-version" }
 androidx-preference = { module = "androidx.preference:preference", version = "1.2.1" }
 androidx-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "exoplayer-version" }
 androidx-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "exoplayer-version" }
@@ -22,6 +27,7 @@ google-material = { module = "com.google.android.material:material", version = "
 
 # Common
 common-utilcode = { module = "com.blankj:utilcodex", version = "1.31.1" }
+common-android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.8.1" }
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.1.1" }

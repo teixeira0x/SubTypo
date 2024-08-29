@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/padding_small"
+        android:orientation="vertical"
+        android:layout_weight="1.0"
+        android:id="@+id/edit_option"
+        android:foreground="@drawable/ripple_effect">
+
+        <ImageView
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:src="@drawable/ic_pencil"
+            android:tint="?attr/colorSecondaryVariant" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:ellipsize="marquee"
+            android:textSize="12sp"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:layout_marginTop="@dimen/margin_small"
+            android:maxLines="1"
+            android:text="@string/edit" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_small"
+        android:layout_weight="1.0"
+        android:id="@+id/delete_option"
+        android:foreground="@drawable/ripple_effect">
+
+        <ImageView
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:src="@drawable/ic_delete"
+            android:tint="?attr/colorSecondaryVariant" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:ellipsize="marquee"
+            android:textSize="12sp"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:layout_marginTop="@dimen/margin_small"
+            android:maxLines="1"
+            android:text="@string/delete" />
+
+    </LinearLayout>
+
+</LinearLayout>

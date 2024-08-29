@@ -1,27 +1,23 @@
 plugins {
   id("com.android.application")
   id("kotlin-android")
+  id("kotlin-parcelize")
 }
 
 android {
   namespace = "com.teixeira.subtitles"
-  compileSdk = 34
+
+  defaultConfig {
+    applicationId = "com.teixeira.subtitles"
+
+    vectorDrawables { useSupportLibrary = true }
+  }
 
   dependenciesInfo {
     // Disables dependency metadata when building APKs.
     includeInApk = false
     // Disables dependency metadata when building Android App Bundles.
     includeInBundle = false
-  }
-
-  defaultConfig {
-    applicationId = "com.teixeira.subtitles"
-    minSdk = 24
-    targetSdk = 34
-    versionCode = 2
-    versionName = "1.1.1"
-
-    vectorDrawables { useSupportLibrary = true }
   }
 
   signingConfigs {
@@ -33,11 +29,7 @@ android {
     }
   }
 
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    isCoreLibraryDesugaringEnabled = true
-  }
+  compileOptions { isCoreLibraryDesugaringEnabled = true }
 
   buildTypes {
     release {
@@ -62,13 +54,19 @@ dependencies {
   coreLibraryDesugaring(libs.android.desugar)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.fragment.ktx)
+  implementation(libs.androidx.lifecycle.runtime)
+  implementation(libs.androidx.lifecycle.viewmodel)
   implementation(libs.androidx.preference)
   implementation(libs.androidx.exoplayer)
   implementation(libs.androidx.exoplayer.dash)
   implementation(libs.androidx.exoplayer.ui)
 
   implementation(libs.google.material)
-  //implementation(libs.google.gson)
-  
+
   implementation(libs.common.utilcode)
+  implementation(libs.common.android.coroutines)
+
+  implementation(project(":subtitle"))
 }

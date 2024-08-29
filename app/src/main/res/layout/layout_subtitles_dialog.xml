@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="@dimen/dialog_padding">
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/top_bar">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:layout_centerVertical="true"
+            android:ellipsize="marquee"
+            android:layout_toLeftOf="@id/add_subtitle"
+            android:maxLines="1"
+            android:id="@+id/title"
+            android:text="@string/proj_subtitle_list" />
+
+        <ImageView
+            android:src="@drawable/ic_plus"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            style="@style/ControllerImageStyle"
+            android:id="@+id/add_subtitle" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/top_bar"
+        android:layout_marginTop="4dp"
+        android:id="@+id/subtitles" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_below="@id/top_bar"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:text="@string/proj_subtitle_list_empty"
+        android:id="@+id/no_subtitles" />
+
+</RelativeLayout>

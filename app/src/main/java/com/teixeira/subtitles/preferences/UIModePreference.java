@@ -35,9 +35,9 @@ public class UIModePreference extends Preference {
 
     String[] items =
         new String[] {
-          getString(R.string.pref_ui_mode_value_follow),
-          getString(R.string.pref_ui_mode_value_light),
-          getString(R.string.pref_ui_mode_value_dark),
+          getString(R.string.pref_aparence_ui_mode_value_follow),
+          getString(R.string.pref_aparence_ui_mode_value_light),
+          getString(R.string.pref_aparence_ui_mode_value_dark),
         };
 
     SharedPreferences.Editor prefEdit = getSharedPreferences().edit();

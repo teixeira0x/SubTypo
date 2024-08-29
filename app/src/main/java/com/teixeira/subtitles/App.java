@@ -9,10 +9,10 @@ import androidx.preference.PreferenceManager;
 import com.blankj.utilcode.util.ThrowableUtils;
 import com.google.android.material.color.DynamicColors;
 import com.teixeira.subtitles.activities.CrashActivity;
-import com.teixeira.subtitles.preferences.Preferences;
+import com.teixeira.subtitles.preferences.PreferencesKt;
 
 public class App extends Application {
-  
+
   public static final String APP_REPO_URL = "https://github.com/teixeira0x/SubTypo";
   public static final String APP_REPO_OPEN_ISSUE = APP_REPO_URL + "/issues/new";
 
@@ -30,12 +30,14 @@ public class App extends Application {
 
     defaultPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-    DynamicColors.applyToActivitiesIfAvailable(this);
+    if (PreferencesKt.getAparenceMaterialYou()) {
+      DynamicColors.applyToActivitiesIfAvailable(this);
+    }
     updateUIMode();
   }
 
   public void updateUIMode() {
-    AppCompatDelegate.setDefaultNightMode(Preferences.getUIModeValue());
+    AppCompatDelegate.setDefaultNightMode(PreferencesKt.getAparenceUIMode());
   }
 
   public void openUrl(String url) {

@@ -44,8 +44,8 @@ class SubtitleListAdapter(
   override fun onBindViewHolder(holder: SubtitleViewHolder, position: Int) {
     holder.binding.apply {
       val subtitle = subtitles[position]
-
-      name.text = subtitle.name + subtitle.subtitleFormat.extension
+      
+      name.text = "${position + 1}. ${subtitle.name}${subtitle.subtitleFormat.extension}"
 
       if (selectedIndex == position) {
         root.setCardBackgroundColor(MaterialColors.getColor(root, R.attr.colorOutlineVariant))

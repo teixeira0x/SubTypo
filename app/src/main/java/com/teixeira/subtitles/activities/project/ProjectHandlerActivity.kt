@@ -59,7 +59,6 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
     projectManager.openProject(project)
 
     supportActionBar?.title = project.name
-    supportActionBar?.subtitle = project.videoName
     initializeProject()
   }
 
@@ -146,7 +145,6 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
 
   protected fun saveProjectAsync() {
     supportActionBar?.setSubtitle(R.string.proj_saving)
-
     coroutineScope.launch(Dispatchers.IO) {
       try {
         ProjectRepository.writeSubtitleDataFile(project.path, subtitlesViewModel.subtitles)
@@ -162,7 +160,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
         }
       }
 
-      withContext(Dispatchers.Main) { supportActionBar?.subtitle = project.videoName }
+      withContext(Dispatchers.Main) { supportActionBar?.subtitle = subtitlesViewModel.subtitle?.let { "${subtitlesViewModel.subtitleIndex + 1}. ${it.name}" } }
     }
   }
 }

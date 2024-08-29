@@ -57,7 +57,7 @@ class SubtitleSaverHandler(
           return
         }
 
-    subtitleSaver.launch(subtitle.name + subtitle.subtitleFormat.extension)
+    subtitleSaver.launch(subtitle.fullName)
   }
 
   private fun onSubtitleSave(uri: Uri?) {

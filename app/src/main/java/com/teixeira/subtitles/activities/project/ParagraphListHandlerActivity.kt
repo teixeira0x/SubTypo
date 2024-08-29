@@ -85,8 +85,9 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     subtitlesViewModel.observeSubtitles(this) {
       if (it != null && subtitlesViewModel.autoSave) saveProjectAsync()
     }
-    subtitlesViewModel.observeCurrentSubtitle(this) { (_, paragraph) ->
-      val paragraphs = paragraph?.paragraphs
+    subtitlesViewModel.observeCurrentSubtitle(this) { (index, subtitle) ->
+      supportActionBar?.subtitle = subtitle?.let { "${index + 1}. ${it.name}" }
+      val paragraphs = subtitle?.paragraphs
       paragraphListAdapter.paragraphs = paragraphs
       paragraphListAdapter.notifyDataSetChanged()
 

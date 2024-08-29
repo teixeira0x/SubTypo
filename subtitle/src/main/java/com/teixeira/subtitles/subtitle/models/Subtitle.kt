@@ -26,12 +26,15 @@ data class Subtitle(
   val paragraphs: MutableList<Paragraph> = ArrayList<Paragraph>(),
 ) {
 
-  private val carataker = Caretaker()
-
   companion object {
     const val MAX_FILE_SIZE = 1024 * 1024 * 20 // 20 MB
     const val MAX_STATES_SIZE = 20
   }
+
+  private val carataker = Caretaker()
+
+  val fullName: String
+    get() = name + subtitleFormat.extension
 
   fun moveParagraph(targetIndex: Int) {
     if (targetIndex >= 0 && targetIndex < paragraphs.size) {

@@ -4,24 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:padding="@dimen/padding_small"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:padding="5dp">
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginEnd="2dp"
             android:textSize="14sp"
             android:id="@+id/current_video_position" />
 
         <SeekBar
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_weight="1.0"
             android:id="@+id/seek_bar" />
 
@@ -36,7 +35,7 @@
     <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:padding="2dp">
+        android:layout_marginTop="@dimen/margin_small">
 
         <ImageView
             android:src="@drawable/ic_undo"
@@ -44,14 +43,14 @@
             android:id="@+id/undo" />
 
         <ImageView
-            android:src="@drawable/ic_redo"
             android:layout_toEndOf="@id/undo"
+            android:src="@drawable/ic_redo"
             style="@style/ControllerImageStyle"
             android:id="@+id/redo" />
 
         <ImageView
             android:src="@drawable/ic_skip_backward"
-            android:layout_toLeftOf="@id/play"
+            android:layout_toStartOf="@id/play"
             style="@style/ControllerImageStyle"
             android:id="@+id/skip_backward" />
 
@@ -64,6 +63,7 @@
         <ImageView
             android:layout_centerInParent="true"
             android:src="@drawable/ic_play"
+            android:layout_centerHorizontal="true"
             style="@style/ControllerImageStyle"
             android:id="@+id/play" />
 

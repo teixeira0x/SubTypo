@@ -8,9 +8,11 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="0dp"
+        android:background="@drawable/shape_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:elevation="1dp"
         android:id="@+id/app_bar">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -30,7 +32,7 @@
         android:id="@+id/video_container">
 
         <include
-            layout="@layout/layout_video_content"
+            layout="@layout/layout_project_video_content"
             android:id="@+id/video_content" />
 
     </FrameLayout>
@@ -45,13 +47,13 @@
         android:id="@+id/controller_container">
 
         <include
-            layout="@layout/layout_video_controller_content"
+            layout="@layout/layout_project_video_controller_content"
             android:id="@+id/controller_content" />
 
     </FrameLayout>
 
     <View
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_size"
         android:layout_width="0dp"
         android:background="?attr/colorOutlineVariant"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +89,7 @@
     </FrameLayout>
 
     <View
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_size"
         android:layout_width="0dp"
         android:background="?attr/colorOutlineVariant"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:paddingVertical="8dp"
-    android:paddingHorizontal="2dp"
+    android:padding="@dimen/padding_small"
     android:foreground="@drawable/ripple_effect">
 
     <TextView

@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.R
 import com.google.android.material.color.MaterialColors
-import com.teixeira.subtitles.databinding.LayoutLanguageItemBinding
+import com.teixeira.subtitles.databinding.LayoutSubtitleItemBinding
 import com.teixeira.subtitles.subtitle.models.Subtitle
 
 class SubtitleListAdapter(
@@ -32,12 +32,12 @@ class SubtitleListAdapter(
   val onLongClickListener: (index: Int, subtitle: Subtitle) -> Boolean,
 ) : RecyclerView.Adapter<SubtitleListAdapter.SubtitleViewHolder>() {
 
-  inner class SubtitleViewHolder(val binding: LayoutLanguageItemBinding) :
+  inner class SubtitleViewHolder(val binding: LayoutSubtitleItemBinding) :
     RecyclerView.ViewHolder(binding.root)
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubtitleViewHolder {
     return SubtitleViewHolder(
-      LayoutLanguageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+      LayoutSubtitleItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
   }
 

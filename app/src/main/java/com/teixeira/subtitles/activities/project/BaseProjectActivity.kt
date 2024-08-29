@@ -20,6 +20,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import com.google.android.material.color.MaterialColors
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.activities.BaseActivity
 import com.teixeira.subtitles.adapters.ParagraphListAdapter
@@ -58,6 +59,10 @@ abstract class BaseProjectActivity : BaseActivity() {
 
   protected val isDestroying: Boolean
     get() = _isDestroying
+
+  override val statusBarColor: Int
+    get() =
+      MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurfaceInverse, 0)
 
   override fun bindView(): View {
     _binding = ActivityProjectBinding.inflate(layoutInflater)

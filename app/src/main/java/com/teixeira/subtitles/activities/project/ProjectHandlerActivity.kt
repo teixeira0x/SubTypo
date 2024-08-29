@@ -160,7 +160,10 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
         }
       }
 
-      withContext(Dispatchers.Main) { supportActionBar?.subtitle = subtitlesViewModel.subtitle?.let { "${subtitlesViewModel.subtitleIndex + 1}. ${it.name}" } }
+      withContext(Dispatchers.Main) {
+        supportActionBar?.subtitle =
+          subtitlesViewModel.subtitle?.let { "${subtitlesViewModel.subtitleIndex + 1}. ${it.name}" }
+      }
     }
   }
 }

@@ -19,10 +19,13 @@
 
     <!-- Messages -->
     <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
-    <string name="msg_permission_request">Permission Request</string>
-    <string name="msg_permission_request_detail">Permissions are required as the app work with video and subtitle files.</string>
-    <string name="msg_permission_request_settings_detail">You must grant the permissions manually in the settings.</string>
     <string name="msg_video_not_chosen">Video not chosen</string>
+
+    <!-- Permission -->
+    <string name="permission_required">Required permissions</string>
+    <string name="permission_required_detail">This app requires permissions to access video and subtitle files. Without these permissions, certain features may not function properly.</string>
+    <string name="permission_required_settings_detail">Please grant the required permissions manually through the app\'s settings to ensure full functionality.</string>
+    <string name="permission_required_settings_goto">Go to settings</string>
 
     <!-- Warn -->
     <string name="warn_text_field_cannot_empty">This text field cannot be empty</string>

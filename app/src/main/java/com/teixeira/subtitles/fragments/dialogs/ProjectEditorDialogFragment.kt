@@ -15,6 +15,7 @@ import com.teixeira.subtitles.R
 import com.teixeira.subtitles.activities.project.BaseProjectActivity
 import com.teixeira.subtitles.activities.project.ProjectActivity
 import com.teixeira.subtitles.databinding.FragmentDialogProjectEditorBinding
+import com.teixeira.subtitles.handlers.PermissionsHandler
 import com.teixeira.subtitles.models.Project
 import com.teixeira.subtitles.project.ProjectRepository
 import com.teixeira.subtitles.utils.ToastUtils
@@ -48,9 +49,7 @@ class ProjectEditorDialogFragment : DialogFragment() {
   private val videoPicker =
     registerForActivityResult(ActivityResultContracts.OpenDocument(), this::onChooseVideo)
   private var binding: FragmentDialogProjectEditorBinding? = null
-
   private var videoUri: Uri? = null
-
   private var isExistingProject = false
   private var project: Project? = null
 
@@ -84,7 +83,13 @@ class ProjectEditorDialogFragment : DialogFragment() {
       binding!!.tieName.setText(R.string.proj_new)
     }
 
-    binding!!.chooseVideo.setOnClickListener { videoPicker.launch(arrayOf("video/*")) }
+    binding!!.chooseVideo.setOnClickListener {
+      if (PermissionsHandler.isPermissionsGranted(requireContext())) {
+        videoPicker.launch(arrayOf("video/*"))
+      } else {
+        PermissionsHandler.showPermissionSettingsDialog(requireContext())
+      }
+    }
 
     binding!!.dialogButtons.cancel.setOnClickListener {
       if (projectEditorViewModel.isCreatingProject) {

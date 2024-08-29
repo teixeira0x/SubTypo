@@ -44,26 +44,45 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
     const val KEY_PERMISSION = "key_read_media_video_files"
 
     @JvmStatic
-    fun Context.isPermissionsGranted(): Boolean {
+    fun isPermissionsGranted(context: Context): Boolean {
       return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO) ==
+        checkSelfPermission(context, Manifest.permission.READ_MEDIA_VIDEO) ==
           PackageManager.PERMISSION_GRANTED
       } else {
-        checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+        checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
           PackageManager.PERMISSION_GRANTED
       }
+    }
+
+    /** Displays a dialog asking the user to go to the application settings to grant permissions. */
+    @JvmStatic
+    fun showPermissionSettingsDialog(context: Context) {
+      MaterialAlertDialogBuilder(context)
+        .setTitle(R.string.permission_required)
+        .setMessage(R.string.permission_required_settings_detail)
+        .setPositiveButton(R.string.permission_required_settings_goto) { _, _ ->
+          context.startActivity(
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+              data = Uri.fromParts("package", context.packageName, null)
+            }
+          )
+        }
+        .setNegativeButton(R.string.no, null)
+        .show()
     }
   }
 
   private lateinit var reqPermissions: ActivityResultLauncher<Array<String>>
 
-  private val readMediaPermissions =
+  private val readExternalStoragePermission =
     arrayOf(
-      Manifest.permission
-        .READ_EXTERNAL_STORAGE, // [READ_EXTERNAL_STORAGE] For devices below api 33 (Android 13).
-      Manifest.permission
-        .READ_MEDIA_VIDEO, // [READ_MEDIA_VIDEO] For devices with api 33 (Android 13) or above.
-    )
+      Manifest.permission.READ_EXTERNAL_STORAGE
+    ) // [READ_EXTERNAL_STORAGE] For devices below api 33 (Android 13).
+
+  private val readMediaVideoPermission =
+    arrayOf(
+      Manifest.permission.READ_MEDIA_VIDEO
+    ) // [READ_MEDIA_VIDEO] For devices with api 33 (Android 13) or above.
 
   override fun onCreate(owner: LifecycleOwner) {
     reqPermissions =
@@ -82,8 +101,14 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
   }
 
   /** Launch the permission request on the screen. */
-  private fun requestPermissions() {
-    reqPermissions.launch(readMediaPermissions)
+  fun requestPermissions() {
+    reqPermissions.launch(
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        readMediaVideoPermission
+      } else {
+        readExternalStoragePermission
+      }
+    )
   }
 
   /**
@@ -92,15 +117,8 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
    * @param permissions Result of requested permissions.
    */
   private fun onResultCallback(permissions: Map<String, Boolean>) {
-    if (permissions.isNotEmpty()) {
-      val permission =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          permissions.entries.elementAt(1)
-        } else {
-          permissions.entries.elementAt(0)
-        }
-
-      checkPermission(permission)
+    for (entry in permissions.entries) {
+      checkPermission(entry)
     }
   }
 
@@ -123,36 +141,18 @@ public class PermissionsHandler(val activity: Activity, val registry: ActivityRe
       else -> {
         // If permission is denied too many times, the device will block the request, so the user
         // will have to go to the app's settings and grant it manually.
-        showPermissionSettingsDialog()
+        showPermissionSettingsDialog(activity)
       }
     }
   }
 
   /** Displays a dialog requesting permissions. */
   private fun showRequestPermissionDialog() {
-    MaterialAlertDialogBuilder(activity).apply {
-      setTitle(R.string.msg_permission_request)
-      setMessage(R.string.msg_permission_request_detail)
-      setPositiveButton(R.string.grant) { _, _ -> requestPermissions() }
-      setNegativeButton(R.string.no, null)
-      show()
-    }
-  }
-
-  /** Displays a dialog asking the user to go to the application settings to grant permissions. */
-  private fun showPermissionSettingsDialog() {
-    MaterialAlertDialogBuilder(activity).apply {
-      setTitle(R.string.msg_permission_request)
-      setMessage(R.string.msg_permission_request_settings_detail)
-      setPositiveButton(R.string.grant) { _, _ ->
-        activity.startActivity(
-          Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", activity.packageName, null)
-          }
-        )
-      }
-      setNegativeButton(R.string.no, null)
-      show()
-    }
+    MaterialAlertDialogBuilder(activity)
+      .setTitle(R.string.permission_required)
+      .setMessage(R.string.permission_required_detail)
+      .setPositiveButton(R.string.grant) { _, _ -> requestPermissions() }
+      .setNegativeButton(R.string.no, null)
+      .show()
   }
 }

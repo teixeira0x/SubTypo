@@ -51,6 +51,10 @@ class SubtitlePickerHandler(
       )
   }
 
+  override fun onDestroy(owner: LifecycleOwner) {
+    subtitlePicker.unregister()
+  }
+
   fun launchPicker() {
     subtitlePicker.launch("*/*")
   }

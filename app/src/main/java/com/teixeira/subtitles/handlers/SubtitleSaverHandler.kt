@@ -49,6 +49,10 @@ class SubtitleSaverHandler(
       )
   }
 
+  override fun onDestroy(owner: LifecycleOwner) {
+    subtitleSaver.unregister()
+  }
+
   fun launchSaver() {
     val subtitle =
       subtitlesViewModel.subtitle

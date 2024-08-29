@@ -38,6 +38,7 @@ Commits should always be made to the `dev` branch, the `main` branch is protecte
 <hr/>
 
 ## Thanks to
+- [SUSE](https://github.com/SUSE) for the [suse-font](https://github.com/SUSE/suse-font)
 - [Akash Yadav](https://github.com/itsaky) for the awesome [AndroidIDE](https://github.com/AndroidIDEOfficial/AndroidIDE)
 
 <hr/>

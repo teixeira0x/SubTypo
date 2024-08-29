@@ -19,6 +19,8 @@
 <img width="150" height="350" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png">
 <img width="150" height="350" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png">
 <img width="150" height="350" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png">
+<img width="150" height="350" src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png">
+<img width="150" height="350" src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png">
 
 </p>
 

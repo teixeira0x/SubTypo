@@ -10,7 +10,7 @@ const val PREF_ABOUT_VERSION_KEY = "pref_about_version_key"
 const val PREF_APARENCE_UI_MODE_KEY = "pref_aparence_ui_mode_key"
 const val PREF_APARENCE_MATERIALYOU_KEY = "pref_aparence_materialyou_key"
 
-val defaultPrefs = App.getInstance().getDefaultPrefs()
+val defaultPrefs = App.instance.defaultPrefs
 
 val aparenceUIMode: Int
   get() =

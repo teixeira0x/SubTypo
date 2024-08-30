@@ -68,7 +68,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
       }
 
       findPreference<Preference>(PREF_ABOUT_GITHUB_KEY)?.setOnPreferenceClickListener { _ ->
-        App.getInstance().openUrl(App.APP_REPO_URL)
+        App.instance.openUrl(App.APP_REPO_URL)
         true
       }
 

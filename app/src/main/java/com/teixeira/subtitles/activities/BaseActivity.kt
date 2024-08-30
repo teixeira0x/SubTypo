@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.color.MaterialColors
+import com.teixeira.subtitles.App
 import com.teixeira.subtitles.R
 
 /**
@@ -37,6 +38,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
   protected open val navigationBarDividerColor: Int
     get() = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOutlineVariant, 0)
+
+  protected val app: App
+    get() = App.instance
 
   protected abstract fun bindView(): View
 

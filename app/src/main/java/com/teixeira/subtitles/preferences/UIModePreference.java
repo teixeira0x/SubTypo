@@ -49,7 +49,7 @@ public class UIModePreference extends Preference {
         R.string.save,
         (d, w) -> {
           prefEdit.apply();
-          App.getInstance().updateUIMode();
+          App.Companion.getInstance().updateUIMode();
         });
     builder.show();
   }

@@ -37,6 +37,9 @@
 
 Commits should always be made to the `dev` branch, the `main` branch is protected and will only contain release commits. 
 
+You can contribute by translating SubTypo using Crowdin: 
+
+[![Crowdin](https://badges.crowdin.net/subtypo/localized.svg)](https://crowdin.com/project/subtypo)
 <hr/>
 
 ## Thanks to

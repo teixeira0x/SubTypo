@@ -44,7 +44,7 @@ public class CrashActivity extends BaseActivity {
     fullError.append(getIntent().getExtras().getString(KEY_ERROR));
 
     binding.log.setText(fullError.toString());
-    binding.openIssue.setOnClickListener(
+    binding.copyAndReportIssue.setOnClickListener(
         v -> {
           App.getInstance().openUrl(App.APP_REPO_OPEN_ISSUE);
           ClipboardUtils.copyText(binding.log.getText().toString());

@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/open_issue"
+            app:layout_constraintBottom_toTopOf="@id/copy_and_report_issue"
             android:id="@+id/log_container">
 
             <HorizontalScrollView
@@ -60,15 +60,15 @@
             app:layout_constraintStart_toStartOf="parent"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_weight="1.0"
-            android:text="@string/open_issue"
-            android:id="@+id/open_issue" />
+            android:text="@string/copy_and_report_issue"
+            android:id="@+id/copy_and_report_issue" />
 
         <Button
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_marginEnd="8dp"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@id/open_issue"
+            app:layout_constraintStart_toEndOf="@id/copy_and_report_issue"
             app:layout_constraintBottom_toTopOf="@id/close_app"
             android:layout_marginStart="5dp"
             app:layout_constraintTop_toBottomOf="@id/log_container"
@@ -85,7 +85,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@id/open_issue"
+            app:layout_constraintTop_toBottomOf="@id/copy_and_report_issue"
             android:layout_marginBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Widget.Material3.Button.OutlinedButton"

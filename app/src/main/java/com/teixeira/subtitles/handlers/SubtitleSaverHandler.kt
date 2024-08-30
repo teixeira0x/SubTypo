@@ -57,7 +57,7 @@ class SubtitleSaverHandler(
     val subtitle =
       subtitlesViewModel.subtitle
         ?: run {
-          ToastUtils.showShort(R.string.error_no_subtitles_to_export)
+          ToastUtils.showShort(R.string.proj_export_subtitle_error_no_subtitles)
           return
         }
 
@@ -73,9 +73,9 @@ class SubtitleSaverHandler(
         context.contentResolver.openOutputStream(uri)?.use {
           it.write(subtitle.toText().toByteArray())
         }
-        ToastUtils.showLong(R.string.proj_export_saved, subtitleFile.getAbsolutePath())
+        ToastUtils.showLong(R.string.proj_export_subtitle_saved, subtitleFile.getAbsolutePath())
       } catch (e: Exception) {
-        ToastUtils.showLong(R.string.error_exporting_subtitles)
+        ToastUtils.showLong(R.string.proj_export_subtitle_error)
       }
     }
   }

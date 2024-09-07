@@ -1,110 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:background="@drawable/shape_toolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:elevation="1dp"
-        android:id="@+id/app_bar">
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/app_bar"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_toolbar"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:elevation="1dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:id="@+id/toolbar" />
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/controller_container"
-        app:layout_constraintTop_toBottomOf="@id/app_bar"
-        android:id="@+id/video_container">
+  <FrameLayout
+    android:id="@+id/video_container"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/controller_container"
+    app:layout_constraintTop_toBottomOf="@id/app_bar">
 
-        <include
-            layout="@layout/layout_project_video_content"
-            android:id="@+id/video_content" />
+    <include
+      android:id="@+id/video_content"
+      layout="@layout/layout_project_video_content" />
 
-    </FrameLayout>
+  </FrameLayout>
 
-    <FrameLayout
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintTop_toBottomOf="@id/video_container"
-        android:id="@+id/controller_container">
+  <FrameLayout
+    android:id="@+id/controller_container"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/divider"
+    app:layout_constraintTop_toBottomOf="@id/video_container">
 
-        <include
-            layout="@layout/layout_project_video_controller_content"
-            android:id="@+id/controller_content" />
+    <include
+      android:id="@+id/controller_content"
+      layout="@layout/layout_project_video_controller_content" />
 
-    </FrameLayout>
+  </FrameLayout>
 
-    <View
-        android:layout_height="@dimen/divider_size"
-        android:layout_width="0dp"
-        android:background="?attr/colorOutlineVariant"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/paragraphs_container"
-        app:layout_constraintTop_toBottomOf="@id/controller_container"
-        android:id="@+id/divider" />
+  <View
+    android:id="@+id/divider"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/divider_size"
+    android:background="?attr/colorOutlineVariant"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/paragraphs_container"
+    app:layout_constraintTop_toBottomOf="@id/controller_container" />
 
-    <FrameLayout
-        android:layout_height="0dp"
-        android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_divider"
-        app:layout_constraintTop_toBottomOf="@id/divider"
-        android:id="@+id/paragraphs_container">
+  <FrameLayout
+    android:id="@+id/paragraphs_container"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/bottom_divider"
+    app:layout_constraintTop_toBottomOf="@id/divider">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_below="@id/controller_container"
-            android:padding="5dp"
-            android:id="@+id/paragraphs" />
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/paragraphs"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@id/controller_container"
+      android:padding="5dp" />
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textSize="14sp"
-            android:layout_gravity="center"
-            android:text="@string/proj_no_subtitles"
-            android:id="@+id/no_paragraphs" />
+    <TextView
+      android:id="@+id/no_paragraphs"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="14sp"
+      android:layout_gravity="center"
+      android:text="@string/proj_no_subtitles" />
 
-    </FrameLayout>
+  </FrameLayout>
 
-    <View
-        android:layout_height="@dimen/divider_size"
-        android:layout_width="0dp"
-        android:background="?attr/colorOutlineVariant"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/time_line"
-        app:layout_constraintTop_toBottomOf="@id/paragraphs_container"
-        android:id="@+id/bottom_divider" />
+  <View
+    android:id="@+id/bottom_divider"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/divider_size"
+    android:background="?attr/colorOutlineVariant"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/time_line"
+    app:layout_constraintTop_toBottomOf="@id/paragraphs_container" />
 
-    <com.teixeira.subtitles.ui.TimeLineView
-        android:layout_height="40dp"
-        android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottom_divider"
-        android:id="@+id/time_line" />
+  <com.teixeira.subtitles.ui.TimeLineView
+    android:id="@+id/time_line"
+    android:layout_width="0dp"
+    android:layout_height="40dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/bottom_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

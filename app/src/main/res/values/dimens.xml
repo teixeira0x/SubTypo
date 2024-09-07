@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="dialog_padding">16dp</dimen>
-    <dimen name="divider_size">1dp</dimen>
-    <dimen name="margin_small">5dp</dimen>
-    <dimen name="margin_medium">16dp</dimen>
-    <dimen name="margin_large">24dp</dimen>
-    <dimen name="padding_small">5dp</dimen>
-    <dimen name="padding_medium">16dp</dimen>
-    <dimen name="padding_large">24dp</dimen>
+  <dimen name="dialog_padding">16dp</dimen>
+  <dimen name="divider_size">1dp</dimen>
+  <dimen name="margin_small">5dp</dimen>
+  <dimen name="margin_medium">16dp</dimen>
+  <dimen name="margin_large">24dp</dimen>
+  <dimen name="padding_small">5dp</dimen>
+  <dimen name="padding_medium">16dp</dimen>
+  <dimen name="padding_large">24dp</dimen>
 </resources>

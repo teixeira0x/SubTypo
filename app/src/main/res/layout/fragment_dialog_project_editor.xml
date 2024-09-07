@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:padding="@dimen/dialog_padding"
+  android:orientation="vertical">
+
+  <com.google.android.material.progressindicator.LinearProgressIndicator
+    android:id="@+id/progress_indicator"
     android:layout_width="match_parent"
-    android:padding="@dimen/dialog_padding"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:indeterminate="true" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
+  <TextView
+    android:id="@+id/title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+    android:text="@string/proj_new" />
+
+  <com.google.android.material.card.MaterialCardView
+    android:id="@+id/choose_video"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:foreground="@drawable/ripple_effect">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <ImageView
+        android:id="@+id/video_icon"
+        android:layout_width="160dp"
+        android:layout_height="80dp"
+        android:scaleType="fitCenter"
+        android:background="@android:color/black"
+        android:clickable="false" />
+
+      <TextView
+        android:id="@+id/video_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:visibility="invisible"
-        android:indeterminate="true"
-        android:id="@+id/progress_indicator" />
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toEndOf="@id/video_icon"
+        android:clickable="false"
+        android:textSize="12sp"
+        android:text="@string/msg_video_not_chosen" />
 
-    <TextView
+      <TextView
+        android:id="@+id/choose_video_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:text="@string/proj_new"
-        android:id="@+id/title" />
+        android:layout_marginBottom="@dimen/margin_small"
+        android:alpha="0.5"
+        android:layout_centerHorizontal="true"
+        android:textSize="12sp"
+        android:layout_alignBottom="@id/video_icon"
+        android:text="@string/proj_click_choose_video" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:foreground="@drawable/ripple_effect"
-        android:id="@+id/choose_video">
+    </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+  </com.google.android.material.card.MaterialCardView>
 
-            <ImageView
-                android:layout_height="80dp"
-                android:layout_width="160dp"
-                android:scaleType="fitCenter"
-                android:background="@android:color/black"
-                android:clickable="false"
-                android:id="@+id/video_icon" />
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/til_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/margin_medium"
+    android:hint="@string/proj_enter_name"
+    style="@style/AppTheme.TextInputLayout">
 
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_toEndOf="@id/video_icon"
-                android:clickable="false"
-                android:textSize="12sp"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
-                android:text="@string/msg_video_not_chosen"
-                android:id="@+id/video_name" />
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/tie_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:singleLine="true" />
 
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:alpha="0.5"
-                android:layout_centerHorizontal="true"
-                android:textSize="12sp"
-                android:layout_alignBottom="@id/video_icon"
-                android:id="@+id/choose_video_text"
-                android:text="@string/proj_click_choose_video" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        </RelativeLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginVertical="@dimen/margin_medium"
-        android:hint="@string/proj_enter_name"
-        style="@style/AppTheme.TextInputLayout"
-        android:id="@+id/til_name">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:singleLine="true"
-            android:id="@+id/tie_name" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <include
-        layout="@layout/layout_dialog_buttons"
-        android:id="@+id/dialog_buttons" />
+  <include
+    android:id="@+id/dialog_buttons"
+    layout="@layout/layout_dialog_buttons" />
 
 </LinearLayout>

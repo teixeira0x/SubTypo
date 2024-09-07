@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">SubTypo</string>
-    <string name="close_app">Close app</string>
-    <string name="about">About</string>
-    <string name="settings">Settings</string>
-    <string name="delete">Delete</string>
-    <string name="rename">Rename</string>
-    <string name="edit">Edit</string>
-    <string name="ok">Ok</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <string name="copy">Copy</string>
-    <string name="grant">Grant</string>
-    <string name="export">Export</string>
-    <string name="copy_and_report_issue">Copy and report issue</string>
+  <string name="app_name" translatable="false">SubTypo</string>
+  <string name="close_app">Close app</string>
+  <string name="about">About</string>
+  <string name="settings">Settings</string>
+  <string name="delete">Delete</string>
+  <string name="rename">Rename</string>
+  <string name="edit">Edit</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="cancel">Cancel</string>
+  <string name="save">Save</string>
+  <string name="copy">Copy</string>
+  <string name="grant">Grant</string>
+  <string name="export">Export</string>
+  <string name="copy_and_report_issue">Copy and report issue</string>
 
-    <!-- Messages -->
-    <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
-    <string name="msg_video_not_chosen">Video not chosen</string>
+  <!-- Messages -->
+  <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
+  <string name="msg_video_not_chosen">Video not chosen</string>
 
-    <!-- Permission -->
-    <string name="permission_required">Required permissions</string>
-    <string name="permission_required_detail">This app requires permissions to access video and subtitle files. Without these permissions, certain features may not function properly.</string>
-    <string name="permission_required_settings_detail">Please grant the required permissions manually through the app\'s settings to ensure full functionality.</string>
-    <string name="permission_required_settings_goto">Go to settings</string>
+  <!-- Permission -->
+  <string name="permission_required">Required permissions</string>
+  <string name="permission_required_detail">This app requires permissions to access video and subtitle files. Without these permissions, certain features may not function properly.</string>
+  <string name="permission_required_settings_detail">Please grant the required permissions manually through the app\'s settings to ensure full functionality.</string>
+  <string name="permission_required_settings_goto">Go to settings</string>
 
-    <!-- Warn -->
-    <string name="warn_text_field_cannot_empty">This text field cannot be empty</string>
-    <string name="warn_name_already_existing">Name already existing</string>
+  <!-- Warn -->
+  <string name="warn_text_field_cannot_empty">This text field cannot be empty</string>
+  <string name="warn_name_already_existing">Name already existing</string>
 
-    <!-- Preferences -->
-    <string name="pref_category_configure">Configure</string>
-    <string name="pref_category_about">About</string>
-    <string name="pref_category_aparence">Aparence</string>
-    <string name="pref_configure_general">General</string>
-    <string name="pref_configure_general_summary">General application settings.</string>
-    <string name="pref_aparence_ui_mode">UI Mode</string>
-    <string name="pref_aparence_ui_mode_summary">Choose light or dark mode</string>
-    <string name="pref_aparence_ui_mode_value_light">Light</string>
-    <string name="pref_aparence_ui_mode_value_dark">Dark</string>
-    <string name="pref_aparence_ui_mode_value_follow">Follow System</string>
-    <string name="pref_aparence_materialyou">Material You</string>
-    <string name="pref_aparence_materialyou_summary">The app follows the device\'s theme colors (requires app restart).</string>
-    <string name="pref_about_github" translatable="false">GitHub</string>
-    <string name="pref_about_github_summary">This app is open source!</string>
-    <string name="pref_about_version">Version</string>
+  <!-- Preferences -->
+  <string name="pref_category_configure">Configure</string>
+  <string name="pref_category_about">About</string>
+  <string name="pref_category_aparence">Aparence</string>
+  <string name="pref_configure_general">General</string>
+  <string name="pref_configure_general_summary">General application settings.</string>
+  <string name="pref_aparence_ui_mode">UI Mode</string>
+  <string name="pref_aparence_ui_mode_summary">Choose light or dark mode</string>
+  <string name="pref_aparence_ui_mode_value_light">Light</string>
+  <string name="pref_aparence_ui_mode_value_dark">Dark</string>
+  <string name="pref_aparence_ui_mode_value_follow">Follow System</string>
+  <string name="pref_aparence_materialyou">Material You</string>
+  <string name="pref_aparence_materialyou_summary">The app follows the device\'s theme colors (requires app restart).</string>
+  <string name="pref_about_github" translatable="false">GitHub</string>
+  <string name="pref_about_github_summary">This app is open source!</string>
+  <string name="pref_about_version">Version</string>
 
-    <!-- Project -->
-    <string name="projects">Projects</string>
-    <string name="proj_initializing">Initializing project..</string>
-    <string name="proj_saving">Saving project..</string>
-    <string name="proj_close">Close Project</string>
-    <string name="proj_no_projects">Without projects click "+" to create projects!</string>
-    <string name="proj_new">New Project</string>
-    <string name="proj_edit">Edit Project</string>
-    <string name="proj_enter_name">Enter a name</string>
-    <string name="proj_choose_video">Choose video</string>
-    <string name="proj_click_choose_video">Click to choose video</string>
-    <string name="proj_current_video_position">Current video position: %1$s</string>
-    <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>
+  <!-- Project -->
+  <string name="projects">Projects</string>
+  <string name="proj_initializing">Initializing project..</string>
+  <string name="proj_saving">Saving project..</string>
+  <string name="proj_close">Close Project</string>
+  <string name="proj_no_projects">Without projects click "+" to create projects!</string>
+  <string name="proj_new">New Project</string>
+  <string name="proj_edit">Edit Project</string>
+  <string name="proj_enter_name">Enter a name</string>
+  <string name="proj_choose_video">Choose video</string>
+  <string name="proj_click_choose_video">Click to choose video</string>
+  <string name="proj_current_video_position">Current video position: %1$s</string>
+  <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>
 
-    <string name="proj_subtitle_add">Add Subtitle</string>
-    <string name="proj_subtitle_edit">Edit Subtitle</string>
-    <string name="proj_subtitle_list">Subtitles</string>
-    <string name="proj_subtitle_list_empty">No subtitles, click \"+\" to add.</string>
-    <string name="proj_subtitle_enter_name">Enter name</string>
-    <string name="proj_subtitle_enter_format">Enter format</string>
+  <string name="proj_subtitle_add">Add Subtitle</string>
+  <string name="proj_subtitle_edit">Edit Subtitle</string>
+  <string name="proj_subtitle_list">Subtitles</string>
+  <string name="proj_subtitle_list_empty">No subtitles, click \"+\" to add.</string>
+  <string name="proj_subtitle_enter_name">Enter name</string>
+  <string name="proj_subtitle_enter_format">Enter format</string>
 
-    <string name="proj_export_subtitle">Export Subtitle</string>
-    <string name="proj_export_subtitle_saved">Saved on path:  %1$s</string>
-    <string name="proj_export_subtitle_error">Failed to export subtitle</string>
-    <string name="proj_export_subtitle_error_no_subtitles">Add subtitles to be able to export.</string>
+  <string name="proj_export_subtitle">Export Subtitle</string>
+  <string name="proj_export_subtitle_saved">Saved on path:  %1$s</string>
+  <string name="proj_export_subtitle_error">Failed to export subtitle</string>
+  <string name="proj_export_subtitle_error_no_subtitles">Add subtitles to be able to export.</string>
 
-    <string name="proj_import_subtitle">Import Subtitle</string>
-    <string name="proj_import_subtitle_success">Imported successfully</string>
-    <string name="proj_import_subtitle_error">Unable to import this subtitle</string>
-    <!-- Errors -->
-    <string name="error_choose_video">Please choose a video</string>
-    <string name="error_enter_name">Please enter a name</string>
-    <string name="error_loading_project">An error occurred when trying to load the project</string>
-    <string name="error_saving_project">An error occurred when trying to save the project</string>
-    <!-- Subtitles -->
-    <string name="subtitles">Subtitles</string>
-    <string name="subtitle_loading">Loading subtitles..</string>
-    <string name="subtitle_paragraph">Paragraph</string>
-    <string name="subtitle_paragraph_enter_start_time">Enter start time</string>
-    <string name="subtitle_paragraph_enter_end_time">Enter end time</string>
-    <string name="subtitle_paragraph_enter_text">Enter text</string>
+  <string name="proj_import_subtitle">Import Subtitle</string>
+  <string name="proj_import_subtitle_success">Imported successfully</string>
+  <string name="proj_import_subtitle_error">Unable to import this subtitle</string>
+  <!-- Errors -->
+  <string name="error_choose_video">Please choose a video</string>
+  <string name="error_enter_name">Please enter a name</string>
+  <string name="error_loading_project">An error occurred when trying to load the project</string>
+  <string name="error_saving_project">An error occurred when trying to save the project</string>
+  <!-- Subtitles -->
+  <string name="subtitles">Subtitles</string>
+  <string name="subtitle_loading">Loading subtitles..</string>
+  <string name="subtitle_paragraph">Paragraph</string>
+  <string name="subtitle_paragraph_enter_start_time">Enter start time</string>
+  <string name="subtitle_paragraph_enter_end_time">Enter end time</string>
+  <string name="subtitle_paragraph_enter_text">Enter text</string>
 </resources>

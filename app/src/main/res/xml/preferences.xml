@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:title="@string/pref_category_configure">
+  <PreferenceCategory
+    app:iconSpaceReserved="false"
+    app:title="@string/pref_category_configure">
 
-        <Preference
-            app:iconSpaceReserved="false"
-            app:key="pref_configure_general_key"
-            app:title="@string/pref_configure_general"
-            app:summary="@string/pref_configure_general_summary" />
+    <Preference
+      app:iconSpaceReserved="false"
+      app:key="pref_configure_general_key"
+      app:title="@string/pref_configure_general"
+      app:summary="@string/pref_configure_general_summary" />
 
-    </PreferenceCategory>
+  </PreferenceCategory>
 
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:title="@string/pref_category_about">
+  <PreferenceCategory
+    app:iconSpaceReserved="false"
+    app:title="@string/pref_category_about">
 
-        <Preference
-            app:icon="@drawable/ic_github"
-            app:key="pref_about_github_key"
-            app:title="@string/pref_about_github"
-            app:summary="@string/pref_about_github_summary" />
+    <Preference
+      app:icon="@drawable/ic_github"
+      app:key="pref_about_github_key"
+      app:title="@string/pref_about_github"
+      app:summary="@string/pref_about_github_summary" />
 
-        <Preference
-            app:icon="@drawable/ic_information_outline"
-            app:key="pref_about_version_key"
-            app:title="@string/pref_about_version" />
+    <Preference
+      app:icon="@drawable/ic_information_outline"
+      app:key="pref_about_version_key"
+      app:title="@string/pref_about_version" />
 
-    </PreferenceCategory>
+  </PreferenceCategory>
 
 </PreferenceScreen>

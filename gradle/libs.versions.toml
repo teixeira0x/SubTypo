@@ -3,6 +3,10 @@
 lifecycle-version = "2.8.5"
 exoplayer-version = "1.4.1"
 
+android = "8.1.1"
+kotlin = "1.9.10"
+detekt = "1.23.6"
+
 [libraries]
 
 # Android
@@ -30,6 +34,7 @@ common-utilcode = { module = "com.blankj:utilcodex", version = "1.31.1" }
 common-android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.8.1" }
 
 [plugins]
-android-application = { id = "com.android.application", version = "8.1.1" }
-android-library = { id = "com.android.library", version = "8.1.1" }
-kotlin = { id = "org.jetbrains.kotlin.android", version = "1.9.10" }
+android-application = { id = "com.android.application", version.ref = "android" }
+android-library = { id = "com.android.library", version.ref = "android" }
+kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

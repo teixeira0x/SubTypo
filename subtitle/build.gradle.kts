@@ -17,6 +17,7 @@ plugins {
   id("com.android.library")
   id("kotlin-android")
   id("kotlin-parcelize")
+  id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -31,7 +32,5 @@ android {
 }
 
 dependencies {
-  implementation(libs.androidx.appcompat)
-  implementation(libs.androidx.core)
-  implementation(libs.google.material)
+  implementation(libs.androidx.annotation)
 }

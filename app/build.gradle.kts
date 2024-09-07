@@ -2,6 +2,7 @@ plugins {
   id("com.android.application")
   id("kotlin-android")
   id("kotlin-parcelize")
+  id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -53,6 +54,7 @@ android {
 dependencies {
   coreLibraryDesugaring(libs.android.desugar)
   implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.annotation)
   implementation(libs.androidx.core)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.fragment.ktx)

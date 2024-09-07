@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.databinding.FragmentDialogParagraphEditorBinding
 import com.teixeira.subtitles.subtitle.models.Paragraph
+import com.teixeira.subtitles.subtitle.models.Subtitle
 import com.teixeira.subtitles.subtitle.models.Time
 import com.teixeira.subtitles.subtitle.utils.TimeUtils
 import com.teixeira.subtitles.utils.OnTextChangedListener
@@ -22,11 +23,11 @@ import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 class ParagraphEditorDialogFragment : DialogFragment() {
 
   companion object {
+    private val previewSubtitle =
+      Subtitle(paragraphs = mutableListOf(Paragraph(Time(0), Time(0), "")))
     const val KEY_VIDEO_POSITION = "key_current_video_position"
     const val KEY_PARAGRAPH_INDEX = "key_paragraph_index"
     const val KEY_PARAGRAPH = "key_paragraph"
-
-    val previewParagraph = Paragraph(Time(0), Time(0), "")
 
     @JvmStatic
     fun newInstance(
@@ -66,7 +67,7 @@ class ParagraphEditorDialogFragment : DialogFragment() {
     paragraph =
       args.getParcelableCompat<Paragraph>(KEY_PARAGRAPH)
         ?: Paragraph(Time(videoPosition), Time(videoPosition + 2000), "")
-    previewParagraph.text = paragraph.text
+    previewSubtitle.paragraphs[0].text = paragraph.text
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -90,10 +91,12 @@ class ParagraphEditorDialogFragment : DialogFragment() {
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }
     binding.dialogButtons.save.setOnClickListener { saveParagraph() }
 
+    binding.deleteParagraph.isEnabled = paragraphIndex >= 0
     binding.tieStartTime.setText(paragraph.startTime.time)
     binding.tieEndTime.setText(paragraph.endTime.time)
     binding.tieText.setText(paragraph.text)
-    binding.preview.setParagraph(previewParagraph)
+    binding.preview.setSubtitle(previewSubtitle)
+    binding.preview.setVideoPosition(0L)
     configureTextWatchers()
     validateFields()
 
@@ -120,7 +123,7 @@ class ParagraphEditorDialogFragment : DialogFragment() {
       object : OnTextChangedListener() {
 
         override fun afterTextChanged(editable: Editable) {
-          previewParagraph.text = editable.toString().trim()
+          previewSubtitle.paragraphs[0].text = editable.toString().trim()
           binding.preview.invalidate()
           validateFields()
         }
@@ -201,13 +204,16 @@ class ParagraphEditorDialogFragment : DialogFragment() {
 
   private fun getIndexForNewParagraph(): Int {
     val paragraphs = subtitlesViewModel.paragraphs
-    var index = paragraphs.size
+
+    var index = 0
     for (i in paragraphs.indices) {
       val paragraph = paragraphs[i]
 
-      if (paragraph.startTime.milliseconds.toInt() >= videoPosition.toInt()) {
-        index = i
-        break
+      if (
+        videoPosition >= paragraph.startTime.milliseconds &&
+          videoPosition <= paragraph.endTime.milliseconds
+      ) {
+        index = i + 1
       }
     }
     return index

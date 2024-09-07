@@ -18,7 +18,6 @@ package com.teixeira.subtitles.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -31,24 +30,9 @@ class ParagraphListAdapter(
   val onLongClickListener: (view: View, position: Int, paragraph: Paragraph) -> Boolean,
 ) : RecyclerView.Adapter<ParagraphListAdapter.ParagraphViewHolder>() {
 
+  private var videoParagraphIndexer = mutableListOf<Int>()
   var paragraphs: List<Paragraph>? = null
   var isVideoPlaying: Boolean = false
-
-  var videoParagraphIndex: Int = -1
-    set(value) {
-      if (field != value) {
-        val lastVideoParagraphIndex = field
-        field = value
-
-        if (lastVideoParagraphIndex >= 0) {
-          notifyItemChanged(lastVideoParagraphIndex)
-        }
-
-        if (value >= 0) {
-          notifyItemChanged(value)
-        }
-      }
-    }
 
   inner class ParagraphViewHolder(val binding: LayoutParagraphItemBinding) :
     RecyclerView.ViewHolder(binding.root)
@@ -62,9 +46,11 @@ class ParagraphListAdapter(
   override fun onBindViewHolder(holder: ParagraphViewHolder, position: Int) {
     holder.binding.apply {
       val paragraph = paragraphs!![position]
-      text.text = paragraph.text
-      inScreen.isVisible = position == videoParagraphIndex
-      startAndEnd.text = "${paragraph.startTime.time} | ${paragraph.endTime.time}"
+      text.text = "${position + 1}. ${paragraph.text}"
+      startAndEnd.text = "${paragraph.startTime.time}|${paragraph.endTime.time}"
+
+      inVideo.visibility =
+        if (videoParagraphIndexer.contains(position)) View.VISIBLE else View.INVISIBLE
 
       dragHandler.setOnLongClickListener {
         if (!isVideoPlaying) {
@@ -82,4 +68,20 @@ class ParagraphListAdapter(
   }
 
   override fun getItemCount(): Int = paragraphs?.size ?: 0
+
+  fun setVideoPosition(videoPosition: Long) {
+    val lastVideoParagraphIndexer = videoParagraphIndexer.toList()
+    videoParagraphIndexer.clear()
+
+    paragraphs?.forEach {
+      if (videoPosition >= it.startTime.milliseconds && videoPosition <= it.endTime.milliseconds) {
+        videoParagraphIndexer.add(paragraphs!!.indexOf(it))
+      }
+    }
+
+    if (lastVideoParagraphIndexer != videoParagraphIndexer) {
+      lastVideoParagraphIndexer.forEach { notifyItemChanged(it) }
+      videoParagraphIndexer.forEach { notifyItemChanged(it) }
+    }
+  }
 }

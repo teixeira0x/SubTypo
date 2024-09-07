@@ -15,6 +15,9 @@
 
 package com.teixeira.subtitles.subtitle.formats
 
+import android.os.Build
+import android.text.Html
+import android.text.SpannableStringBuilder
 import com.teixeira.subtitles.subtitle.models.Paragraph
 import com.teixeira.subtitles.subtitle.models.SyntaxError
 import com.teixeira.subtitles.subtitle.models.Time
@@ -117,5 +120,14 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
     }
 
     return paragraphs
+  }
+
+  override fun generateSpan(text: String): SpannableStringBuilder {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      Html.fromHtml(text.replace("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY)
+    } else {
+      Html.fromHtml(text.replace("\n", "<br/>"))
+    }
+      as SpannableStringBuilder
   }
 }

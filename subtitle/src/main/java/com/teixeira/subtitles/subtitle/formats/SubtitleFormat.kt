@@ -15,6 +15,7 @@
 
 package com.teixeira.subtitles.subtitle.formats
 
+import android.text.SpannableStringBuilder
 import com.teixeira.subtitles.subtitle.models.Paragraph
 import com.teixeira.subtitles.subtitle.models.SyntaxError
 
@@ -40,6 +41,8 @@ abstract class SubtitleFormat(val name: String, val extension: String) {
   abstract fun toText(paragraphs: List<Paragraph>): String
 
   abstract fun parseText(text: String): MutableList<Paragraph>
+
+  abstract fun generateSpan(text: String): SpannableStringBuilder
 
   protected fun addError(error: SyntaxError) {
     _errorList.add(error)

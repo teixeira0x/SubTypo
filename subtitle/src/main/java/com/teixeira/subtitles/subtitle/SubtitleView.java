@@ -18,26 +18,25 @@ package com.teixeira.subtitles.subtitle;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.Build;
-import android.text.Html;
-import android.text.Layout;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.teixeira.subtitles.subtitle.models.Paragraph;
+import com.teixeira.subtitles.subtitle.models.Subtitle;
+import java.util.List;
 
 /**
  * @author Felipe Teixeira
  */
 public class SubtitleView extends View {
 
-  private TextPaint textPaint;
-  private Paragraph paragraph;
+  public static final float DEFAULT_BOTTOM_PADDING_FRACTION = 0.08f;
+
+  private final SubtitlePainter painter;
+  private List<Paragraph> paragraphs;
+  private Subtitle subtitle;
+
+  private long videoPosition;
 
   public SubtitleView(Context context) {
     this(context, null);
@@ -50,57 +49,39 @@ public class SubtitleView extends View {
   public SubtitleView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
-    textPaint = new TextPaint();
-    textPaint.setAntiAlias(true);
-    textPaint.setTextSize(35);
-    textPaint.setColor(Color.WHITE);
+    this.painter = new SubtitlePainter(context);
   }
 
   @Override
   public void draw(Canvas canvas) {
     super.draw(canvas);
 
-    drawText(canvas);
-  }
-
-  public void setParagraph(@Nullable Paragraph paragraph) {
-    this.paragraph = paragraph;
-    invalidate();
-  }
-
-  private void drawText(Canvas canvas) {
-
-    if (paragraph == null) {
+    if (subtitle == null || paragraphs == null) {
       return;
     }
 
-    Spanned text;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      text = Html.fromHtml(paragraph.getText().replaceAll("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY);
-    } else {
-      text = Html.fromHtml(paragraph.getText().replaceAll("\n", "<br/>"));
+    int left = getPaddingLeft();
+    int top = getPaddingTop();
+    int right = getWidth() - getPaddingRight();
+    int bottom = getHeight() - getPaddingBottom();
+
+    for (Paragraph paragraph : paragraphs) {
+      painter.draw(
+          canvas, subtitle.getSubtitleFormat(), paragraph, Color.BLACK, left, top, right, bottom);
     }
-
-    SpannableString span = new SpannableString(text);
-    span.setSpan(
-        new BackgroundColorSpan(Color.BLACK), 0, text.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-    StaticLayout staticLayout =
-        StaticLayout.Builder.obtain(span, 0, span.length(), textPaint, canvas.getWidth())
-            .setAlignment(Layout.Alignment.ALIGN_CENTER)
-            .build();
-
-    canvas.save();
-    canvas.translate(0, (getHeight() - 60) - staticLayout.getHeight());
-    staticLayout.draw(canvas);
-    canvas.restore();
   }
 
-  String formatParagraphText(String text) {
-    String[] lines = text.split("\n");
-    for (String line : lines) {
-      
+  public void setSubtitle(@Nullable Subtitle subtitle) {
+    this.subtitle = subtitle;
+    setVideoPosition(videoPosition);
+  }
+
+  public void setVideoPosition(long videoPosition) {
+    paragraphs = null;
+    if (subtitle != null) {
+      paragraphs = subtitle.getParagraphsAt(videoPosition);
     }
-    return text;
+    this.videoPosition = videoPosition;
+    invalidate();
   }
 }

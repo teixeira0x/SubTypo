@@ -92,6 +92,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
       paragraphListAdapter.notifyDataSetChanged()
 
       binding.noParagraphs.isVisible = paragraphs?.isEmpty() ?: true
+      binding.videoContent.subtitleView.setSubtitle(subtitle)
       binding.timeLine.setParagraphs(paragraphs)
 
       updateVideoUI(videoViewModel.currentPosition)
@@ -103,10 +104,6 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
 
     subtitlesViewModel.observeRedoButtonState(this) { canRedo ->
       UiUtils.setImageEnabled(binding.controllerContent.redo, canRedo)
-    }
-
-    subtitlesViewModel.observeVideoParagraphIndex(this) { index ->
-      paragraphListAdapter.videoParagraphIndex = index
     }
 
     subtitlesViewModel.observeScrollPosition(this) { position ->

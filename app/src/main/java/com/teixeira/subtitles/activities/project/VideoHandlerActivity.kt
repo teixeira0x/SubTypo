@@ -19,7 +19,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.core.view.isVisible
 import androidx.media3.common.Player
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ThreadUtils
@@ -136,29 +135,11 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
   }
 
   protected fun updateVideoUI(currentPosition: Long) {
-    val currentPositionInt = currentPosition.toInt()
+    requireParagraphListAdapter().setVideoPosition(currentPosition)
     binding.controllerContent.currentVideoPosition.setText(TimeUtils.getTime(currentPosition))
-    binding.controllerContent.seekBar.setProgress(currentPositionInt)
+    binding.videoContent.subtitleView.setVideoPosition(currentPosition)
+    binding.controllerContent.seekBar.setProgress(currentPosition.toInt())
     binding.timeLine.setCurrentPosition(currentPosition)
-
-    val paragraphs = subtitlesViewModel.paragraphs
-    var paragraphFound = false
-    for (i in paragraphs.indices) {
-      val paragraph = paragraphs.get(i)
-      val startTime = paragraph.startTime.milliseconds.toInt()
-      val endTime = paragraph.endTime.milliseconds.toInt()
-
-      if (currentPositionInt >= startTime && currentPositionInt <= endTime) {
-        binding.videoContent.subtitleView.setParagraph(paragraph)
-        subtitlesViewModel.videoParagraphIndex = i
-        paragraphFound = true
-        break
-      }
-    }
-    binding.videoContent.subtitleView.isVisible = paragraphFound
-    if (!paragraphFound) {
-      subtitlesViewModel.videoParagraphIndex = -1
-    }
   }
 
   private fun onVideoPrepared(player: Player) {

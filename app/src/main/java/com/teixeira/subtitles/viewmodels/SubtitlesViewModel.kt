@@ -29,7 +29,6 @@ class SubtitlesViewModel : ViewModel() {
   private val _subtitles = MutableLiveData<MutableList<Subtitle>?>(null)
   private val _currentSubtitle = MutableLiveData<Pair<Int, Subtitle?>>(-1 to null)
 
-  private val _videoParagraphIndex = MutableLiveData<Int>(-1)
   private val _scrollPosition = MutableLiveData<Int>(0)
   private val _autoSave = MutableLiveData<Boolean>(false)
 
@@ -50,15 +49,6 @@ class SubtitlesViewModel : ViewModel() {
 
   val paragraphs: List<Paragraph>
     get() = subtitle?.paragraphs ?: listOf()
-
-  var videoParagraphIndex: Int
-    get() = _videoParagraphIndex.value!!
-    set(value) {
-      if (_videoParagraphIndex.value != value) {
-        _videoParagraphIndex.value = value
-        scrollPosition = value
-      }
-    }
 
   var scrollPosition: Int
     get() = _scrollPosition.value!!
@@ -197,10 +187,6 @@ class SubtitlesViewModel : ViewModel() {
     observer: Observer<Pair<Int, Subtitle?>>,
   ) {
     _currentSubtitle.observe(lifecycleOwner, observer)
-  }
-
-  fun observeVideoParagraphIndex(lifecycleOwner: LifecycleOwner, observer: Observer<Int>) {
-    _videoParagraphIndex.observe(lifecycleOwner, observer)
   }
 
   fun observeScrollPosition(lifecycleOwner: LifecycleOwner, observer: Observer<Int>) {

@@ -2,10 +2,6 @@ Most of the code in this module is inspired by [subtitleedit](https://github.com
 
 ## Idea
 
-**SubtitleView.kt**
-
-It is a view to draw custom text for a caption paragraph.  
-
 **/formats/SubtitleFormat.kt**
 
 A base class for subtitle formats. 

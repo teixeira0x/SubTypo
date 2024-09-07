@@ -92,6 +92,12 @@ data class Subtitle(
     carataker.redo()
   }
 
+  fun getParagraphsAt(milliseconds: Long): List<Paragraph> {
+    return paragraphs.filter {
+      milliseconds >= it.startTime.milliseconds && milliseconds <= it.endTime.milliseconds
+    }
+  }
+
   fun toText(): String {
     return subtitleFormat.toText(paragraphs)
   }

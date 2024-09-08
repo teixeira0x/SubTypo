@@ -5,7 +5,7 @@ exoplayer-version = "1.4.1"
 
 android = "8.1.1"
 kotlin = "1.9.10"
-detekt = "1.23.6"
+detekt = "1.23.7"
 
 [libraries]
 

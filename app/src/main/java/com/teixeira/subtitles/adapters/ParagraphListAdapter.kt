@@ -47,7 +47,7 @@ class ParagraphListAdapter(
     holder.binding.apply {
       val paragraph = paragraphs!![position]
       text.text = "${position + 1}. ${paragraph.text}"
-      startAndEnd.text = "${paragraph.startTime.time}|${paragraph.endTime.time}"
+      startAndEnd.text = "${paragraph.startTime.formattedTime}|${paragraph.endTime.formattedTime}"
 
       inVideo.visibility =
         if (videoParagraphIndexer.contains(position)) View.VISIBLE else View.INVISIBLE

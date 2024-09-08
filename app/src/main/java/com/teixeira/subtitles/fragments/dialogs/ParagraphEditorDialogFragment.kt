@@ -81,19 +81,19 @@ class ParagraphEditorDialogFragment : DialogFragment() {
     }
 
     binding.currentVideoPosition.setText(
-      getString(R.string.proj_current_video_position, TimeUtils.getTime(videoPosition))
+      getString(R.string.proj_current_video_position, TimeUtils.getFormattedTime(videoPosition))
     )
 
     binding.currentVideoPosition.setOnClickListener {
-      ClipboardUtils.copyText(TimeUtils.getTime(videoPosition))
+      ClipboardUtils.copyText(TimeUtils.getFormattedTime(videoPosition))
     }
     binding.deleteParagraph.setOnClickListener { showAlertToDeleteParagraph() }
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }
     binding.dialogButtons.save.setOnClickListener { saveParagraph() }
 
     binding.deleteParagraph.isEnabled = paragraphIndex >= 0
-    binding.tieStartTime.setText(paragraph.startTime.time)
-    binding.tieEndTime.setText(paragraph.endTime.time)
+    binding.tieStartTime.setText(paragraph.startTime.formattedTime)
+    binding.tieEndTime.setText(paragraph.endTime.formattedTime)
     binding.tieText.setText(paragraph.text)
     binding.preview.setSubtitle(previewSubtitle)
     binding.preview.setVideoPosition(0L)

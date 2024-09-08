@@ -31,6 +31,4 @@ android {
   }
 }
 
-dependencies {
-  implementation(libs.androidx.annotation)
-}
+dependencies { implementation(libs.androidx.annotation) }

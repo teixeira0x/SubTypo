@@ -38,10 +38,28 @@ abstract class SubtitleFormat(val name: String, val extension: String) {
   val errorList: List<SyntaxError>
     get() = _errorList
 
+  /**
+   * Convert paragraph list to text in caption format.
+   *
+   * @param paragraphs The list of paragraphs to convert.
+   * @return Converted text.
+   */
   abstract fun toText(paragraphs: List<Paragraph>): String
 
+  /**
+   * Analyze the obtained text and recover the paragraphs.
+   *
+   * @param text Text to analyze.
+   * @return List of recovered paragraphs.
+   */
   abstract fun parseText(text: String): MutableList<Paragraph>
 
+  /**
+   * Generate span based on caption format for given text.
+   *
+   * @param text Paragraph text to generate spans.
+   * @return Spannable text.
+   */
   abstract fun generateSpan(text: String): SpannableStringBuilder
 
   protected fun addError(error: SyntaxError) {

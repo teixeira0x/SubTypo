@@ -105,25 +105,13 @@ class SubtitlesViewModel : ViewModel() {
     }
   }
 
-  fun moveParagraph(targetIndex: Int) {
-    val subtitle = this.subtitle
-    subtitle?.moveParagraph(targetIndex)
-    this.subtitle = subtitle
-  }
-
   fun swapParagraph(from: Int, to: Int) {
     val subtitle = this.subtitle
     subtitle?.swapParagraph(from, to)
     this.subtitle = subtitle
   }
 
-  fun addParagraph(paragraph: Paragraph) {
-    val subtitle = this.subtitle
-    subtitle?.addParagraph(paragraph)
-    this.subtitle = subtitle
-  }
-
-  fun addParagraph(index: Int, paragraph: Paragraph) {
+  fun addParagraph(index: Int = paragraphs.size, paragraph: Paragraph) {
     val subtitle = this.subtitle
     subtitle?.addParagraph(index, paragraph)
     this.subtitle = subtitle

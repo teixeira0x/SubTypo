@@ -34,10 +34,8 @@ subprojects {
   plugins.withId("com.android.library") { configureBaseExtension() }
 
   tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions {
-      jvmTarget.set(JvmTarget.JVM_17)
-    }
-    //kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
+    compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
+    // kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
   }
 }
 

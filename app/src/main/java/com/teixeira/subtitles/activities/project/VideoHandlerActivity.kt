@@ -136,7 +136,9 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
 
   protected fun updateVideoUI(currentPosition: Long) {
     requireParagraphListAdapter().setVideoPosition(currentPosition)
-    binding.controllerContent.currentVideoPosition.setText(TimeUtils.getTime(currentPosition))
+    binding.controllerContent.currentVideoPosition.setText(
+      TimeUtils.getFormattedTime(currentPosition)
+    )
     binding.videoContent.subtitleView.setVideoPosition(currentPosition)
     binding.controllerContent.seekBar.setProgress(currentPosition.toInt())
     binding.timeLine.setCurrentPosition(currentPosition)
@@ -145,7 +147,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
   private fun onVideoPrepared(player: Player) {
     val duration = player.duration
 
-    binding.controllerContent.videoDuration.setText(TimeUtils.getTime(duration))
+    binding.controllerContent.videoDuration.setText(TimeUtils.getFormattedTime(duration))
     binding.controllerContent.seekBar.setMax(duration.toInt())
     binding.timeLine.setDuration(duration)
     videoViewModel.duration = duration

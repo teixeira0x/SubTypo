@@ -47,4 +47,13 @@ data class ParagraphState(
   val startTimeState: TimeState,
   val endTimeState: TimeState,
   val text: String,
-)
+) {
+
+  fun getParagraph(): Paragraph {
+    return Paragraph(
+      startTime = startTimeState.getTime(),
+      endTime = endTimeState.getTime(),
+      text = text,
+    )
+  }
+}

@@ -23,8 +23,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Time(var milliseconds: Long) : Parcelable {
 
-  val time: String
-    get() = TimeUtils.getTime(this.milliseconds)
+  val formattedTime: String
+    get() = TimeUtils.getFormattedTime(this.milliseconds)
 
   internal fun getState(): TimeState {
     return TimeState(milliseconds)
@@ -35,4 +35,9 @@ data class Time(var milliseconds: Long) : Parcelable {
   }
 }
 
-data class TimeState(val milliseconds: Long)
+data class TimeState(val milliseconds: Long) {
+
+  fun getTime(): Time {
+    return Time(milliseconds)
+  }
+}

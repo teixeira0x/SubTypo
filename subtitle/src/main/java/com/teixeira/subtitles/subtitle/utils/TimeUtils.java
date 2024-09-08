@@ -13,7 +13,7 @@ public class TimeUtils {
    * @param milliseconds Milliseconds to convert to String.
    * @return The time String in the format hh:mm:ss,SSS.
    */
-  public static String getTime(long milliseconds) {
+  public static String getFormattedTime(long milliseconds) {
     long hours = milliseconds / 3600000;
     long minutes = (milliseconds % 3600000) / 60000;
     long seconds = (milliseconds % 60000) / 1000;

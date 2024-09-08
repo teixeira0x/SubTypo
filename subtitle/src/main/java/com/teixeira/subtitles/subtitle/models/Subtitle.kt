@@ -31,146 +31,49 @@ data class Subtitle(
     const val MAX_STATES_SIZE = 20
   }
 
-  private val carataker = Caretaker()
+  val stateManager = SubtitleStateManager(this)
 
   val fullName: String
     get() = name + subtitleFormat.extension
 
-  fun moveParagraph(targetIndex: Int) {
-    if (targetIndex >= 0 && targetIndex < paragraphs.size) {
-      var first: Int
-      if (targetIndex - 1 >= 0) {
-        first = targetIndex - 1
-      } else if (targetIndex + 1 < paragraphs.size) {
-        first = targetIndex + 1
-      } else {
-        first = targetIndex
-      }
-      swapParagraph(first, targetIndex)
-    }
-  }
-
   fun swapParagraph(first: Int, second: Int) {
     Collections.swap(paragraphs, first, second)
-    carataker.pushState()
+    stateManager.pushState()
   }
 
-  fun addParagraph(paragraph: Paragraph) {
-    paragraphs.add(paragraph)
-    carataker.pushState()
-  }
-
-  fun addParagraph(index: Int, paragraph: Paragraph) {
+  fun addParagraph(index: Int = paragraphs.size, paragraph: Paragraph) {
     paragraphs.add(index, paragraph)
-    carataker.pushState()
+    stateManager.pushState()
   }
 
   fun setParagraph(index: Int, newParagraph: Paragraph) {
     paragraphs.set(index, newParagraph)
-    carataker.pushState()
+    stateManager.pushState()
   }
 
   fun removeParagraph(paragraph: Paragraph) {
     paragraphs.remove(paragraph)
-    carataker.pushState()
+    stateManager.pushState()
   }
 
   fun removeParagraph(index: Int) {
     paragraphs.removeAt(index)
-    carataker.pushState()
+    stateManager.pushState()
   }
 
-  fun canUndo(): Boolean = carataker.canUndo()
+  fun canUndo(): Boolean = stateManager.canUndo()
 
-  fun canRedo(): Boolean = carataker.canRedo()
+  fun canRedo(): Boolean = stateManager.canRedo()
 
   fun undo() {
-    carataker.undo()
+    stateManager.undo()
   }
 
   fun redo() {
-    carataker.redo()
-  }
-
-  fun getParagraphsAt(milliseconds: Long): List<Paragraph> {
-    return paragraphs.filter {
-      milliseconds >= it.startTime.milliseconds && milliseconds <= it.endTime.milliseconds
-    }
+    stateManager.redo()
   }
 
   fun toText(): String {
     return subtitleFormat.toText(paragraphs)
   }
-
-  inner class Caretaker {
-    private val savedStates = ArrayList<StateItem>()
-    private var state = 0
-
-    init {
-      pushState()
-    }
-
-    fun pushState() {
-      while (state < savedStates.size - 1) {
-        savedStates.removeAt(savedStates.size - 1)
-      }
-
-      val paragraphStates = paragraphs.map { it.getState() }
-      savedStates.add(StateItem(paragraphStates))
-      if (savedStates.size > 1) {
-        state++
-      }
-
-      while (state > 1 && savedStates.size > MAX_STATES_SIZE) {
-        savedStates.removeAt(0)
-        state--
-      }
-    }
-
-    fun canUndo(): Boolean = state > 0
-
-    fun canRedo(): Boolean = state < savedStates.size - 1
-
-    fun undo() {
-      if (canUndo()) {
-        state--
-        restoreState(savedStates[state])
-      }
-    }
-
-    fun redo() {
-      if (canRedo()) {
-        state++
-        restoreState(savedStates[state])
-      }
-    }
-
-    fun restoreState(state: StateItem) {
-      val paragraphStates = state.paragraphStates
-
-      while (paragraphs.size > paragraphStates.size) {
-        paragraphs.removeAt(0)
-      }
-
-      for (i in paragraphStates.indices) {
-        val paragraphState = paragraphStates[i]
-        if (i >= paragraphs.size) {
-          paragraphs.add(paragraphState.toParagraph())
-          continue
-        }
-
-        paragraphs[i].restoreState(paragraphState)
-      }
-    }
-
-    fun ParagraphState.toParagraph(): Paragraph {
-      return Paragraph(
-        startTime = Time(startTimeState.milliseconds),
-        endTime = Time(endTimeState.milliseconds),
-        text = text,
-      )
-    }
-  }
-
-  inner class StateItem(val paragraphStates: List<ParagraphState>)
 }

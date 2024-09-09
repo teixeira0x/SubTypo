@@ -41,33 +41,25 @@ class App : Application() {
   }
 
   fun openUrl(url: String) {
-    try {
-      startActivity(
-        Intent().apply {
-          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-          action = Intent.ACTION_VIEW
-          data = Uri.parse(url)
-        }
-      )
-    } catch (th: Throwable) {
-      th.printStackTrace()
-    }
+    startActivity(
+      Intent().apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        action = Intent.ACTION_VIEW
+        data = Uri.parse(url)
+      }
+    )
   }
 
   private fun uncaughtException(thread: Thread, throwable: Throwable) {
-    try {
-      // Start the crash activity
-      startActivity(
-        Intent(this, CrashActivity::class.java).apply {
-          putExtra(CrashActivity.KEY_EXTRA_ERROR, ThrowableUtils.getFullStackTrace(throwable))
-          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-      )
+    // Start the crash activity
+    startActivity(
+      Intent(this, CrashActivity::class.java).apply {
+        putExtra(CrashActivity.KEY_EXTRA_ERROR, ThrowableUtils.getFullStackTrace(throwable))
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      }
+    )
 
-      uncaughtExceptionHandler?.uncaughtException(thread, throwable)
-      System.exit(1)
-    } catch (th: Throwable) {
-      th.printStackTrace()
-    }
+    uncaughtExceptionHandler?.uncaughtException(thread, throwable)
+    System.exit(1)
   }
 }

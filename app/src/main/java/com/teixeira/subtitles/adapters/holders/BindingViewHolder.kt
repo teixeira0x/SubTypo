@@ -13,31 +13,9 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira.subtitles.subtitle.models
+package com.teixeira.subtitles.adapters.holders
 
-import android.os.Parcelable
-import com.teixeira.subtitles.subtitle.utils.TimeUtils.getFormattedTime
-import kotlinx.parcelize.Parcelize
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 
-/** @author Felipe Teixeira */
-@Parcelize
-data class Time(var milliseconds: Long) : Parcelable {
-
-  val formattedTime: String
-    get() = this.milliseconds.getFormattedTime()
-
-  internal fun getState(): TimeState {
-    return TimeState(milliseconds)
-  }
-
-  internal fun restoreState(state: TimeState) {
-    this.milliseconds = state.milliseconds
-  }
-}
-
-data class TimeState(val milliseconds: Long) {
-
-  fun getTime(): Time {
-    return Time(milliseconds)
-  }
-}
+class BindingViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)

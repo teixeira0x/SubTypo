@@ -1,23 +1,52 @@
-package com.teixeira.subtitles.fragments.dialogs
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
 
-import android.app.Dialog
+package com.teixeira.subtitles.fragments.sheets
+
 import android.os.Bundle
-import android.text.Editable
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.databinding.FragmentDialogSubtitleEditorBinding
 import com.teixeira.subtitles.subtitle.formats.SubtitleFormat
 import com.teixeira.subtitles.subtitle.models.Subtitle
-import com.teixeira.subtitles.utils.OnTextChangedListener
+import com.teixeira.subtitles.utils.EditTextUtils.afterTextChanged
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 
-class SubtitleEditorDialogFragment : DialogFragment() {
+/**
+ * BottomSheet to edit or add a new {@link Subtitle}.
+ *
+ * @author Felipe Teixeira
+ */
+class SubtitleEditorFragment : BaseBottomSheetFragment() {
+
+  companion object {
+    const val KEY_SUBTITLE_INDEX = "key_subtitle_index"
+
+    @JvmStatic
+    fun newInstance(subtitleIndex: Int = -1): SubtitleEditorFragment {
+      return SubtitleEditorFragment().also {
+        it.arguments = Bundle().apply { putInt(KEY_SUBTITLE_INDEX, subtitleIndex) }
+      }
+    }
+  }
 
   private var _binding: FragmentDialogSubtitleEditorBinding? = null
   private val binding: FragmentDialogSubtitleEditorBinding
@@ -25,55 +54,31 @@ class SubtitleEditorDialogFragment : DialogFragment() {
 
   private val subtitlesViewModel by
     viewModels<SubtitlesViewModel>(ownerProducer = { requireActivity() })
-  private var index: Int = -1
+  private var subtitleIndex: Int = -1
   private lateinit var subtitle: Subtitle
 
   private var isEditingSubtitle = false
 
-  companion object {
-    const val KEY_SUBTITLE_INDEX = "key_subtitle_index"
-
-    @JvmStatic
-    fun newInstance(index: Int = -1): SubtitleEditorDialogFragment {
-      return SubtitleEditorDialogFragment().also {
-        it.arguments = Bundle().apply { putInt(KEY_SUBTITLE_INDEX, index) }
-      }
-    }
-  }
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val args = arguments
-    index = args?.getInt(KEY_SUBTITLE_INDEX) ?: -1
-    isEditingSubtitle = index >= 0
+    subtitleIndex = arguments?.getInt(KEY_SUBTITLE_INDEX) ?: -1
+    isEditingSubtitle = subtitleIndex >= 0
     subtitle =
       if (isEditingSubtitle) {
-        subtitlesViewModel.subtitles[index]
+        subtitlesViewModel.subtitles[subtitleIndex]
       } else Subtitle()
   }
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val sheetDialog = BottomSheetDialog(requireContext())
-    _binding = FragmentDialogSubtitleEditorBinding.inflate(sheetDialog.layoutInflater)
-    sheetDialog.setContentView(binding.root)
-    sheetDialog.setCancelable(isCancelable())
-
-    sheetDialog.behavior.apply {
-      peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
-      state = BottomSheetBehavior.STATE_EXPANDED
-    }
-    init()
-    return sheetDialog
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?,
+  ): View {
+    return FragmentDialogSubtitleEditorBinding.inflate(inflater).also { _binding = it }.root
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
-  }
-
-  private fun init() {
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     binding.delete.setOnClickListener {
       MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete)
@@ -92,27 +97,20 @@ class SubtitleEditorDialogFragment : DialogFragment() {
     binding.title.setText(
       if (isEditingSubtitle) R.string.proj_subtitle_edit else R.string.proj_subtitle_add
     )
+    binding.tieName.afterTextChanged { updateSaveButton() }
     binding.tieName.setText(subtitle.name)
     binding.tieFormat.setText(subtitle.subtitleFormat.extension)
     binding.tieFormat.setAdapter(
       ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, arrayOf(".srt"))
     )
-    setTextWatchers()
 
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }
     binding.dialogButtons.save.setOnClickListener { onSave() }
   }
 
-  private fun setTextWatchers() {
-    binding.tieName.addTextChangedListener(
-      object : OnTextChangedListener() {
-
-        override fun afterTextChanged(editable: Editable) {
-          updateSaveButton()
-        }
-      }
-    )
-    updateSaveButton()
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   private fun updateSaveButton() {
@@ -126,7 +124,6 @@ class SubtitleEditorDialogFragment : DialogFragment() {
   }
 
   private fun onSave() {
-    dismiss()
 
     subtitle.apply {
       name = binding.tieName.text.toString()
@@ -134,9 +131,10 @@ class SubtitleEditorDialogFragment : DialogFragment() {
     }
 
     if (isEditingSubtitle) {
-      subtitlesViewModel.setSubtitle(index, subtitle)
+      subtitlesViewModel.setSubtitle(subtitleIndex, subtitle)
     } else {
       subtitlesViewModel.addSubtitle(subtitle, true)
     }
+    dismiss()
   }
 }

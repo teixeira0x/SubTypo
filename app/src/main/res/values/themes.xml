@@ -60,7 +60,9 @@
     <item name="android:widgetLayout">@layout/layout_material_switch_style</item>
   </style>
 
-  <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox" />
+  <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <item name="hintAnimationEnabled">true</item>
+  </style>
 
   <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu" />
 

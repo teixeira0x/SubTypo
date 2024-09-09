@@ -23,7 +23,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import com.teixeira.subtitles.subtitle.models.Paragraph;
 import com.teixeira.subtitles.subtitle.models.Subtitle;
-import com.teixeira.subtitles.subtitle.utils.SubtitleUtilsKt;
+import com.teixeira.subtitles.subtitle.utils.SubtitleUtils;
 import java.util.List;
 
 /**
@@ -80,7 +80,7 @@ public class SubtitleView extends View {
   public void setVideoPosition(long videoPosition) {
     paragraphs = null;
     if (subtitle != null) {
-      paragraphs = SubtitleUtilsKt.getParagraphsAt(subtitle.getParagraphs(), videoPosition);
+      paragraphs = SubtitleUtils.findParagraphsAt(subtitle.getParagraphs(), videoPosition);
     }
     this.videoPosition = videoPosition;
     invalidate();

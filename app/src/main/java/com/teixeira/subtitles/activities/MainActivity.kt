@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import com.google.android.material.color.MaterialColors
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.databinding.ActivityMainBinding
-import com.teixeira.subtitles.fragments.dialogs.ProjectEditorDialogFragment
+import com.teixeira.subtitles.fragments.sheets.ProjectEditorFragment
 import com.teixeira.subtitles.handlers.PermissionsHandler
 import com.teixeira.subtitles.viewmodels.MainViewModel
 
@@ -67,16 +67,16 @@ class MainActivity : BaseActivity() {
 
     binding.fabNewProject.setOnClickListener {
       mainViewModel.currentFragmentIndex = MainViewModel.FRAGMENT_PROJECTS_INDEX
-      ProjectEditorDialogFragment.newInstance().show(supportFragmentManager, null)
+      ProjectEditorFragment.newInstance().show(supportFragmentManager, null)
     }
 
     binding.bottomNavigation.setOnItemSelectedListener { item ->
-      when (item.itemId) {
-        R.id.item_projects ->
-          mainViewModel.currentFragmentIndex = MainViewModel.FRAGMENT_PROJECTS_INDEX
-        R.id.item_settings ->
-          mainViewModel.currentFragmentIndex = MainViewModel.FRAGMENT_SETTINGS_INDEX
-      }
+      mainViewModel.currentFragmentIndex =
+        when (item.itemId) {
+          R.id.item_projects -> MainViewModel.FRAGMENT_PROJECTS_INDEX
+          R.id.item_settings -> MainViewModel.FRAGMENT_SETTINGS_INDEX
+          else -> throw IllegalArgumentException("Invalid item id: '${item.itemId}'")
+        }
       true
     }
   }

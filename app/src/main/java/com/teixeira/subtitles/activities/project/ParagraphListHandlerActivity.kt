@@ -23,9 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira.subtitles.adapters.ParagraphListAdapter
-import com.teixeira.subtitles.fragments.dialogs.ParagraphEditorDialogFragment
+import com.teixeira.subtitles.fragments.sheets.ParagraphEditorFragment
 import com.teixeira.subtitles.subtitle.models.Subtitle
-import com.teixeira.subtitles.utils.UiUtils
 
 /**
  * Base class for ProjectActivity that handles most things related to the caption list.
@@ -42,7 +41,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
       touchHelper,
       { _, index, paragraph ->
         videoViewModel.pauseVideo()
-        ParagraphEditorDialogFragment.newInstance(videoViewModel.currentPosition, index, paragraph)
+        ParagraphEditorFragment.newInstance(videoViewModel.currentPosition, index, paragraph)
           .show(supportFragmentManager, null)
       },
     ) { _, _, _ ->
@@ -99,11 +98,11 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     }
 
     subtitlesViewModel.observeUndoButtonState(this) { canUndo ->
-      UiUtils.setImageEnabled(binding.controllerContent.undo, canUndo)
+      binding.controllerContent.undo.isEnabled = canUndo
     }
 
     subtitlesViewModel.observeRedoButtonState(this) { canRedo ->
-      UiUtils.setImageEnabled(binding.controllerContent.redo, canRedo)
+      binding.controllerContent.redo.isEnabled = canRedo
     }
 
     subtitlesViewModel.observeScrollPosition(this) { position ->

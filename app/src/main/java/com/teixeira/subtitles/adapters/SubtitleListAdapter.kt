@@ -15,29 +15,28 @@
 
 package com.teixeira.subtitles.adapters
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.R
 import com.google.android.material.color.MaterialColors
+import com.teixeira.subtitles.adapters.holders.BindingViewHolder
 import com.teixeira.subtitles.databinding.LayoutSubtitleItemBinding
 import com.teixeira.subtitles.subtitle.models.Subtitle
+import com.teixeira.subtitles.utils.ContextUtils.layoutInflater
+
+typealias SubtitleViewHolder = BindingViewHolder<LayoutSubtitleItemBinding>
 
 class SubtitleListAdapter(
   val subtitles: List<Subtitle>,
   val selectedIndex: Int,
   val onClickListener: (view: View, index: Int, subtitle: Subtitle) -> Unit,
   val onLongClickListener: (index: Int, subtitle: Subtitle) -> Boolean,
-) : RecyclerView.Adapter<SubtitleListAdapter.SubtitleViewHolder>() {
-
-  inner class SubtitleViewHolder(val binding: LayoutSubtitleItemBinding) :
-    RecyclerView.ViewHolder(binding.root)
+) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubtitleViewHolder {
     return SubtitleViewHolder(
-      LayoutSubtitleItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+      LayoutSubtitleItemBinding.inflate(parent.context.layoutInflater, parent, false)
     )
   }
 

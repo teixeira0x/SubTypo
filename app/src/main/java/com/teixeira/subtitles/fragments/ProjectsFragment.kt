@@ -9,21 +9,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.FileUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.activities.project.BaseProjectActivity
 import com.teixeira.subtitles.activities.project.ProjectActivity
 import com.teixeira.subtitles.adapters.ProjectListAdapter
 import com.teixeira.subtitles.databinding.FragmentProjectsBinding
-import com.teixeira.subtitles.fragments.dialogs.ProjectEditorDialogFragment
+import com.teixeira.subtitles.fragments.sheets.ProjectEditorFragment
 import com.teixeira.subtitles.models.Project
-import com.teixeira.subtitles.utils.cancelIfActive
 import com.teixeira.subtitles.viewmodels.ProjectsViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.teixeira.subtitles.viewmodels.ProjectsViewModel.ProjectsState.Loaded
+import com.teixeira.subtitles.viewmodels.ProjectsViewModel.ProjectsState.Loading
 
 class ProjectsFragment : Fragment() {
 
@@ -33,9 +29,24 @@ class ProjectsFragment : Fragment() {
 
   private val projectsViewModel by
     viewModels<ProjectsViewModel>(ownerProducer = { requireActivity() })
-  private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-  private lateinit var adapter: ProjectListAdapter
+  private val projectsAdapter by lazy {
+    ProjectListAdapter(
+      onProjectClick = { _, project ->
+        startActivity(
+          Intent(requireContext(), ProjectActivity::class.java)
+            .putExtra(BaseProjectActivity.KEY_PROJECT, project)
+        )
+      }
+    ) { view, project ->
+      when (view.id) {
+        R.id.edit_option ->
+          ProjectEditorFragment.newInstance(project).show(childFragmentManager, null)
+        R.id.delete_option -> deleteProject(project)
+        else -> {}
+      }
+    }
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -48,40 +59,33 @@ class ProjectsFragment : Fragment() {
   override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
     super.onViewCreated(v, savedInstanceState)
 
-    adapter =
-      ProjectListAdapter({ _, project ->
-        startActivity(
-          Intent(requireContext(), ProjectActivity::class.java)
-            .putExtra(BaseProjectActivity.KEY_PROJECT, project)
-        )
-      }) { view, project ->
-        when (view.id) {
-          R.id.edit_option ->
-            ProjectEditorDialogFragment.newInstance(project).show(childFragmentManager, null)
-          R.id.delete_option -> deleteProject(project)
-          else -> {}
+    projectsViewModel.stateData.observe(this) { state ->
+      when (state) {
+        is Loading -> {
+          binding.projects.isVisible = false
+          binding.noProjects.isVisible = false
+        }
+        is Loaded -> {
+          binding.noProjects.isVisible = state.projects.isEmpty()
+          binding.projects.isVisible = true
+          projectsAdapter.submitList(state.projects)
         }
       }
+    }
 
     binding.apply {
       projects.layoutManager = LinearLayoutManager(requireContext())
-      projects.adapter = adapter
-    }
-
-    projectsViewModel.observeProjects(this) { projects ->
-      binding.noProjects.isVisible = projects.isEmpty()
-      adapter.submitList(projects)
+      projects.adapter = projectsAdapter
     }
   }
 
   override fun onStart() {
     super.onStart()
-    projectsViewModel.provideProjects()
+    projectsViewModel.loadProjects()
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    coroutineScope.cancelIfActive("Fragment has been destroyed!")
     _binding = null
   }
 
@@ -89,20 +93,8 @@ class ProjectsFragment : Fragment() {
     MaterialAlertDialogBuilder(requireContext())
       .setTitle(R.string.delete)
       .setMessage(getString(R.string.msg_delete_confirmation, project.name))
-      .setPositiveButton(R.string.yes) { _, _ -> deleteProjectAsync(project) }
+      .setPositiveButton(R.string.yes) { _, _ -> projectsViewModel.deleteProject(project) {} }
       .setNegativeButton(R.string.no, null)
       .show()
-  }
-
-  private fun deleteProjectAsync(project: Project) {
-    coroutineScope.launch {
-      val deleted = FileUtils.delete(project.path)
-
-      withContext(Dispatchers.Main) {
-        if (deleted) {
-          projectsViewModel.provideProjects()
-        }
-      }
-    }
   }
 }

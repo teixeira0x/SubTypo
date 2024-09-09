@@ -89,4 +89,5 @@
   <string name="subtitle_paragraph_enter_start_time">Enter start time</string>
   <string name="subtitle_paragraph_enter_end_time">Enter end time</string>
   <string name="subtitle_paragraph_enter_text">Enter text</string>
+  <string name="subtitle_paragraph_invalid_time">This is not a valid time.</string>
 </resources>

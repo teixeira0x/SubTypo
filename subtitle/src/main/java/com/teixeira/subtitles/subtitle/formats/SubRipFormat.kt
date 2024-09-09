@@ -22,6 +22,7 @@ import com.teixeira.subtitles.subtitle.models.Paragraph
 import com.teixeira.subtitles.subtitle.models.SyntaxError
 import com.teixeira.subtitles.subtitle.models.Time
 import com.teixeira.subtitles.subtitle.utils.TimeUtils
+import com.teixeira.subtitles.subtitle.utils.TimeUtils.getMilliseconds
 
 /** @author Felipe Teixeira */
 class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
@@ -64,15 +65,23 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
 
     while (lineIndex < lines.size) {
       var line = lines[lineIndex].trim()
-      while (lineIndex < lines.size && line.isEmpty()) {
-        line = lines[++lineIndex].trim()
+      if (line.isEmpty()) {
+        lineIndex++
+        continue
       }
 
       val expectedNumber = captionNumber + 1
       val number = parseCaptionNumber(expectedNumber, lineIndex, line)
-      if (number == expectedNumber) {
-        lineIndex++
-        val times = parseTimeCode(lineIndex, lines[lineIndex]) ?: continue
+
+      lineIndex++
+      val times =
+        if (lineIndex < lines.size) parseTimeCode(lineIndex, lines[lineIndex])
+        else {
+          addError(SyntaxError("Unexpected end of file", lineIndex))
+          null
+        }
+
+      if (number == expectedNumber && times != null) {
         val (startTime, endTime) = times
 
         lineIndex++
@@ -84,8 +93,8 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
 
         paragraphs.add(
           Paragraph(
-            Time(TimeUtils.getMilliseconds(startTime)),
-            Time(TimeUtils.getMilliseconds(endTime)),
+            Time(startTime.getMilliseconds()),
+            Time(endTime.getMilliseconds()),
             textBuilder.toString().trim(),
           )
         )
@@ -128,8 +137,7 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
     val (startTime, endTime) = timeCodes
 
     return if (
-      TimeUtils.isValidTime(startTime.split(":").toTypedArray()) ||
-        TimeUtils.isValidTime(endTime.split(":").toTypedArray())
+      TimeUtils.isValidTime(startTime.split(":")) || TimeUtils.isValidTime(endTime.split(":"))
     ) {
       arrayOf(startTime, endTime)
     } else {

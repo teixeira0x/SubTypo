@@ -22,13 +22,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.adapters.SubtitleListAdapter
 import com.teixeira.subtitles.databinding.LayoutSubtitlesDialogBinding
-import com.teixeira.subtitles.fragments.dialogs.SubtitleEditorDialogFragment
+import com.teixeira.subtitles.fragments.sheets.SubtitleEditorFragment
 import com.teixeira.subtitles.models.Project
 import com.teixeira.subtitles.project.ProjectManager
 import com.teixeira.subtitles.project.ProjectRepository
 import com.teixeira.subtitles.subtitle.models.Subtitle
-import com.teixeira.subtitles.utils.DialogUtils
-import com.teixeira.subtitles.utils.getParcelableCompat
+import com.teixeira.subtitles.utils.BundleUtils.getParcelableCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,16 +45,9 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    if (intent == null || intent.extras == null) {
-      throw IllegalArgumentException("You cannot open this activity without a project.")
-    }
-
-    val extras = intent.extras!!
-    if (!extras.containsKey(KEY_PROJECT)) {
-      throw IllegalArgumentException("You cannot open this activity without a project.")
-    }
-
-    project = extras.getParcelableCompat<Project>(KEY_PROJECT)!!
+    project =
+      intent?.extras?.getParcelableCompat<Project>(KEY_PROJECT)
+        ?: throw IllegalArgumentException("You cannot open this activity without a project.")
     projectManager.openProject(project)
 
     supportActionBar?.title = project.name
@@ -81,15 +73,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
       } catch (e: Exception) {
         subtitles = ArrayList<Subtitle>()
         // Add handle to error.
-        withContext(Dispatchers.Main) {
-          DialogUtils.createSimpleDialog(
-              this@ProjectHandlerActivity,
-              "An error ocurred",
-              e.toString(),
-            )
-            .setPositiveButton(R.string.ok, null)
-            .show()
-        }
+
       }
 
       withContext(Dispatchers.Main) {
@@ -103,7 +87,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
   protected open fun onInitializeProject() {}
 
   protected fun showSubtitleEditorDialog(index: Int = -1) {
-    SubtitleEditorDialogFragment.newInstance(index).show(supportFragmentManager, "")
+    SubtitleEditorFragment.newInstance(index).show(supportFragmentManager, "")
   }
 
   protected fun showSubtitleSelectorDialog() {
@@ -150,11 +134,9 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
         ProjectRepository.writeSubtitleDataFile(project.path, subtitlesViewModel.subtitles)
       } catch (e: Exception) {
         withContext(Dispatchers.Main) {
-          DialogUtils.createSimpleDialog(
-              this@ProjectHandlerActivity,
-              getString(R.string.error_saving_project),
-              e.toString(),
-            )
+          MaterialAlertDialogBuilder(this@ProjectHandlerActivity)
+            .setTitle(getString(R.string.error_saving_project))
+            .setMessage(e.toString())
             .setPositiveButton(R.string.ok, null)
             .show()
         }

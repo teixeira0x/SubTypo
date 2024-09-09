@@ -27,7 +27,7 @@ import com.teixeira.subtitles.adapters.ParagraphListAdapter
 import com.teixeira.subtitles.databinding.ActivityProjectBinding
 import com.teixeira.subtitles.handlers.SubtitlePickerHandler
 import com.teixeira.subtitles.handlers.SubtitleSaverHandler
-import com.teixeira.subtitles.utils.cancelIfActive
+import com.teixeira.subtitles.utils.CoroutineUtils.cancelIfActive
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 import com.teixeira.subtitles.viewmodels.VideoViewModel
 import kotlinx.coroutines.CoroutineScope

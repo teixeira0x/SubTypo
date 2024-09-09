@@ -15,31 +15,30 @@
 
 package com.teixeira.subtitles.adapters
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.teixeira.subtitles.adapters.holders.BindingViewHolder
 import com.teixeira.subtitles.databinding.LayoutParagraphItemBinding
 import com.teixeira.subtitles.subtitle.models.Paragraph
+import com.teixeira.subtitles.utils.ContextUtils.layoutInflater
+
+typealias ParagraphViewHolder = BindingViewHolder<LayoutParagraphItemBinding>
 
 class ParagraphListAdapter(
   val touchHelper: ItemTouchHelper,
   val onClickListener: (view: View, position: Int, paragraph: Paragraph) -> Unit,
   val onLongClickListener: (view: View, position: Int, paragraph: Paragraph) -> Boolean,
-) : RecyclerView.Adapter<ParagraphListAdapter.ParagraphViewHolder>() {
+) : RecyclerView.Adapter<ParagraphViewHolder>() {
 
   private var videoParagraphIndexer = mutableListOf<Int>()
   var paragraphs: List<Paragraph>? = null
   var isVideoPlaying: Boolean = false
 
-  inner class ParagraphViewHolder(val binding: LayoutParagraphItemBinding) :
-    RecyclerView.ViewHolder(binding.root)
-
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParagraphViewHolder {
     return ParagraphViewHolder(
-      LayoutParagraphItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+      LayoutParagraphItemBinding.inflate(parent.context.layoutInflater, parent, false)
     )
   }
 

@@ -22,11 +22,11 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.blankj.utilcode.util.UriUtils
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.subtitle.formats.SubtitleFormat
 import com.teixeira.subtitles.subtitle.models.Subtitle
 import com.teixeira.subtitles.utils.ToastUtils
+import com.teixeira.subtitles.utils.UriUtils.uri2File
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 
 class SubtitlePickerHandler(
@@ -60,30 +60,32 @@ class SubtitlePickerHandler(
   }
 
   private fun onPickSubtitle(uri: Uri?) {
-    if (uri == null) {
-      return
-    }
-
-    try {
+    if (uri != null) {
       val text =
         context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
-          ?: return
 
-      val file = UriUtils.uri2File(uri)
-      val subtitleFormat = SubtitleFormat.getExtensionFormat(file.extension)
-      val paragraphs = subtitleFormat.parseText(text)
-      if (subtitleFormat.errorList.isNotEmpty()) {
-        ToastUtils.showLong(R.string.proj_import_subtitle_error)
-        return
+      if (text != null && text.isNotEmpty()) {
+
+        val file = uri.uri2File
+        val subtitleFormat = SubtitleFormat.getExtensionFormat(".${file.extension}")
+        val paragraphs = subtitleFormat.parseText(text)
+
+        if (subtitleFormat.errorList.isNotEmpty()) {
+          ToastUtils.showLong(R.string.proj_import_subtitle_error)
+          return
+        }
+
+        subtitlesViewModel.addSubtitle(
+          subtitle =
+            Subtitle(
+              name = file.name.substringBeforeLast("."),
+              subtitleFormat = subtitleFormat,
+              paragraphs = paragraphs,
+            ),
+          select = true,
+        )
+        ToastUtils.showLong(R.string.proj_import_subtitle_success)
       }
-
-      subtitlesViewModel.addSubtitle(
-        Subtitle(file.name.substringBeforeLast("."), subtitleFormat, paragraphs),
-        true,
-      )
-      ToastUtils.showLong(R.string.proj_import_subtitle_success)
-    } catch (e: Exception) {
-      ToastUtils.showLong(R.string.proj_import_subtitle_error)
     }
   }
 }

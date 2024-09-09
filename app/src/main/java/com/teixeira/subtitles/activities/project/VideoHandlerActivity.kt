@@ -23,9 +23,8 @@ import androidx.media3.common.Player
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira.subtitles.R
-import com.teixeira.subtitles.fragments.dialogs.ParagraphEditorDialogFragment
-import com.teixeira.subtitles.subtitle.utils.TimeUtils
-import com.teixeira.subtitles.utils.UiUtils
+import com.teixeira.subtitles.fragments.sheets.ParagraphEditorFragment
+import com.teixeira.subtitles.subtitle.utils.TimeUtils.getFormattedTime
 
 /**
  * Base class for ProjectActivity that handles most video related things.
@@ -129,16 +128,14 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
         showSubtitleEditorDialog()
         return@setOnClickListener
       }
-      ParagraphEditorDialogFragment.newInstance(videoViewModel.currentPosition)
+      ParagraphEditorFragment.newInstance(videoViewModel.currentPosition)
         .show(supportFragmentManager, null)
     }
   }
 
   protected fun updateVideoUI(currentPosition: Long) {
     requireParagraphListAdapter().setVideoPosition(currentPosition)
-    binding.controllerContent.currentVideoPosition.setText(
-      TimeUtils.getFormattedTime(currentPosition)
-    )
+    binding.controllerContent.currentVideoPosition.setText(currentPosition.getFormattedTime())
     binding.videoContent.subtitleView.setVideoPosition(currentPosition)
     binding.controllerContent.seekBar.setProgress(currentPosition.toInt())
     binding.timeLine.setCurrentPosition(currentPosition)
@@ -147,7 +144,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
   private fun onVideoPrepared(player: Player) {
     val duration = player.duration
 
-    binding.controllerContent.videoDuration.setText(TimeUtils.getFormattedTime(duration))
+    binding.controllerContent.videoDuration.setText(duration.getFormattedTime())
     binding.controllerContent.seekBar.setMax(duration.toInt())
     binding.timeLine.setDuration(duration)
     videoViewModel.duration = duration
@@ -174,10 +171,10 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
 
   private fun setVideoViewModelObservers() {
     videoViewModel.observeIsPrepared(this) { isPrepared ->
-      UiUtils.setImageEnabled(binding.controllerContent.skipBackward, isPrepared)
-      UiUtils.setImageEnabled(binding.controllerContent.play, isPrepared)
-      UiUtils.setImageEnabled(binding.controllerContent.skipFoward, isPrepared)
-      UiUtils.setImageEnabled(binding.controllerContent.addParagraph, isPrepared)
+      binding.controllerContent.skipBackward.isEnabled = isPrepared
+      binding.controllerContent.play.isEnabled = isPrepared
+      binding.controllerContent.skipFoward.isEnabled = isPrepared
+      binding.controllerContent.addParagraph.isEnabled = isPrepared
     }
     videoViewModel.observeCurrentPosition(this) { (currentPosition, seekTo) ->
       if (seekTo) {

@@ -22,10 +22,11 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.blankj.utilcode.util.UriUtils
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.utils.ToastUtils
+import com.teixeira.subtitles.utils.UriUtils.uri2File
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
+import java.io.IOException
 
 class SubtitleSaverHandler(
   val context: Context,
@@ -67,15 +68,18 @@ class SubtitleSaverHandler(
   private fun onSubtitleSave(uri: Uri?) {
     if (uri != null) {
       val subtitle = subtitlesViewModel.subtitle ?: return
-      val subtitleFile = UriUtils.uri2File(uri)
+      val subtitleFile = uri.uri2File
 
       try {
-        context.contentResolver.openOutputStream(uri)?.use {
-          it.write(subtitle.toText().toByteArray())
+        val outputStream = context.contentResolver.openOutputStream(uri)
+
+        if (outputStream != null) {
+          outputStream.write(subtitle.toText().toByteArray())
+          ToastUtils.showLong(R.string.proj_export_subtitle_saved, subtitleFile.absolutePath)
         }
-        ToastUtils.showLong(R.string.proj_export_subtitle_saved, subtitleFile.getAbsolutePath())
-      } catch (e: Exception) {
+      } catch (ioe: IOException) {
         ToastUtils.showLong(R.string.proj_export_subtitle_error)
+        // Add logger later to better handle exceptions.
       }
     }
   }

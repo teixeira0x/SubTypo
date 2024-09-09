@@ -16,7 +16,6 @@
 package com.teixeira.subtitles.adapters
 
 import android.animation.LayoutTransition
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -24,24 +23,29 @@ import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.teixeira.subtitles.adapters.holders.BindingViewHolder
 import com.teixeira.subtitles.databinding.LayoutProjectItemBinding
 import com.teixeira.subtitles.models.Project
+import com.teixeira.subtitles.utils.ContextUtils.layoutInflater
 import com.teixeira.subtitles.utils.UiUtils
 import com.teixeira.subtitles.utils.VideoUtils
+
+typealias ProjectViewHolder = BindingViewHolder<LayoutProjectItemBinding>
 
 class ProjectListAdapter(
   val onProjectClick: (view: View, project: Project) -> Unit,
   val onProjectOptionClick: (view: View, project: Project) -> Unit,
-) : RecyclerView.Adapter<ProjectListAdapter.ProjectViewHolder>() {
+) : RecyclerView.Adapter<ProjectViewHolder>() {
+
+  companion object {
+    const val DEFAULT_CHEVRON_ROTATION = -90f
+  }
 
   private var projects = listOf<Project>()
 
-  inner class ProjectViewHolder(val binding: LayoutProjectItemBinding) :
-    RecyclerView.ViewHolder(binding.root)
-
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
     return ProjectViewHolder(
-      LayoutProjectItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+      LayoutProjectItemBinding.inflate(parent.context.layoutInflater, parent, false)
     )
   }
 
@@ -80,7 +84,7 @@ class ProjectListAdapter(
 
   private fun toggleOptionsVisibility(optionsContainer: FrameLayout, chevron: ImageView) {
     optionsContainer.isVisible = !optionsContainer.isVisible
-    UiUtils.rotateView(chevron, if (optionsContainer.isVisible) 0.0f else -90.0f)
+    UiUtils.rotateView(chevron, if (optionsContainer.isVisible) 0f else DEFAULT_CHEVRON_ROTATION)
   }
 
   class ProjectDiffCallback(val oldList: List<Project>, val newList: List<Project>) :

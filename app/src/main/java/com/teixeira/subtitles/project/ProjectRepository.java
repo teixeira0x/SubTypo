@@ -20,12 +20,12 @@ import static com.teixeira.subtitles.utils.FileUtil.PROJECTS_DIR;
 import android.net.Uri;
 import android.text.TextUtils;
 import com.blankj.utilcode.util.EncodeUtils;
-import com.blankj.utilcode.util.UriUtils;
 import com.teixeira.subtitles.models.Project;
 import com.teixeira.subtitles.subtitle.formats.SubRipFormat;
 import com.teixeira.subtitles.subtitle.formats.SubtitleFormat;
 import com.teixeira.subtitles.subtitle.models.Subtitle;
 import com.teixeira.subtitles.utils.FileUtil;
+import com.teixeira.subtitles.utils.UriUtils;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -141,7 +141,7 @@ public class ProjectRepository {
         projectDir.mkdirs();
       }
 
-      File videoFile = UriUtils.uri2File(videoUri);
+      File videoFile = UriUtils.getUri2File(videoUri);
 
       writeConfigFile(projectDir.getPath(), name, videoFile, PROJECT_CREATOR_VERSION);
       writeSubtitleDataFile(projectDir.getAbsolutePath(), List.of(new Subtitle("subtitle", new SubRipFormat(), new ArrayList<>())));
@@ -160,18 +160,20 @@ public class ProjectRepository {
    * @param name The name of the project.
    * @param videoUri The uri of the project's video file.
    */
-  public static void updateProject(String projectId, String name, Uri videoUri) {
+  public static Project updateProject(String projectId, String name, Uri videoUri) {
     try {
       File projectDir = new File(PROJECTS_DIR, projectId);
       if (!projectDir.exists()) {
-        return;
+        return null;
       }
 
-      File videoFile = UriUtils.uri2File(videoUri);
+      File videoFile = UriUtils.getUri2File(videoUri);
 
       writeConfigFile(projectDir.getPath(), name, videoFile, PROJECT_CREATOR_VERSION);
+      return findProject(projectDir);
     } catch (JSONException jsone) {
       jsone.printStackTrace();
+      return null;
     }
   }
 

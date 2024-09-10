@@ -22,7 +22,7 @@ import java.util.Collections
 /** @author Felipe Teixeira */
 data class Subtitle(
   var name: String = "undefined",
-  var subtitleFormat: SubtitleFormat = SubRipFormat(),
+  var subtitleFormat: SubtitleFormat = SubtitleFormat.Builder.default.build(),
   val paragraphs: MutableList<Paragraph> = ArrayList<Paragraph>(),
 ) {
 

@@ -142,7 +142,6 @@ class SubtitlesViewModel : ViewModel() {
       subtitle!!.undo()
     }
     this.subtitle = subtitle
-    updateUndoButtons()
   }
 
   fun redo() {
@@ -151,7 +150,6 @@ class SubtitlesViewModel : ViewModel() {
       subtitle!!.redo()
     }
     this.subtitle = subtitle
-    updateUndoButtons()
   }
 
   fun updateUndoButtons() {

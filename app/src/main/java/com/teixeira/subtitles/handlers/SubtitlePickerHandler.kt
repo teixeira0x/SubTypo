@@ -67,7 +67,7 @@ class SubtitlePickerHandler(
       if (text != null && text.isNotEmpty()) {
 
         val file = uri.uri2File
-        val subtitleFormat = SubtitleFormat.getExtensionFormat(".${file.extension}")
+        val subtitleFormat = SubtitleFormat.Builder.from(".${file.extension}").build()
         val paragraphs = subtitleFormat.parseText(text)
 
         if (subtitleFormat.errorList.isNotEmpty()) {

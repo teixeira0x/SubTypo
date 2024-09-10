@@ -249,7 +249,7 @@ public class ProjectRepository {
           }
 
           SubtitleFormat format =
-              SubtitleFormat.getExtensionFormat(subtitleObj.getString("format"));
+              SubtitleFormat.Builder.from(subtitleObj.getString("format")).build();
 
           String name = subtitleObj.getString("name");
           String content = subtitleObj.getString("content");

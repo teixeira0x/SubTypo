@@ -101,7 +101,7 @@ class SubtitleEditorFragment : BaseBottomSheetFragment() {
     binding.tieName.setText(subtitle.name)
     binding.tieFormat.setText(subtitle.subtitleFormat.extension)
     binding.tieFormat.setAdapter(
-      ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, arrayOf(".srt"))
+      ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, SubtitleFormat.Builder.availableExtensions)
     )
 
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }
@@ -127,7 +127,7 @@ class SubtitleEditorFragment : BaseBottomSheetFragment() {
 
     subtitle.apply {
       name = binding.tieName.text.toString()
-      subtitleFormat = SubtitleFormat.getExtensionFormat(binding.tieFormat.text.toString())
+      subtitleFormat = SubtitleFormat.Builder.from(binding.tieFormat.text.toString()).build()
     }
 
     if (isEditingSubtitle) {

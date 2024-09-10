@@ -20,15 +20,36 @@ import com.teixeira.subtitles.subtitle.models.Paragraph
 import com.teixeira.subtitles.subtitle.models.SyntaxError
 
 /** @author Felipe Teixeira */
-abstract class SubtitleFormat(val name: String, val extension: String) {
+abstract class SubtitleFormat protected constructor(val name: String, val extension: String) {
 
-  companion object {
+  class Builder private constructor(val extension: String) {
 
-    @JvmStatic
-    fun getExtensionFormat(extension: String): SubtitleFormat {
+    companion object {
+      @JvmStatic
+      val availableExtensions = arrayOf(
+        ".srt"
+      )
+
+      @JvmStatic
+      val default = Builder.from(".srt")
+
+      @JvmStatic
+      fun from(extension: String): Builder {
+        require(availableExtensions.contains(extension)) {
+          "The extension: $extension is not in available extensions"
+        }
+        return Builder(extension)
+      }
+    }
+
+    private var frameRate: Float = 0f
+
+    fun setFrameRate(frameRate: Float) = apply { this.frameRate = frameRate }
+
+    fun build(): SubtitleFormat {
       return when (extension) {
         ".srt" -> SubRipFormat()
-        else -> SubRipFormat()
+        else -> throw IllegalArgumentException("Invalid format extension")
       }
     }
   }

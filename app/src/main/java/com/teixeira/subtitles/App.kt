@@ -17,7 +17,9 @@ class App : Application() {
     const val APP_REPO_URL = "https://github.com/teixeira0x/SubTypo"
     const val APP_REPO_OPEN_ISSUE = "$APP_REPO_URL/issues/new"
 
+    @JvmStatic
     lateinit var instance: App
+      private set
   }
 
   private var uncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null

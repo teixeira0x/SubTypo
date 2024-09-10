@@ -30,7 +30,7 @@ public class VideoUtils {
 
     try {
       retriever = new MediaMetadataRetriever();
-      retriever.setDataSource(App.Companion.getInstance(), uri);
+      retriever.setDataSource(App.getInstance(), uri);
       thumbnail = retriever.getFrameAtTime();
     } catch (Exception e) {
       e.printStackTrace();

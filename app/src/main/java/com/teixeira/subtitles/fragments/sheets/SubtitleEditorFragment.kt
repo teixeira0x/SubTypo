@@ -101,7 +101,11 @@ class SubtitleEditorFragment : BaseBottomSheetFragment() {
     binding.tieName.setText(subtitle.name)
     binding.tieFormat.setText(subtitle.subtitleFormat.extension)
     binding.tieFormat.setAdapter(
-      ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, SubtitleFormat.Builder.availableExtensions)
+      ArrayAdapter<String>(
+        requireContext(),
+        android.R.layout.simple_list_item_1,
+        SubtitleFormat.Builder.availableExtensions,
+      )
     )
 
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }

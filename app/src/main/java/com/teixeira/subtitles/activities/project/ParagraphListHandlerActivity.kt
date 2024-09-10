@@ -38,7 +38,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
 
     ParagraphListAdapter(
       touchHelper,
-      { _, index, paragraph ->
+      { _, index, _ ->
         videoViewModel.pauseVideo()
         showParagraphEditorSheet(index)
       },
@@ -63,6 +63,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     super.postDestroy()
 
     paragraphListAdapter.unregisterAdapterDataObserver(adapterDataObserver)
+    subtitlesViewModel.autoSave = false
   }
 
   override fun onInitializeProject() {

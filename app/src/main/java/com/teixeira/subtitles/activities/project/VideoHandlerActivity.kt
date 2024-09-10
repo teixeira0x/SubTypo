@@ -15,12 +15,15 @@
 
 package com.teixeira.subtitles.activities.project
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.media3.common.Player
-import com.blankj.utilcode.util.SizeUtils
+import androidx.media3.common.Player.EVENT_AVAILABLE_COMMANDS_CHANGED
+import androidx.media3.common.Player.EVENT_IS_PLAYING_CHANGED
+import androidx.media3.common.Player.EVENT_PLAYBACK_STATE_CHANGED
+import androidx.media3.common.Player.EVENT_PLAY_WHEN_READY_CHANGED
+import androidx.media3.common.Player.Events
+import androidx.media3.exoplayer.ExoPlayer
 import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.subtitle.utils.TimeUtils.getFormattedTime
@@ -32,14 +35,19 @@ import com.teixeira.subtitles.subtitle.utils.TimeUtils.getFormattedTime
  */
 abstract class VideoHandlerActivity : ProjectHandlerActivity() {
 
-  private var progressTracker: Runnable? = null
+  companion object {
+    const val MAX_UPDATE_INTERVAL_MS = 1_000L
+  }
+
+  private val handler = ThreadUtils.getMainHandler()
+  private var updateProgressAction: Runnable? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    progressTracker = Runnable { progressTracker() }
+    updateProgressAction = Runnable { updateProgress() }
 
-    binding.videoContent.videoView.setVideoPath(project.videoPath)
+    binding.videoContent.videoView.setUri(project.videoPath)
     binding.videoContent.videoView.seekTo(videoViewModel.currentPosition)
     setVideoViewModelObservers()
     configureListeners()
@@ -58,31 +66,36 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     videoViewModel.isPrepared = false
   }
 
+  override fun postDestroy() {
+    super.postDestroy()
+    updateProgressAction?.also { handler.removeCallbacks(it) }
+    updateProgressAction = null
+  }
+
   private fun configureListeners() {
-    binding.videoContent.videoView.setPlayerListener(
+    binding.videoContent.videoView.addListener(
       object : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
-          if (state == Player.STATE_READY) {
-            onVideoPrepared(binding.videoContent.videoView.player!!)
-          } else if (state == Player.STATE_ENDED) {
-            binding.controllerContent.play.setImageResource(R.drawable.ic_play)
-            videoViewModel.setCurrentPosition(0, true)
-            videoViewModel.pauseVideo()
+          when (state) {
+            Player.STATE_READY -> onVideoPrepared(binding.videoContent.videoView.player)
+            Player.STATE_ENDED -> {
+              binding.controllerContent.play.setImageResource(R.drawable.ic_play)
+              videoViewModel.setCurrentPosition(0, true)
+              videoViewModel.pauseVideo()
+            }
+            else -> {}
           }
         }
 
-        override fun onPositionDiscontinuity(
-          oldPosition: Player.PositionInfo,
-          newPosition: Player.PositionInfo,
-          reason: Int,
-        ) {
-          videoViewModel.setCurrentPosition(newPosition.contentPositionMs, false)
-        }
-
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-          if (isPlaying) {
-            progressTracker?.also { ThreadUtils.getMainHandler().post(it) }
-          }
+        override fun onEvents(player: Player, events: Events) {
+          if (
+            events.containsAny(
+              EVENT_PLAYBACK_STATE_CHANGED,
+              EVENT_PLAY_WHEN_READY_CHANGED,
+              EVENT_IS_PLAYING_CHANGED,
+              EVENT_AVAILABLE_COMMANDS_CHANGED,
+            )
+          ) updateProgress()
         }
       }
     )
@@ -90,19 +103,19 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     binding.controllerContent.seekBar.setOnSeekBarChangeListener(
       object : SeekBar.OnSeekBarChangeListener {
 
-        private var wasPlaying = false
+        private var arePlaying = false
 
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
           if (fromUser) videoViewModel.setCurrentPosition(progress.toLong(), true)
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
-          wasPlaying = videoViewModel.isPlaying
-          if (wasPlaying) videoViewModel.pauseVideo()
+          arePlaying = videoViewModel.isPlaying
+          if (arePlaying) videoViewModel.pauseVideo()
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
-          if (wasPlaying) videoViewModel.playVideo()
+          if (arePlaying) videoViewModel.playVideo()
         }
       }
     )
@@ -120,7 +133,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
       binding.videoContent.videoView.seekFoward()
     }
 
-    binding.controllerContent.changeLanguage.setOnClickListener { showSubtitleSelectorDialog() }
+    binding.controllerContent.changeSubtitle.setOnClickListener { showSubtitleSelectorDialog() }
     binding.controllerContent.addParagraph.setOnClickListener {
       videoViewModel.pauseVideo()
       if (subtitlesViewModel.subtitles.isEmpty()) {
@@ -134,37 +147,25 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
   protected fun updateVideoUI(currentPosition: Long) {
     requireParagraphListAdapter().setVideoPosition(currentPosition)
     binding.controllerContent.currentVideoPosition.setText(currentPosition.getFormattedTime())
-    binding.videoContent.subtitleView.setVideoPosition(currentPosition)
     binding.controllerContent.seekBar.setProgress(currentPosition.toInt())
+    binding.videoContent.subtitleView.setVideoPosition(currentPosition)
     binding.timeLine.setCurrentPosition(currentPosition)
   }
 
-  private fun onVideoPrepared(player: Player) {
-    val duration = player.duration
+  private fun onVideoPrepared(player: ExoPlayer) {
+    projectManager.updateVideoFormat(player.videoFormat)
 
-    binding.controllerContent.videoDuration.setText(duration.getFormattedTime())
-    binding.controllerContent.seekBar.setMax(duration.toInt())
-    binding.timeLine.setDuration(duration)
-    videoViewModel.duration = duration
+    if (videoViewModel.isPrepared.not()) { // The first preparation of the video
+      val duration = player.duration
 
-    val width = player.videoSize.width
-    val height = player.videoSize.height
+      binding.controllerContent.videoDuration.setText(duration.getFormattedTime())
+      binding.controllerContent.seekBar.setMax(duration.toInt())
+      binding.timeLine.setDuration(duration)
+      videoViewModel.duration = duration
+      videoViewModel.isPrepared = true
 
-    when {
-      width > height -> {
-        binding.videoContent.videoView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT
-        binding.videoContent.videoView.requestLayout()
-      }
-      height > width &&
-        resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT -> {
-        binding.videoContent.root.getLayoutParams().height = SizeUtils.dp2px(350f)
-        binding.videoContent.root.requestLayout()
-      }
-      else -> {}
+      updateVideoUI(videoViewModel.currentPosition)
     }
-
-    updateVideoUI(videoViewModel.currentPosition)
-    videoViewModel.isPrepared = true
   }
 
   private fun setVideoViewModelObservers() {
@@ -172,12 +173,12 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
       binding.controllerContent.skipBackward.isEnabled = isPrepared
       binding.controllerContent.play.isEnabled = isPrepared
       binding.controllerContent.skipFoward.isEnabled = isPrepared
+      binding.controllerContent.changeSubtitle.isEnabled = isPrepared
       binding.controllerContent.addParagraph.isEnabled = isPrepared
     }
+
     videoViewModel.observeCurrentPosition(this) { (currentPosition, seekTo) ->
-      if (seekTo) {
-        binding.videoContent.videoView.seekTo(currentPosition)
-      }
+      if (seekTo) binding.videoContent.videoView.seekTo(currentPosition)
       updateVideoUI(currentPosition)
     }
 
@@ -193,16 +194,19 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     }
   }
 
-  private fun progressTracker() {
-
+  private fun updateProgress() {
     if (isDestroying) {
       return
     }
 
-    videoViewModel.setCurrentPosition(binding.videoContent.videoView.getCurrentPosition(), false)
+    val updateProgressAction = updateProgressAction!!
+    val player = binding.videoContent.videoView.player
 
-    if (videoViewModel.isPlaying) {
-      progressTracker?.also { ThreadUtils.getMainHandler().post(it) }
+    videoViewModel.setCurrentPosition(player.currentPosition, false)
+
+    handler.removeCallbacks(updateProgressAction)
+    if (player.isPlaying) {
+      handler.post(updateProgressAction)
     }
   }
 }

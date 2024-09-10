@@ -68,7 +68,7 @@
       style="@style/ControllerImageStyle" />
 
     <ImageView
-      android:id="@+id/change_language"
+      android:id="@+id/change_subtitle"
       android:src="@drawable/ic_subtitle"
       android:layout_toStartOf="@id/add_paragraph"
       style="@style/ControllerImageStyle" />

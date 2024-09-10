@@ -25,13 +25,9 @@ abstract class SubtitleFormat protected constructor(val name: String, val extens
   class Builder private constructor(val extension: String) {
 
     companion object {
-      @JvmStatic
-      val availableExtensions = arrayOf(
-        ".srt"
-      )
+      @JvmStatic val availableExtensions = arrayOf(".srt")
 
-      @JvmStatic
-      val default = Builder.from(".srt")
+      @JvmStatic val default = Builder.from(".srt")
 
       @JvmStatic
       fun from(extension: String): Builder {
@@ -42,7 +38,7 @@ abstract class SubtitleFormat protected constructor(val name: String, val extens
       }
     }
 
-    private var frameRate: Float = 0f
+    private var frameRate: Float? = null
 
     fun setFrameRate(frameRate: Float) = apply { this.frameRate = frameRate }
 

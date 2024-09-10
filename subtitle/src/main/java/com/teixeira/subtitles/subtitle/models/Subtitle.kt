@@ -15,7 +15,6 @@
 
 package com.teixeira.subtitles.subtitle.models
 
-import com.teixeira.subtitles.subtitle.formats.SubRipFormat
 import com.teixeira.subtitles.subtitle.formats.SubtitleFormat
 import java.util.Collections
 

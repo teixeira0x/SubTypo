@@ -49,6 +49,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
     project =
       intent?.extras?.getParcelableCompat<Project>(KEY_PROJECT)
         ?: throw IllegalArgumentException("You cannot open this activity without a project.")
+
     projectManager.openProject(project)
 
     supportActionBar?.title = project.name

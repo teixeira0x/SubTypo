@@ -22,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira.subtitles.R
 import com.teixeira.subtitles.adapters.SubtitleListAdapter
 import com.teixeira.subtitles.databinding.LayoutSubtitlesDialogBinding
+import com.teixeira.subtitles.fragments.sheets.ParagraphEditorFragment
 import com.teixeira.subtitles.fragments.sheets.SubtitleEditorFragment
 import com.teixeira.subtitles.models.Project
 import com.teixeira.subtitles.project.ProjectManager
@@ -86,8 +87,16 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
 
   protected open fun onInitializeProject() {}
 
-  protected fun showSubtitleEditorDialog(index: Int = -1) {
+  protected fun showSubtitleEditorSheet(index: Int = -1) {
     SubtitleEditorFragment.newInstance(index).show(supportFragmentManager, "")
+  }
+
+  protected fun showParagraphEditorSheet(index: Int = -1) {
+    ParagraphEditorFragment.newInstance(
+        videoPosition = videoViewModel.currentPosition,
+        paragraphIndex = index,
+      )
+      .show(supportFragmentManager, null)
   }
 
   protected fun showSubtitleSelectorDialog() {
@@ -100,7 +109,7 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
     binding.apply {
       this.addSubtitle.setOnClickListener {
         dialog.dismiss()
-        showSubtitleEditorDialog()
+        showSubtitleEditorSheet()
       }
 
       if (subtitlesViewModel.subtitles.isEmpty()) {
@@ -115,13 +124,13 @@ abstract class ProjectHandlerActivity : BaseProjectActivity() {
           { view, index, subtitle ->
             dialog.dismiss()
             when (view.id) {
-              R.id.edit -> showSubtitleEditorDialog(index)
+              R.id.edit -> showSubtitleEditorSheet(index)
               else -> subtitlesViewModel.setCurrentSubtitle(index, subtitle)
             }
           },
         ) { index, _ ->
           dialog.dismiss()
-          showSubtitleEditorDialog(index)
+          showSubtitleEditorSheet(index)
           true
         }
     }

@@ -31,7 +31,6 @@ import com.teixeira.subtitles.subtitle.models.Subtitle
 import com.teixeira.subtitles.subtitle.models.Time
 import com.teixeira.subtitles.subtitle.utils.TimeUtils.getFormattedTime
 import com.teixeira.subtitles.subtitle.utils.TimeUtils.getMilliseconds
-import com.teixeira.subtitles.utils.BundleUtils.getParcelableCompat
 import com.teixeira.subtitles.utils.EditTextUtils.afterTextChanged
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 
@@ -48,38 +47,35 @@ class ParagraphEditorFragment : BaseBottomSheetFragment() {
 
     const val KEY_VIDEO_POSITION = "key_current_video_position"
     const val KEY_PARAGRAPH_INDEX = "key_paragraph_index"
-    const val KEY_PARAGRAPH = "key_paragraph"
 
     const val DEFAULT_PARAGRAPH_DURATION = 2000
 
     @JvmStatic
-    fun newInstance(
-      videoPosition: Long,
-      paragraphIndex: Int = -1,
-      paragraph: Paragraph? = null,
-    ): ParagraphEditorFragment {
+    fun newInstance(videoPosition: Long, paragraphIndex: Int = -1): ParagraphEditorFragment {
       return ParagraphEditorFragment().also {
         it.arguments =
           Bundle().apply {
             putLong(KEY_VIDEO_POSITION, videoPosition)
             putInt(KEY_PARAGRAPH_INDEX, paragraphIndex)
-            putParcelable(KEY_PARAGRAPH, paragraph)
           }
       }
     }
   }
 
   private var _binding: FragmentDialogParagraphEditorBinding? = null
-  private val binding: FragmentDialogParagraphEditorBinding
-    get() = checkNotNull(_binding) { "ParagraphEditorFragment has been destroyed!" }
-
   private val subtitlesViewModel by
     viewModels<SubtitlesViewModel>(ownerProducer = { requireActivity() })
   private val paragraphValidator by lazy { ParagraphValidator(requireContext()) }
 
-  private lateinit var paragraph: Paragraph
   private var videoPosition: Long = 0
   private var paragraphIndex = -1
+  private lateinit var unmodifiedParagraph: Paragraph
+
+  private val binding: FragmentDialogParagraphEditorBinding
+    get() = checkNotNull(_binding) { "ParagraphEditorFragment has been destroyed!" }
+
+  private val isExistingParagraph: Boolean
+    get() = paragraphIndex >= 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -87,10 +83,10 @@ class ParagraphEditorFragment : BaseBottomSheetFragment() {
 
     videoPosition = arguments.getLong(KEY_VIDEO_POSITION)
     paragraphIndex = arguments.getInt(KEY_PARAGRAPH_INDEX)
-    paragraph =
-      arguments.getParcelableCompat<Paragraph>(KEY_PARAGRAPH)
-        ?: Paragraph(Time(videoPosition), Time(videoPosition + DEFAULT_PARAGRAPH_DURATION), "")
-    previewSubtitle.paragraphs[0].text = paragraph.text
+    unmodifiedParagraph =
+      if (isExistingParagraph) subtitlesViewModel.paragraphs[paragraphIndex]
+      else Paragraph(Time(videoPosition), Time(videoPosition + DEFAULT_PARAGRAPH_DURATION), "")
+    previewSubtitle.paragraphs[0].text = unmodifiedParagraph.text
   }
 
   override fun onCreateView(
@@ -103,11 +99,11 @@ class ParagraphEditorFragment : BaseBottomSheetFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-    binding.deleteParagraph.isEnabled = paragraphIndex >= 0
+    binding.deleteParagraph.isEnabled = isExistingParagraph
     binding.deleteParagraph.setOnClickListener {
       MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete)
-        .setMessage(getString(R.string.msg_delete_confirmation, paragraph.text))
+        .setMessage(getString(R.string.msg_delete_confirmation, unmodifiedParagraph.text))
         .setPositiveButton(R.string.yes) { _, _ ->
           dismiss()
           subtitlesViewModel.removeParagraph(paragraphIndex)
@@ -126,10 +122,10 @@ class ParagraphEditorFragment : BaseBottomSheetFragment() {
     binding.subtitlePreview.setSubtitle(previewSubtitle)
     binding.subtitlePreview.setVideoPosition(0L)
 
-    configureTextWatchers()
-    binding.tieStartTime.setText(paragraph.startTime.formattedTime)
-    binding.tieEndTime.setText(paragraph.endTime.formattedTime)
-    binding.tieText.setText(paragraph.text)
+    setTextWatchers()
+    binding.tieStartTime.setText(unmodifiedParagraph.startTime.formattedTime)
+    binding.tieEndTime.setText(unmodifiedParagraph.endTime.formattedTime)
+    binding.tieText.setText(unmodifiedParagraph.text)
 
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }
     binding.dialogButtons.save.setOnClickListener { saveParagraph() }
@@ -140,7 +136,7 @@ class ParagraphEditorFragment : BaseBottomSheetFragment() {
     _binding = null
   }
 
-  private fun configureTextWatchers() {
+  private fun setTextWatchers() {
     binding.tieStartTime.afterTextChanged { s ->
       when (val startTimeResult = paragraphValidator.checkTime(s.toString().trim())) {
         is ValidationResult.Success -> binding.tilStartTime.isErrorEnabled = false
@@ -166,50 +162,69 @@ class ParagraphEditorFragment : BaseBottomSheetFragment() {
     }
   }
 
+  /** Adds a new paragraph or sets new values for an index of an existing paragraph. */
   private fun saveParagraph() {
     val startTime = binding.tieStartTime.text.toString().trim().getMilliseconds()
     val endTime = binding.tieEndTime.text.toString().trim().getMilliseconds()
     val text = binding.tieText.text.toString().trim()
 
-    val hasParagraphChanged =
-      paragraph.startTime.milliseconds != startTime ||
-        paragraph.endTime.milliseconds != endTime ||
-        paragraph.text != text
-
-    paragraph.apply {
-      this.startTime.milliseconds = startTime
-      this.endTime.milliseconds = endTime
-      this.text = text
-    }
-
-    if (paragraphIndex >= 0) {
-      if (hasParagraphChanged) subtitlesViewModel.setParagraph(paragraphIndex, paragraph)
+    if (isExistingParagraph) {
+      subtitlesViewModel.setParagraph(
+        index = paragraphIndex,
+        startTime = startTime,
+        endTime = endTime,
+        text = text,
+      )
     } else {
-      subtitlesViewModel.addParagraph(getIndexForNewParagraph(), paragraph)
+      subtitlesViewModel.addParagraph(
+        index = getIndexForNewParagraph(),
+        startTime = startTime,
+        endTime = endTime,
+        text = text,
+      )
     }
     dismiss()
   }
 
+  /**
+   * Returns an index for a new paragraph to be added, it goes through the list of paragraphs and if
+   * the position of the video is greater than the start time of the paragraph it increments this
+   * value to the index, otherwise it returns index 0.
+   *
+   * @return Index 0 or the index of the last paragraph that the video position is greater than the
+   *   start time.
+   */
   private fun getIndexForNewParagraph(): Int {
     val paragraphs = subtitlesViewModel.paragraphs
-
     var index = 0
     for (i in paragraphs.indices) {
       val paragraph = paragraphs[i]
-
-      if (
-        videoPosition >= paragraph.startTime.milliseconds &&
-          videoPosition <= paragraph.endTime.milliseconds
-      ) {
+      if (videoPosition >= paragraph.startTime.milliseconds) {
         index = i + 1
       }
     }
+
     return index
   }
 
+  /**
+   * Updates the state of the save button, if there are no errors in the fields and the paragraph
+   * has been modified the button is enabled, otherwise it is disabled.
+   */
   private fun updateSaveButton() {
+    val isModified =
+      if (isExistingParagraph) {
+        paragraphValidator.isModified(
+          unmodifiedParagraph,
+          binding.tieStartTime.text.toString().trim(),
+          binding.tieEndTime.text.toString().trim(),
+          binding.tieText.text.toString().trim(),
+        )
+      } else true // Always true if the user is adding a new paragraph.
+
     binding.dialogButtons.save.isEnabled =
-      binding.tilStartTime.isErrorEnabled.not() &&
+      isModified &&
+        binding.tilStartTime.isErrorEnabled.not() &&
         binding.tilEndTime.isErrorEnabled.not() &&
         binding.tilText.isErrorEnabled.not()
   }

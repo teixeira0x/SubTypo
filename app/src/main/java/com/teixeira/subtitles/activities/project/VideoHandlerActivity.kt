@@ -23,7 +23,6 @@ import androidx.media3.common.Player
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira.subtitles.R
-import com.teixeira.subtitles.fragments.sheets.ParagraphEditorFragment
 import com.teixeira.subtitles.subtitle.utils.TimeUtils.getFormattedTime
 
 /**
@@ -43,6 +42,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     binding.videoContent.videoView.setVideoPath(project.videoPath)
     binding.videoContent.videoView.seekTo(videoViewModel.currentPosition)
     setVideoViewModelObservers()
+    configureListeners()
   }
 
   override fun onPause() {
@@ -58,8 +58,7 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     videoViewModel.isPrepared = false
   }
 
-  override fun configureListeners() {
-    super.configureListeners()
+  private fun configureListeners() {
     binding.videoContent.videoView.setPlayerListener(
       object : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
@@ -125,11 +124,10 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
     binding.controllerContent.addParagraph.setOnClickListener {
       videoViewModel.pauseVideo()
       if (subtitlesViewModel.subtitles.isEmpty()) {
-        showSubtitleEditorDialog()
+        showSubtitleEditorSheet()
         return@setOnClickListener
       }
-      ParagraphEditorFragment.newInstance(videoViewModel.currentPosition)
-        .show(supportFragmentManager, null)
+      showParagraphEditorSheet()
     }
   }
 

@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira.subtitles.adapters.ParagraphListAdapter
-import com.teixeira.subtitles.fragments.sheets.ParagraphEditorFragment
 import com.teixeira.subtitles.subtitle.models.Subtitle
 
 /**
@@ -41,8 +40,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
       touchHelper,
       { _, index, paragraph ->
         videoViewModel.pauseVideo()
-        ParagraphEditorFragment.newInstance(videoViewModel.currentPosition, index, paragraph)
-          .show(supportFragmentManager, null)
+        showParagraphEditorSheet(index)
       },
     ) { _, _, _ ->
       true

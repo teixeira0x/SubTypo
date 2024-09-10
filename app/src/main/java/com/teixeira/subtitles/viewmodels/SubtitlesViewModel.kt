@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.teixeira.subtitles.subtitle.models.Paragraph
 import com.teixeira.subtitles.subtitle.models.Subtitle
+import com.teixeira.subtitles.subtitle.models.Time
 
 class SubtitlesViewModel : ViewModel() {
 
@@ -105,27 +106,27 @@ class SubtitlesViewModel : ViewModel() {
     }
   }
 
-  fun swapParagraph(from: Int, to: Int) {
+  fun swapParagraph(first: Int, second: Int) {
     val subtitle = this.subtitle
-    subtitle?.swapParagraph(from, to)
+    subtitle?.swapParagraph(first, second)
     this.subtitle = subtitle
   }
 
-  fun addParagraph(index: Int = paragraphs.size, paragraph: Paragraph) {
+  fun addParagraph(index: Int = paragraphs.size, startTime: Long, endTime: Long, text: String) {
     val subtitle = this.subtitle
-    subtitle?.addParagraph(index, paragraph)
+    subtitle?.addParagraph(
+      index = index,
+      paragraph = Paragraph(startTime = Time(startTime), endTime = Time(endTime), text = text),
+    )
     this.subtitle = subtitle
   }
 
-  fun setParagraph(index: Int, paragraph: Paragraph) {
+  fun setParagraph(index: Int, startTime: Long, endTime: Long, text: String) {
     val subtitle = this.subtitle
-    subtitle?.setParagraph(index, paragraph)
-    this.subtitle = subtitle
-  }
-
-  fun removeParagraph(paragraph: Paragraph) {
-    val subtitle = this.subtitle
-    subtitle?.removeParagraph(paragraph)
+    subtitle?.setParagraph(
+      index = index,
+      paragraph = Paragraph(startTime = Time(startTime), endTime = Time(endTime), text = text),
+    )
     this.subtitle = subtitle
   }
 

@@ -19,7 +19,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 
-/** @author Felipe Teixeira */
+/**
+ * Useful functions to ease the implementation of {@link TextWatcher}.
+ *
+ * @author Felipe Teixeira
+ */
 object EditTextUtils {
 
   inline fun EditText.beforeTextChanged(
@@ -60,6 +64,10 @@ object EditTextUtils {
   }
 }
 
+/**
+ * A base implementation for {@link TextWatcher} avoids implementing methods that you won't use from
+ * {@link TextWatcher}
+ */
 open class DefaultTextWatcher : TextWatcher {
 
   override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {

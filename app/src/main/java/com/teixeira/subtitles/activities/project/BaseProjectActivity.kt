@@ -40,6 +40,10 @@ import kotlinx.coroutines.Dispatchers
  */
 abstract class BaseProjectActivity : BaseActivity() {
 
+  companion object {
+    const val KEY_PROJECT = "key_project"
+  }
+
   private var _binding: ActivityProjectBinding? = null
   private var _isDestroying = false
 
@@ -80,8 +84,6 @@ abstract class BaseProjectActivity : BaseActivity() {
       addObserver(subtitlePickerHandler)
       addObserver(subtitleSaverHandler)
     }
-
-    configureListeners()
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -100,24 +102,19 @@ abstract class BaseProjectActivity : BaseActivity() {
   }
 
   override fun onDestroy() {
-    _isDestroying = true
     preDestroy()
     super.onDestroy()
     postDestroy()
   }
 
-  protected open fun preDestroy() {}
+  protected open fun preDestroy() {
+    _isDestroying = true
+  }
 
   protected open fun postDestroy() {
     coroutineScope.cancelIfActive("Activity has been destroyed")
     _binding = null
   }
 
-  protected open fun configureListeners() {}
-
   protected abstract fun requireParagraphListAdapter(): ParagraphListAdapter
-
-  companion object {
-    const val KEY_PROJECT = "project"
-  }
 }

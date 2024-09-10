@@ -46,13 +46,8 @@ data class Subtitle(
     stateManager.pushState()
   }
 
-  fun setParagraph(index: Int, newParagraph: Paragraph) {
-    paragraphs.set(index, newParagraph)
-    stateManager.pushState()
-  }
-
-  fun removeParagraph(paragraph: Paragraph) {
-    paragraphs.remove(paragraph)
+  fun setParagraph(index: Int, paragraph: Paragraph) {
+    paragraphs.set(index, paragraph)
     stateManager.pushState()
   }
 

@@ -24,7 +24,7 @@ object Versions {
   const val version = "1.2.0"
 
   val versionName by lazy {
-    if (CI.isCiBuild && CI.branchName == "dev") {
+    if (CI.isCiBuild && CI.branchName != "main") {
       "$version-${CI.commitHash}-SNAPSHOT"
     } else version
   }

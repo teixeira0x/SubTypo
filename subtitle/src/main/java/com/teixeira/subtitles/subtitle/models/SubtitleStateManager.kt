@@ -20,11 +20,17 @@ class SubtitleStateManager internal constructor(private val subtitle: Subtitle) 
   private val savedStates = ArrayList<StateItem>()
   private var state = 0
 
+  private var longEdit = false
+
   init {
     pushState()
   }
 
   internal fun pushState() {
+    if (longEdit) {
+      return
+    }
+
     while (state < savedStates.size - 1) {
       savedStates.removeAt(savedStates.size - 1)
     }
@@ -59,7 +65,16 @@ class SubtitleStateManager internal constructor(private val subtitle: Subtitle) 
     }
   }
 
-  fun restoreState(state: StateItem) {
+  fun startLongEdit() {
+    this.longEdit = true
+  }
+
+  fun endLongEdit() {
+    this.longEdit = false
+    pushState() // Push state after completing long edit.
+  }
+
+  private fun restoreState(state: StateItem) {
     val paragraphs = subtitle.paragraphs
     val paragraphStates = state.paragraphStates
 

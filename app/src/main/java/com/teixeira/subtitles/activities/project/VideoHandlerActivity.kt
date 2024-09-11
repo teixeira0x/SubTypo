@@ -95,7 +95,8 @@ abstract class VideoHandlerActivity : ProjectHandlerActivity() {
               EVENT_IS_PLAYING_CHANGED,
               EVENT_AVAILABLE_COMMANDS_CHANGED,
             )
-          ) updateProgress()
+          )
+            updateProgress()
         }
       }
     )

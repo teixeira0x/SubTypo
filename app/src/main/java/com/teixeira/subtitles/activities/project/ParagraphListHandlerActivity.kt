@@ -33,7 +33,7 @@ import com.teixeira.subtitles.subtitle.models.Subtitle
 abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
 
   private val paragraphListAdapter by lazy {
-    val touchHelper = ItemTouchHelper(SubtitleTouchHelper())
+    val touchHelper = ItemTouchHelper(ParagraphTouchHelper())
     touchHelper.attachToRecyclerView(binding.paragraphs)
 
     ParagraphListAdapter(
@@ -125,7 +125,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     }
   }
 
-  inner class SubtitleTouchHelper : ItemTouchHelper.Callback() {
+  inner class ParagraphTouchHelper : ItemTouchHelper.Callback() {
 
     private var subtitle: Subtitle? = null
 
@@ -148,14 +148,22 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
 
     override fun onSelectedChanged(viewHolder: ViewHolder?, actionState: Int) {
       super.onSelectedChanged(viewHolder, actionState)
-      if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-        subtitle = subtitlesViewModel.subtitle
-      } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-        subtitlesViewModel.subtitle = subtitle
-        subtitle = null
+      when (actionState) {
+        ItemTouchHelper.ACTION_STATE_DRAG -> {
+          subtitle = subtitlesViewModel.subtitle
+          subtitle?.stateManager?.startLongEdit()
+        }
+        ItemTouchHelper.ACTION_STATE_IDLE -> {
+          subtitle?.stateManager?.endLongEdit()
+          subtitlesViewModel.subtitle = subtitle
+          subtitle = null
+        }
+        else -> {}
       }
     }
 
-    override fun onSwiped(p0: ViewHolder, p1: Int) {}
+    override fun onSwiped(p0: ViewHolder, p1: Int) {
+      // do nothing
+    }
   }
 }

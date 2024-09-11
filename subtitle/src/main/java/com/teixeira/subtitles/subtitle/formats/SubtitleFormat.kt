@@ -27,7 +27,7 @@ abstract class SubtitleFormat protected constructor(val name: String, val extens
     companion object {
       @JvmStatic val availableExtensions = arrayOf(".srt")
 
-      @JvmStatic val default = Builder.from(".srt")
+      @JvmStatic val defaultBuilder = Builder.from(".srt")
 
       @JvmStatic
       fun from(extension: String): Builder {

@@ -13,21 +13,19 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
+@SuppressWarnings("unused")
+object Versions {
+  const val compileSdkVersion = 34
+  const val buildToolsVersion = "34.0.0"
+  const val minSdkVersion = 24
+  const val targetSdkVersion = 34
 
-android {
-  namespace = "com.teixeira.subtitles.subtitle"
+  const val versionCode = 3
+  const val version = "1.2.0"
 
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
+  val versionName by lazy {
+    if (CI.isCiBuild && CI.branchName == "dev") {
+      "$version-${CI.commitHash}-SNAPSHOT"
+    } else version
   }
 }
-
-dependencies { implementation(libs.androidx.annotation) }

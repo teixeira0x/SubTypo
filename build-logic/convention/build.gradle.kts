@@ -13,21 +13,22 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins { `kotlin-dsl` }
+
+repositories {
+  gradlePluginPortal()
+  google()
+  mavenCentral()
 }
 
-android {
-  namespace = "com.teixeira.subtitles.subtitle"
-
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
+java {
+  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_17
 }
 
-dependencies { implementation(libs.androidx.annotation) }
+tasks.withType<KotlinCompile>().configureEach {
+  compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
+}

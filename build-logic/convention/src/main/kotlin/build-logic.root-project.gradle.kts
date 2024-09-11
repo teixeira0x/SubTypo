@@ -13,21 +13,4 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
-
-android {
-  namespace = "com.teixeira.subtitles.subtitle"
-
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
-}
-
-dependencies { implementation(libs.androidx.annotation) }
+require(project == rootProject) { "This script must be apply to the root project." }

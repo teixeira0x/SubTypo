@@ -4,22 +4,23 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
+  id("build-logic.root-project")
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.library) apply false
-  alias(libs.plugins.kotlin) apply false
+  alias(libs.plugins.kotlin.android) apply false
   alias(libs.plugins.detekt)
 }
 
 fun Project.configureBaseExtension() {
   extensions.findByType(BaseExtension::class)?.run {
-    compileSdkVersion(34)
-    buildToolsVersion = "34.0.0"
+    compileSdkVersion(Versions.compileSdkVersion)
+    buildToolsVersion = Versions.buildToolsVersion
 
     defaultConfig {
-      minSdk = 24
-      targetSdk = 34
-      versionCode = 3
-      versionName = "1.2.0"
+      minSdk = Versions.minSdkVersion
+      targetSdk = Versions.targetSdkVersion
+      versionCode = Versions.versionCode
+      versionName = Versions.versionName
     }
 
     compileOptions {
@@ -35,7 +36,6 @@ subprojects {
 
   tasks.withType<KotlinCompile>().configureEach {
     compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
-    // kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
   }
 }
 

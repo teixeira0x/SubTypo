@@ -13,21 +13,19 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
-
-android {
-  namespace = "com.teixeira.subtitles.subtitle"
-
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+dependencyResolutionManagement {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  versionCatalogs {
+    create("libs") {
+      // make sure the file rootProject/gradle/verison.toml exists!
+      from(files("../gradle/libs.versions.toml"))
     }
   }
 }
 
-dependencies { implementation(libs.androidx.annotation) }
+rootProject.name = "build-logic"
+
+include(":convention")

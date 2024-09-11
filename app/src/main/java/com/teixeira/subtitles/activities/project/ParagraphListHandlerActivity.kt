@@ -88,7 +88,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
       if (it != null && subtitlesViewModel.autoSave) saveProjectAsync()
     }
     subtitlesViewModel.observeCurrentSubtitle(this) { (index, subtitle) ->
-      supportActionBar?.subtitle = subtitle?.let { "${index + 1}. ${it.name}" }
+      supportActionBar?.subtitle = subtitle?.let { "${index + 1}. ${it.fullName}" }
       val paragraphs = subtitle?.paragraphs
       paragraphListAdapter.paragraphs = paragraphs
       paragraphListAdapter.notifyDataSetChanged()
@@ -113,8 +113,7 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     }
   }
 
-  inner class AdapterDataObserver(val saveAction: Runnable) :
-    RecyclerView.AdapterDataObserver() {
+  inner class AdapterDataObserver(val saveAction: Runnable) : RecyclerView.AdapterDataObserver() {
 
     override fun onChanged() {
       super.onChanged()

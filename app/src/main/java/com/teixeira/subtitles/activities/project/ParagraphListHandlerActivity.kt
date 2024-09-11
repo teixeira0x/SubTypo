@@ -32,6 +32,10 @@ import com.teixeira.subtitles.subtitle.models.Subtitle
  */
 abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
 
+  companion object {
+    const val AUTOSAVE_INTERVAL_MS = 15L
+  }
+
   private val paragraphListAdapter by lazy {
     val touchHelper = ItemTouchHelper(ParagraphTouchHelper())
     touchHelper.attachToRecyclerView(binding.paragraphs)
@@ -109,19 +113,17 @@ abstract class ParagraphListHandlerActivity : VideoHandlerActivity() {
     }
   }
 
-  inner class AdapterDataObserver(val saveProjectCallback: Runnable) :
+  inner class AdapterDataObserver(val saveAction: Runnable) :
     RecyclerView.AdapterDataObserver() {
 
     override fun onChanged() {
       super.onChanged()
-
-      val handler = ThreadUtils.getMainHandler()
-      if (subtitlesViewModel.autoSave) {
-        handler.apply {
-          removeCallbacks(saveProjectCallback)
-          postDelayed(saveProjectCallback, 10L)
+      ThreadUtils.getMainHandler().apply {
+        removeCallbacks(saveAction)
+        if (subtitlesViewModel.autoSave) {
+          postDelayed(saveAction, AUTOSAVE_INTERVAL_MS)
         }
-      } else handler.removeCallbacks(saveProjectCallback)
+      }
     }
   }
 

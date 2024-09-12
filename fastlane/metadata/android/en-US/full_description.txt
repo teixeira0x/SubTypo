@@ -1,4 +1,4 @@
-<i>SubTypo(graphy)</i> is a video subtitle editor/maker for Android with a beautiful and easy to understand interface.
+<i>SubTypo(graphy)</i> is a video subtitle editor for Android with a beautiful and easy to understand interface.
 
 Edit your subtitles on-the-go, wherever you are! Waiting for your train, sitting in it waiting to arrive at your destination, having an idle break during a walk: edit your subtitles right on your phone, then export them in SubRip format (*.srt) to continue processing on your PC. Or the other way around, importing your started work.
 

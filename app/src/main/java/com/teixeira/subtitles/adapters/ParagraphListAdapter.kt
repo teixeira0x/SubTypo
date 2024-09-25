@@ -45,7 +45,7 @@ class ParagraphListAdapter(
   override fun onBindViewHolder(holder: ParagraphViewHolder, position: Int) {
     holder.binding.apply {
       val paragraph = paragraphs!![position]
-      text.text = "${position + 1}. ${paragraph.text}"
+      text.text = paragraph.text
       startAndEnd.text = "${paragraph.startTime.formattedTime}|${paragraph.endTime.formattedTime}"
 
       inVideo.visibility =

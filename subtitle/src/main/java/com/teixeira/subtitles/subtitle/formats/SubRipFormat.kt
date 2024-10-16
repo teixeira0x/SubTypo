@@ -27,12 +27,6 @@ import com.teixeira.subtitles.subtitle.utils.TimeUtils.getMilliseconds
 /** @author Felipe Teixeira */
 class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
 
-  /**
-   * Convert paragraph list to text in caption format.
-   *
-   * @param paragraphs The list of paragraphs to convert.
-   * @return Converted text.
-   */
   override fun toText(paragraphs: List<Paragraph>): String {
     val sb = StringBuilder()
     for (i in paragraphs.indices) {
@@ -50,12 +44,6 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
     return sb.toString().trim()
   }
 
-  /**
-   * Analyze the obtained text and recover the paragraphs.
-   *
-   * @param text Text to analyze.
-   * @return List of recovered paragraphs.
-   */
   override fun parseText(text: String): MutableList<Paragraph> {
     val paragraphs = mutableListOf<Paragraph>()
     val lines = text.lines()

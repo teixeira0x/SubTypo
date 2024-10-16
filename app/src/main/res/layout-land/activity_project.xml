@@ -97,7 +97,7 @@
     app:layout_constraintBottom_toTopOf="@id/time_line"
     app:layout_constraintTop_toBottomOf="@id/paragraphs_container" />
 
-  <com.teixeira.subtitles.ui.TimeLineView
+  <com.teixeira.subtitles.presentation.view.TimeLineView
     android:id="@+id/time_line"
     android:layout_width="0dp"
     android:layout_height="40dp"

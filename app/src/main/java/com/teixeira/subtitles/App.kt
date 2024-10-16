@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.blankj.utilcode.util.ThrowableUtils
 import com.google.android.material.color.DynamicColors
-import com.teixeira.subtitles.activities.CrashActivity
-import com.teixeira.subtitles.preferences.aparenceMaterialYou
-import com.teixeira.subtitles.preferences.aparenceUIMode
+import com.teixeira.subtitles.presentation.view.activity.CrashActivity
+import com.teixeira.subtitles.presentation.view.preference.aparenceMaterialYou
+import com.teixeira.subtitles.presentation.view.preference.aparenceUIMode
 
 class App : Application() {
 

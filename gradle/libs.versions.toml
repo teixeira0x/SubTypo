@@ -5,7 +5,6 @@ exoplayer-version = "1.4.1"
 
 android-plugin  = "8.6.0"
 kotlin-plugin = "2.0.20"
-detekt-plugin = "1.23.7"
 
 [libraries]
 
@@ -37,4 +36,3 @@ common-android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines
 android-application = { id = "com.android.application", version.ref = "android-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-plugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-plugin" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt-plugin" }

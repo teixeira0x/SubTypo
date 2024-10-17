@@ -13,6 +13,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.teixeira.subtypo.build.BuildConfig
+
 plugins {
   id("com.android.library")
   id("kotlin-android")
@@ -20,7 +22,7 @@ plugins {
 }
 
 android {
-  namespace = "com.teixeira.subtitles.subtitle"
+  namespace = "${BuildConfig.packageName}.subtitle"
 
   buildTypes {
     release {

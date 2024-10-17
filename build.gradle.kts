@@ -1,4 +1,21 @@
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import com.android.build.gradle.BaseExtension
+import com.teixeira.subtypo.build.BuildConfig
+import com.teixeira.subtypo.build.VersionUtils
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -8,19 +25,18 @@ plugins {
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.library) apply false
   alias(libs.plugins.kotlin.android) apply false
-  alias(libs.plugins.detekt)
 }
 
 fun Project.configureBaseExtension() {
   extensions.findByType(BaseExtension::class)?.run {
-    compileSdkVersion(Versions.compileSdkVersion)
-    buildToolsVersion = Versions.buildToolsVersion
+    compileSdkVersion(BuildConfig.compileSdk)
+    buildToolsVersion = BuildConfig.buildTools
 
     defaultConfig {
-      minSdk = Versions.minSdkVersion
-      targetSdk = Versions.targetSdkVersion
-      versionCode = Versions.versionCode
-      versionName = Versions.versionName
+      minSdk = BuildConfig.minSdk
+      targetSdk = BuildConfig.targetSdk
+      versionCode = VersionUtils.versionCode
+      versionName = VersionUtils.versionName
     }
 
     compileOptions {

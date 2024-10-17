@@ -18,4 +18,6 @@ package com.teixeira.subtitles.presentation.view.adapter.holder
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
-class BindingViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
+/** @author Felipe Teixeira */
+open class BindingViewHolder<T : ViewBinding>(val binding: T) :
+  RecyclerView.ViewHolder(binding.root)

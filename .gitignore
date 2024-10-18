@@ -86,3 +86,4 @@ lint/tmp/
 
 .uuid
 .androidide/
+.kotlin/

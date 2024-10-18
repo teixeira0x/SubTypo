@@ -13,19 +13,19 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencyResolutionManagement {
-  repositories {
-    google()
-    mavenCentral()
-  }
-  versionCatalogs {
-    create("libs") {
-      // make sure the file rootProject/gradle/verison.toml exists!
-      from(files("../gradle/libs.versions.toml"))
-    }
-  }
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins { `kotlin-dsl` }
+
+repositories {
+  gradlePluginPortal()
+  google()
+  mavenCentral()
 }
 
-rootProject.name = "build-logic"
+tasks.withType<KotlinCompile>().configureEach {
+  compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
+}
 
-include(":root", ":common")
+dependencies { implementation(project(":common")) }

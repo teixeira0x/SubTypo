@@ -21,13 +21,6 @@ package com.teixeira.subtitles.subtitle.utils
  * @author Felipe Teixeira
  */
 object TimeUtils {
-  private const val TIME_PARTS_EXPECTED_SIZE = 3
-  private const val TIME_SECONDS_PARTS_EXPECTED_SIZE = 2
-  private const val TIME_HOURS_MAX = 99
-  private const val TIME_MINUTES_MAX = 59
-  private const val TIME_SECONDS_MAX = 59
-  private const val TIME_MILLIS_MAX = 999
-
   const val TIME_UNIT_HOUR = 3600000
   const val TIME_UNIT_MINUTE = 60000
   const val TIME_UNIT_SECOND = 1000
@@ -81,23 +74,23 @@ object TimeUtils {
    */
   fun isValidTime(timeParts: List<String>): Boolean {
     return runCatching {
-        require(timeParts.size == TIME_PARTS_EXPECTED_SIZE) { "Time format must be `hh:mm:ss,SSS`" }
+        require(timeParts.size == 3) { "Time format must be `hh:mm:ss,SSS`" }
 
         val hours = timeParts[0]
         val minutes = timeParts[1]
         val secondsAndMillis = timeParts[2]
         val secParts = secondsAndMillis.split(",")
-        require(secParts.size == TIME_SECONDS_PARTS_EXPECTED_SIZE) {
+        require(secParts.size == 2) {
           "Seconds time format must be `ss,SSS`"
         }
         val seconds = secParts[0]
         val millis = secParts[1]
 
         val isValid =
-          isInRange(hours, 0, TIME_HOURS_MAX, 2) &&
-            isInRange(minutes, 0, TIME_MINUTES_MAX, 2) &&
-            isInRange(seconds, 0, TIME_SECONDS_MAX, 2) &&
-            isInRange(millis, 0, TIME_MILLIS_MAX, 3)
+          isInRange(hours, 0, 99, 2) &&
+            isInRange(minutes, 0, 59, 2) &&
+            isInRange(seconds, 0, 59, 2) &&
+            isInRange(millis, 0, 999, 3)
 
         isValid
       }

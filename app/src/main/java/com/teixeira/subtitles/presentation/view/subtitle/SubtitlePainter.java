@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira.subtitles.subtitle;
+package com.teixeira.subtitles.presentation.view.subtitle;
 
 import android.content.Context;
 import android.content.res.Resources;

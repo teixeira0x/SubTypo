@@ -1,7 +1,7 @@
 <p align="center">
   <img src="./app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="SubTypo" width="80" height="80"/>
 </p>
-<h2 align="center"><b>SubTypo(graphy)</b></h2>
+<h2 align="center"><b>SubTypo</b></h2>
 <p align="center">Make your subtitles simply and quickly!</p>
 
 <div align="center">

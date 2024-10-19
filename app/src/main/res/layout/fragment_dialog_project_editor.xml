@@ -73,7 +73,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/margin_medium"
     android:hint="@string/proj_enter_name"
-    style="@style/AppTheme.TextInputLayout.FilledBox">
+    style="@style/AppTheme.TextInputLayout">
 
     <com.google.android.material.textfield.TextInputEditText
       android:id="@+id/tie_name"

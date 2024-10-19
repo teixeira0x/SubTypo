@@ -16,7 +16,7 @@
     android:enableOnBackInvokedCallback="true"
     android:theme="@style/AppTheme">
     <activity
-      android:name=".presentation.view.activity.MainActivity"
+      android:name=".activities.MainActivity"
       android:configChanges="screenSize"
       android:exported="true">
       <intent-filter>
@@ -27,11 +27,11 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".presentation.view.activity.project.ProjectActivity"
+      android:name=".activities.project.ProjectActivity"
       android:configChanges="screenSize"
       android:exported="false" />
     <activity
-      android:name=".presentation.view.activity.CrashActivity"
+      android:name=".activities.CrashActivity"
       android:exported="false" />
 
   </application>

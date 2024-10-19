@@ -93,7 +93,7 @@ class SubtitleEditorFragment : BaseBottomSheetFragment() {
         .setNegativeButton(R.string.no, null)
         .show()
     }
-    binding.delete.isVisible = isEditingSubtitle
+    binding.delete.isEnabled = isEditingSubtitle
     binding.title.setText(
       if (isEditingSubtitle) R.string.proj_subtitle_edit else R.string.proj_subtitle_add
     )

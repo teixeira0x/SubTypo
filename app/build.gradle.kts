@@ -26,8 +26,7 @@ android {
 
   defaultConfig {
     applicationId = BuildConfig.packageName
-
-    vectorDrawables { useSupportLibrary = true }
+    vectorDrawables.useSupportLibrary = true
   }
 
   dependenciesInfo {
@@ -85,6 +84,8 @@ dependencies {
 
   implementation(libs.common.utilcode)
   implementation(libs.common.android.coroutines)
+
+  debugImplementation(libs.common.leakcanary)
 
   implementation(project(":subtitle"))
 }

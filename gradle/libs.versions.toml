@@ -30,7 +30,7 @@ google-material = { module = "com.google.android.material:material", version = "
 
 # Common
 common-utilcode = { module = "com.blankj:utilcodex", version = "1.31.1" }
-common-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.12" }
+common-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.14" }
 common-android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.9.0" }
 
 [plugins]

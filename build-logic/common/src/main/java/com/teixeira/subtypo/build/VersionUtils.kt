@@ -22,7 +22,7 @@ object VersionUtils {
 
   val versionName by lazy {
     if (CI.isCiBuild && CI.branchName != "main") {
-      "$version-${CI.commitHash}-SNAPSHOT"
+      "$version-${CI.commitHash}-{CI.branchName}"
     } else version
   }
 }

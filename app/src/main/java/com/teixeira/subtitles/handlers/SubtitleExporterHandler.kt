@@ -86,19 +86,17 @@ class SubtitleExporterHandler(
     ) {
       try {
         val subtitle = subtitlesViewModel.subtitle ?: return@launchWithProgress
-    val subtitleFile = uri.uri2File
+        val subtitleFile = uri.uri2File
         val outputStream = context.contentResolver.openOutputStream(uri)
         if (outputStream != null) {
           outputStream.write(subtitle.toText().toByteArray())
-          
+
           withContext(Dispatchers.Main) {
             ToastUtils.showLong(R.string.proj_export_subtitle_saved, subtitleFile.absolutePath)
           }
         }
       } catch (ioe: IOException) {
-        withContext(Dispatchers.Main) {
-          ToastUtils.showLong(R.string.proj_export_subtitle_error)
-        }
+        withContext(Dispatchers.Main) { ToastUtils.showLong(R.string.proj_export_subtitle_error) }
       }
     }
   }

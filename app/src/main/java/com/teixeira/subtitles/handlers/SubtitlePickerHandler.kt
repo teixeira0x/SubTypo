@@ -76,7 +76,7 @@ class SubtitlePickerHandler(
       configureBuilder = {
         setMessage(R.string.msg_please_wait)
         setCancelable(false)
-      }
+      },
     ) {
       try {
         val contentResolver = context.contentResolver
@@ -109,7 +109,7 @@ class SubtitlePickerHandler(
           ToastUtils.showLong(R.string.proj_import_subtitle_success)
         }
       } catch (ioe: Exception) {
-        ToastUtils.showLong(R.string.proj_import_subtitle_error)
+        withContext(Dispatchers.Main) { ToastUtils.showLong(R.string.proj_import_subtitle_error) }
       }
     }
   }

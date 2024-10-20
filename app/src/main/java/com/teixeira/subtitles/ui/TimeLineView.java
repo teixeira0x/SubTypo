@@ -50,6 +50,7 @@ public class TimeLineView extends View {
 
   public TimeLineView(Context context) {
     this(context, null);
+    
   }
 
   public TimeLineView(Context context, AttributeSet attrs) {

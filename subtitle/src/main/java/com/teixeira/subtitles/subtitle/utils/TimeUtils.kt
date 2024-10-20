@@ -80,9 +80,7 @@ object TimeUtils {
         val minutes = timeParts[1]
         val secondsAndMillis = timeParts[2]
         val secParts = secondsAndMillis.split(",")
-        require(secParts.size == 2) {
-          "Seconds time format must be `ss,SSS`"
-        }
+        require(secParts.size == 2) { "Seconds time format must be `ss,SSS`" }
         val seconds = secParts[0]
         val millis = secParts[1]
 

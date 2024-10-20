@@ -18,6 +18,7 @@
   <string name="copy_and_report_issue">Copy and report issue</string>
 
   <!-- Messages -->
+  <string name="msg_please_wait">Please wait..</string>
   <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
   <string name="msg_video_not_chosen">Video not chosen</string>
 

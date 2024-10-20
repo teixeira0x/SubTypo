@@ -23,11 +23,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.teixeira.subtitles.R
+import com.teixeira.subtitles.ext.cancelIfActive
+import com.teixeira.subtitles.ext.launchWithProgress
 import com.teixeira.subtitles.subtitle.formats.SubtitleFormat
 import com.teixeira.subtitles.subtitle.models.Subtitle
 import com.teixeira.subtitles.utils.ToastUtils
 import com.teixeira.subtitles.utils.UriUtils.uri2File
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SubtitlePickerHandler(
   val context: Context,
@@ -41,6 +47,8 @@ class SubtitlePickerHandler(
 
   private lateinit var subtitlePicker: ActivityResultLauncher<String>
 
+  private val scope = CoroutineScope(Dispatchers.Default)
+
   override fun onCreate(owner: LifecycleOwner) {
     subtitlePicker =
       registry.register(
@@ -53,6 +61,7 @@ class SubtitlePickerHandler(
 
   override fun onDestroy(owner: LifecycleOwner) {
     subtitlePicker.unregister()
+    scope.cancelIfActive("SubtitlePickerHandler has been destroyed")
   }
 
   fun launchPicker() {
@@ -60,31 +69,46 @@ class SubtitlePickerHandler(
   }
 
   private fun onPickSubtitle(uri: Uri?) {
-    if (uri != null) {
-      val text =
-        context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+    if (uri == null) return
 
-      if (text != null && text.isNotEmpty()) {
+    scope.launchWithProgress(
+      uiContext = context,
+      configureBuilder = {
+        setMessage(R.string.msg_please_wait)
+      }
+    ) {
+      try {
+        val contentResolver = context.contentResolver
+        val text = contentResolver.openInputStream(uri)?.bufferedReader()?.readText()
 
-        val file = uri.uri2File
-        val subtitleFormat = SubtitleFormat.Builder.from(".${file.extension}").build()
-        val paragraphs = subtitleFormat.parseText(text)
+        withContext(Dispatchers.Main) {
+          if (text == null || text.trim().isEmpty()) {
+            ToastUtils.showLong(R.string.proj_import_subtitle_error)
+            return@withContext
+          }
 
-        if (subtitleFormat.errorList.isNotEmpty()) {
-          ToastUtils.showLong(R.string.proj_import_subtitle_error)
-          return
+          val file = uri.uri2File
+          val subtitleFormat = SubtitleFormat.Builder.from(".${file.extension}").build()
+          val paragraphs = subtitleFormat.parseText(text)
+
+          if (subtitleFormat.errorList.isNotEmpty()) {
+            ToastUtils.showLong(R.string.proj_import_subtitle_error)
+            return@withContext
+          }
+
+          subtitlesViewModel.addSubtitle(
+            subtitle =
+              Subtitle(
+                name = file.name.substringBeforeLast("."),
+                subtitleFormat = subtitleFormat,
+                paragraphs = paragraphs,
+              ),
+            select = true,
+          )
+          ToastUtils.showLong(R.string.proj_import_subtitle_success)
         }
-
-        subtitlesViewModel.addSubtitle(
-          subtitle =
-            Subtitle(
-              name = file.name.substringBeforeLast("."),
-              subtitleFormat = subtitleFormat,
-              paragraphs = paragraphs,
-            ),
-          select = true,
-        )
-        ToastUtils.showLong(R.string.proj_import_subtitle_success)
+      } catch (ioe: Exception) {
+        ToastUtils.showLong(R.string.proj_import_subtitle_error)
       }
     }
   }

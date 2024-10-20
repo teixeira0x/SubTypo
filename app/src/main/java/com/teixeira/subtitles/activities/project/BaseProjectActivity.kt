@@ -25,9 +25,9 @@ import com.teixeira.subtitles.R
 import com.teixeira.subtitles.activities.BaseActivity
 import com.teixeira.subtitles.adapters.ParagraphListAdapter
 import com.teixeira.subtitles.databinding.ActivityProjectBinding
+import com.teixeira.subtitles.ext.cancelIfActive
+import com.teixeira.subtitles.handlers.SubtitleExporterHandler
 import com.teixeira.subtitles.handlers.SubtitlePickerHandler
-import com.teixeira.subtitles.handlers.SubtitleSaverHandler
-import com.teixeira.subtitles.utils.CoroutineUtils.cancelIfActive
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 import com.teixeira.subtitles.viewmodels.VideoViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -54,8 +54,8 @@ abstract class BaseProjectActivity : BaseActivity() {
   private val subtitlePickerHandler by lazy {
     SubtitlePickerHandler(this, activityResultRegistry, subtitlesViewModel)
   }
-  private val subtitleSaverHandler by lazy {
-    SubtitleSaverHandler(this, activityResultRegistry, subtitlesViewModel)
+  private val subtitleExporterHandler by lazy {
+    SubtitleExporterHandler(this, activityResultRegistry, subtitlesViewModel)
   }
 
   protected val binding: ActivityProjectBinding
@@ -82,7 +82,7 @@ abstract class BaseProjectActivity : BaseActivity() {
 
     lifecycle.apply {
       addObserver(subtitlePickerHandler)
-      addObserver(subtitleSaverHandler)
+      addObserver(subtitleExporterHandler)
     }
   }
 
@@ -93,8 +93,8 @@ abstract class BaseProjectActivity : BaseActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
-      R.id.menu_export -> subtitleSaverHandler.launchSaver()
       R.id.menu_import -> subtitlePickerHandler.launchPicker()
+      R.id.menu_export -> subtitleExporterHandler.launchSaver()
       else -> {}
     }
 

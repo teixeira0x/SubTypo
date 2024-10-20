@@ -23,35 +23,44 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.teixeira.subtitles.R
+import com.teixeira.subtitles.ext.cancelIfActive
+import com.teixeira.subtitles.ext.launchWithProgress
 import com.teixeira.subtitles.utils.ToastUtils
 import com.teixeira.subtitles.utils.UriUtils.uri2File
 import com.teixeira.subtitles.viewmodels.SubtitlesViewModel
 import java.io.IOException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class SubtitleSaverHandler(
+class SubtitleExporterHandler(
   val context: Context,
   val registry: ActivityResultRegistry,
   val subtitlesViewModel: SubtitlesViewModel,
 ) : DefaultLifecycleObserver {
 
   companion object {
-    const val KEY_SUBTITLE_SAVER = "key_subtitle_saver"
+    const val KEY_SUBTITLE_EXPORTER = "key_subtitle_exporter"
   }
 
   private lateinit var subtitleSaver: ActivityResultLauncher<String>
 
+  private val scope = CoroutineScope(Dispatchers.Default)
+
   override fun onCreate(owner: LifecycleOwner) {
     subtitleSaver =
       registry.register(
-        KEY_SUBTITLE_SAVER,
+        KEY_SUBTITLE_EXPORTER,
         owner,
         ActivityResultContracts.CreateDocument("text/*"),
-        this::onSubtitleSave,
+        this::onCreateFileUri,
       )
   }
 
   override fun onDestroy(owner: LifecycleOwner) {
     subtitleSaver.unregister()
+    scope.cancelIfActive("SubtitleExporterHandler has been destroyed")
   }
 
   fun launchSaver() {
@@ -65,21 +74,30 @@ class SubtitleSaverHandler(
     subtitleSaver.launch(subtitle.fullName)
   }
 
-  private fun onSubtitleSave(uri: Uri?) {
-    if (uri != null) {
-      val subtitle = subtitlesViewModel.subtitle ?: return
-      val subtitleFile = uri.uri2File
+  private fun onCreateFileUri(uri: Uri?) {
+    if (uri == null) return
 
+    scope.launchWithProgress(
+      uiContext = context,
+      configureBuilder = {
+        setMessage(R.string.msg_please_wait)
+      },
+    ) {
       try {
+        val subtitle = subtitlesViewModel.subtitle ?: return@launchWithProgress
+    val subtitleFile = uri.uri2File
         val outputStream = context.contentResolver.openOutputStream(uri)
-
         if (outputStream != null) {
           outputStream.write(subtitle.toText().toByteArray())
-          ToastUtils.showLong(R.string.proj_export_subtitle_saved, subtitleFile.absolutePath)
+          
+          withContext(Dispatchers.Main) {
+            ToastUtils.showLong(R.string.proj_export_subtitle_saved, subtitleFile.absolutePath)
+          }
         }
       } catch (ioe: IOException) {
-        ToastUtils.showLong(R.string.proj_export_subtitle_error)
-        // Add logger later to better handle exceptions.
+        withContext(Dispatchers.Main) {
+          ToastUtils.showLong(R.string.proj_export_subtitle_error)
+        }
       }
     }
   }

@@ -63,7 +63,7 @@ class SubtitleExporterHandler(
     scope.cancelIfActive("SubtitleExporterHandler has been destroyed")
   }
 
-  fun launchSaver() {
+  fun launchExporter() {
     val subtitle =
       subtitlesViewModel.subtitle
         ?: run {
@@ -81,6 +81,7 @@ class SubtitleExporterHandler(
       uiContext = context,
       configureBuilder = {
         setMessage(R.string.msg_please_wait)
+        setCancelable(false)
       },
     ) {
       try {

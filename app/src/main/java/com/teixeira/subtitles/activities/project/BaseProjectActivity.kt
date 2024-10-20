@@ -94,7 +94,7 @@ abstract class BaseProjectActivity : BaseActivity() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.menu_import -> subtitlePickerHandler.launchPicker()
-      R.id.menu_export -> subtitleExporterHandler.launchSaver()
+      R.id.menu_export -> subtitleExporterHandler.launchExporter()
       else -> {}
     }
 

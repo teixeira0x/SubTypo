@@ -75,6 +75,7 @@ class SubtitlePickerHandler(
       uiContext = context,
       configureBuilder = {
         setMessage(R.string.msg_please_wait)
+        setCancelable(false)
       }
     ) {
       try {

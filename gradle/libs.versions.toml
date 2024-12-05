@@ -1,6 +1,6 @@
 [versions]
 
-lifecycle-version = "2.8.5"
+lifecycle-version = "2.8.7"
 exoplayer-version = "1.4.1"
 
 android-plugin  = "8.6.0"

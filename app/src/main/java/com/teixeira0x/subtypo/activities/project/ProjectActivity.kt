@@ -13,23 +13,6 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira0x.subtypo.build.BuildConfig
+package com.teixeira0x.subtypo.activities.project
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
-
-android {
-  namespace = "${BuildConfig.packageName}.subtitle"
-
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
-}
-
-dependencies {}
+class ProjectActivity : ParagraphListHandlerActivity()

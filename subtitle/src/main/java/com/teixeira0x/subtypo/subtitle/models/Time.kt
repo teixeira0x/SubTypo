@@ -13,23 +13,31 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira0x.subtypo.build.BuildConfig
+package com.teixeira0x.subtypo.subtitle.models
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
+import android.os.Parcelable
+import com.teixeira0x.subtypo.subtitle.utils.TimeUtils.getFormattedTime
+import kotlinx.parcelize.Parcelize
 
-android {
-  namespace = "${BuildConfig.packageName}.subtitle"
+/** @author Felipe Teixeira */
+@Parcelize
+data class Time(var milliseconds: Long) : Parcelable {
 
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
+  val formattedTime: String
+    get() = this.milliseconds.getFormattedTime()
+
+  internal fun getState(): TimeState {
+    return TimeState(milliseconds)
+  }
+
+  internal fun restoreState(state: TimeState) {
+    this.milliseconds = state.milliseconds
   }
 }
 
-dependencies {}
+data class TimeState(val milliseconds: Long) {
+
+  fun getTime(): Time {
+    return Time(milliseconds)
+  }
+}

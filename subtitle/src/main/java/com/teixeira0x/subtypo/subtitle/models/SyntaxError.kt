@@ -13,23 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira0x.subtypo.build.BuildConfig
+package com.teixeira0x.subtypo.subtitle.models
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
-
-android {
-  namespace = "${BuildConfig.packageName}.subtitle"
-
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
-}
-
-dependencies {}
+/** @author Felipe Teixeira */
+data class SyntaxError(val message: String, val line: Int)

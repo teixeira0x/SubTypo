@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira.subtypo.build.BuildConfig
+import com.teixeira0x.subtypo.build.BuildConfig
 
 plugins {
   id("com.android.application")

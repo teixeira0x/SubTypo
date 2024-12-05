@@ -58,7 +58,7 @@
         android:background="@drawable/transparent_background"
         android:paddingHorizontal="@dimen/padding_small">
 
-        <com.teixeira.subtypo.ui.subtitle.SubtitleView
+        <com.teixeira0x.subtypo.ui.subtitle.SubtitleView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:id="@+id/subtitle_preview" />

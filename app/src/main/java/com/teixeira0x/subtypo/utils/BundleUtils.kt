@@ -13,23 +13,16 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira0x.subtypo.build.BuildConfig
+package com.teixeira0x.subtypo.utils
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
+import android.os.Bundle
+import android.os.Parcelable
+import androidx.core.os.BundleCompat
 
-android {
-  namespace = "${BuildConfig.packageName}.subtitle"
+/** @author Felipe Teixeira */
+object BundleUtils {
 
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
+  inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? {
+    return BundleCompat.getParcelable(this, key, T::class.java)
   }
 }
-
-dependencies {}

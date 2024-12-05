@@ -14,8 +14,8 @@
  */
 
 import com.android.build.gradle.BaseExtension
-import com.teixeira.subtypo.build.BuildConfig
-import com.teixeira.subtypo.build.VersionUtils
+import com.teixeira0x.subtypo.build.BuildConfig
+import com.teixeira0x.subtypo.build.VersionUtils
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 

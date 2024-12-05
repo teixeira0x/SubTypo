@@ -13,23 +13,9 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira0x.subtypo.build.BuildConfig
+package com.teixeira0x.subtypo.adapters.holders
 
-plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-}
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 
-android {
-  namespace = "${BuildConfig.packageName}.subtitle"
-
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
-}
-
-dependencies {}
+class BindingViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)

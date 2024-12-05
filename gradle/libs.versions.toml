@@ -9,7 +9,7 @@ kotlin-plugin = "1.9.22"
 [libraries]
 
 # Android
-android-desugar = { module = "com.android.tools:desugar_jdk_libs", version ="2.1.1" }
+android-desugar = { module = "com.android.tools:desugar_jdk_libs", version ="2.1.3" }
 
 # AndroidX
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.8.2" }

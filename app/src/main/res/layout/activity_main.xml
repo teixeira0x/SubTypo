@@ -40,13 +40,13 @@
         android:id="@+id/projects"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.teixeira.subtitles.fragments.ProjectsFragment" />
+        android:name="com.teixeira.subtypo.fragments.ProjectsFragment" />
 
       <androidx.fragment.app.FragmentContainerView
         android:id="@+id/settings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.teixeira.subtitles.fragments.PreferencesFragment" />
+        android:name="com.teixeira.subtypo.fragments.PreferencesFragment" />
 
     </ViewFlipper>
 

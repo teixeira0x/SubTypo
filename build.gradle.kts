@@ -14,12 +14,13 @@
  */
 
 import com.android.build.gradle.BaseExtension
-import com.teixeira.subtypo.build.BuildConfig
-import com.teixeira.subtypo.build.VersionUtils
+import com.teixeira0x.subtypo.build.BuildConfig
+import com.teixeira0x.subtypo.build.VersionUtils
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can add configuration options common to all
+// sub-projects/modules.
 plugins {
   id("build-logic.root-project")
   alias(libs.plugins.android.application) apply false

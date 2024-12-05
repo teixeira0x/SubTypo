@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.teixeira.subtypo.build.BuildConfig
+import com.teixeira0x.subtypo.build.BuildConfig
 
 plugins {
   id("com.android.application")
@@ -51,12 +51,18 @@ android {
     release {
       isMinifyEnabled = false
       signingConfig = signingConfigs.getByName("general")
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      proguardFiles(
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro",
+      )
     }
     debug {
       isMinifyEnabled = false
       signingConfig = signingConfigs.getByName("general")
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      proguardFiles(
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro",
+      )
     }
   }
 

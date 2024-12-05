@@ -28,4 +28,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "build-logic"
 
-include(":root", ":common")
+include(":root")

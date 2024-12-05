@@ -2,7 +2,7 @@ package com.teixeira.subtypo.build
 
 @SuppressWarnings("unused")
 object BuildConfig {
-  const val packageName = "com.teixeira.subtitles"
+  const val packageName = "com.teixeira.subtypo"
 
   const val compileSdk = 34
   const val buildTools = "34.0.0"

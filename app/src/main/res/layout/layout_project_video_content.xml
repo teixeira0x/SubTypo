@@ -6,7 +6,7 @@
   android:layout_height="wrap_content"
   android:background="@android:color/black">
 
-  <com.teixeira.subtitles.ui.VideoView
+  <com.teixeira.subtypo.ui.VideoView
     android:id="@+id/video_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"/>
 
-  <com.teixeira.subtitles.ui.subtitle.SubtitleView
+  <com.teixeira.subtypo.ui.subtitle.SubtitleView
     android:id="@+id/subtitle_view"
     android:layout_width="0dp"
     android:layout_height="0dp"

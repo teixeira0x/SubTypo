@@ -19,6 +19,9 @@ plugins {
   id("com.android.application")
   id("kotlin-android")
   id("kotlin-parcelize")
+  id("kotlin-kapt")
+
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -72,6 +75,8 @@ android {
   }
 }
 
+kapt { correctErrorTypes = true }
+
 dependencies {
   coreLibraryDesugaring(libs.android.desugar)
   implementation(libs.androidx.appcompat)
@@ -87,9 +92,19 @@ dependencies {
   implementation(libs.androidx.exoplayer.ui)
 
   implementation(libs.google.material)
+  implementation(libs.google.gson)
 
   implementation(libs.common.utilcode)
   implementation(libs.common.android.coroutines)
+
+  val roomVersion = "2.6.1"
+  kapt("androidx.room:room-compiler:$roomVersion")
+  implementation("androidx.room:room-runtime:$roomVersion")
+  implementation("androidx.room:room-ktx:$roomVersion")
+
+  val hiltVersion = "2.50"
+  kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+  implementation("com.google.dagger:hilt-android:$hiltVersion")
 
   debugImplementation(libs.common.leakcanary)
 

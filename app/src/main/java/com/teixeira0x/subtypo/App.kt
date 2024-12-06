@@ -10,8 +10,10 @@ import com.google.android.material.color.DynamicColors
 import com.teixeira0x.subtypo.activities.CrashActivity
 import com.teixeira0x.subtypo.preferences.aparenceMaterialYou
 import com.teixeira0x.subtypo.preferences.aparenceUIMode
+import dagger.hilt.android.HiltAndroidApp
 import kotlin.system.exitProcess
 
+@HiltAndroidApp
 class App : Application() {
 
   companion object {

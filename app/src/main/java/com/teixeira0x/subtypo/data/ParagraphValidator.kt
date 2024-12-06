@@ -18,7 +18,7 @@ package com.teixeira0x.subtypo.data
 import android.content.Context
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.subtitle.models.Paragraph
-import com.teixeira0x.subtypo.subtitle.utils.TimeUtils
+import com.teixeira0x.subtypo.utils.TimeUtils
 
 /**
  * Class to validate fields in a paragraph.
@@ -28,7 +28,7 @@ import com.teixeira0x.subtypo.subtitle.utils.TimeUtils
 class ParagraphValidator(val context: Context) {
 
   fun checkTime(formattedTime: String): ValidationResult {
-    return if (TimeUtils.isValidTime(formattedTime.split(":"))) {
+    return if (TimeUtils.isValidTime(formattedTime)) {
       ValidationResult.Success
     } else
       ValidationResult.Error(

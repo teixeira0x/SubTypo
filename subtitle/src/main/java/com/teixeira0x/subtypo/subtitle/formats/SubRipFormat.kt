@@ -135,8 +135,7 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
     val (startTime, endTime) = timeCodes
 
     return if (
-      TimeUtils.isValidTime(startTime.split(":")) ||
-        TimeUtils.isValidTime(endTime.split(":"))
+      TimeUtils.isValidTime(startTime) || TimeUtils.isValidTime(endTime)
     ) {
       arrayOf(startTime, endTime)
     } else {

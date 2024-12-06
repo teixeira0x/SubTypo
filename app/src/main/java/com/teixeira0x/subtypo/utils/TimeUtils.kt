@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.subtitle.utils
+package com.teixeira0x.subtypo.utils
 
 /**
  * Functions for dealing with times.

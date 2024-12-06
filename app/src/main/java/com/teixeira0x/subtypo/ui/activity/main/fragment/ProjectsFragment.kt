@@ -1,6 +1,5 @@
-package com.teixeira0x.subtypo.fragments
+package com.teixeira0x.subtypo.ui.activity.main.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +10,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
-import com.teixeira0x.subtypo.activities.project.BaseProjectActivity
-import com.teixeira0x.subtypo.activities.project.ProjectActivity
-import com.teixeira0x.subtypo.adapters.ProjectListAdapter
 import com.teixeira0x.subtypo.databinding.FragmentProjectsBinding
-import com.teixeira0x.subtypo.fragments.sheets.ProjectEditorFragment
-import com.teixeira0x.subtypo.models.Project
-import com.teixeira0x.subtypo.viewmodels.ProjectsViewModel
-import com.teixeira0x.subtypo.viewmodels.ProjectsViewModel.ProjectsState.Loaded
-import com.teixeira0x.subtypo.viewmodels.ProjectsViewModel.ProjectsState.Loading
+import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.ui.activity.main.adapter.ProjectListAdapter
+import com.teixeira0x.subtypo.ui.activity.main.fragment.sheet.ProjectEditorSheetFragment
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel.ProjectsState.Loaded
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel.ProjectsState.Loading
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProjectsFragment : Fragment() {
 
   private var _binding: FragmentProjectsBinding? = null
@@ -33,16 +32,17 @@ class ProjectsFragment : Fragment() {
   private val projectsAdapter by lazy {
     ProjectListAdapter(
       onProjectClick = { _, project ->
-        startActivity(
-          Intent(requireContext(), ProjectActivity::class.java)
-            .putExtra(BaseProjectActivity.KEY_PROJECT, project)
-        )
+        //  startActivity(
+        //    Intent(requireContext(), ProjectActivity::class.java)
+        //     .putExtra(BaseProjectActivity.KEY_PROJECT, project)
+        // )
       }
     ) { view, project ->
       when (view.id) {
-        R.id.edit_option ->
-          ProjectEditorFragment.newInstance(project)
+        R.id.edit_option -> {
+          ProjectEditorSheetFragment.newInstance(project.id)
             .show(childFragmentManager, null)
+        }
         R.id.delete_option -> deleteProject(project)
         else -> {}
       }
@@ -65,26 +65,25 @@ class ProjectsFragment : Fragment() {
     projectsViewModel.stateData.observe(this) { state ->
       when (state) {
         is Loading -> {
-          binding.projects.isVisible = false
+          binding.rvProjects.isVisible = false
           binding.noProjects.isVisible = false
+          binding.progress.isVisible = true
         }
         is Loaded -> {
           binding.noProjects.isVisible = state.projects.isEmpty()
-          binding.projects.isVisible = true
-          projectsAdapter.submitList(state.projects)
+          binding.rvProjects.isVisible = true
+          binding.progress.isVisible = false
+          projectsAdapter.submitList(
+            state.projects.sortedByDescending { it.id }
+          )
         }
       }
     }
 
     binding.apply {
-      projects.layoutManager = LinearLayoutManager(requireContext())
-      projects.adapter = projectsAdapter
+      rvProjects.layoutManager = LinearLayoutManager(requireContext())
+      rvProjects.adapter = projectsAdapter
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    projectsViewModel.loadProjects()
   }
 
   override fun onDestroyView() {
@@ -97,7 +96,10 @@ class ProjectsFragment : Fragment() {
       .setTitle(R.string.delete)
       .setMessage(getString(R.string.msg_delete_confirmation, project.name))
       .setPositiveButton(R.string.yes) { _, _ ->
-        projectsViewModel.deleteProject(project) {}
+        projectsViewModel.deleteProject(project.id) {
+          // TODO: Show a message to the user saying that the project has been
+          // deleted.
+        }
       }
       .setNegativeButton(R.string.no, null)
       .show()

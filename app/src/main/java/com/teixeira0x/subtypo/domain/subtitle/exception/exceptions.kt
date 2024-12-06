@@ -15,10 +15,8 @@
 
 package com.teixeira0x.subtypo.domain.subtitle.exception
 
-sealed abstract class SubtitleException(
-  message: String,
-  cause: Throwable? = null,
-) : Throwable(message, cause)
+sealed class SubtitleException(message: String, cause: Throwable? = null) :
+  Throwable(message, cause)
 
 class SubtitleParseException(message: String, cause: Throwable? = null) :
   SubtitleException(message, cause)

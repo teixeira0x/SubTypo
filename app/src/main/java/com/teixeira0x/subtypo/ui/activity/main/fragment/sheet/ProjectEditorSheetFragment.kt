@@ -1,19 +1,4 @@
-/*
- * This file is part of SubTypo.
- *
- * SubTypo is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3 of
- * the License, or (at your option) any later version.
- *
- * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with SubTypo.
- * If not, see <https://www.gnu.org/licenses/>.
- */
-
-package com.teixeira0x.subtypo.fragments.sheets
+package com.teixeira0x.subtypo.ui.activity.main.fragment.sheet
 
 import android.content.Intent
 import android.net.Uri
@@ -25,16 +10,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
+import com.blankj.utilcode.util.UriUtils
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.activities.project.BaseProjectActivity
 import com.teixeira0x.subtypo.activities.project.ProjectActivity
 import com.teixeira0x.subtypo.databinding.FragmentDialogProjectEditorBinding
-import com.teixeira0x.subtypo.handlers.PermissionsHandler
-import com.teixeira0x.subtypo.models.Project
-import com.teixeira0x.subtypo.utils.BundleUtils.getParcelableCompat
+import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.ui.activity.main.handler.PermissionsHandler
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectEditorViewModel
+import com.teixeira0x.subtypo.ui.fragment.sheet.BaseBottomSheetFragment
+import com.teixeira0x.subtypo.utils.Constants
 import com.teixeira0x.subtypo.utils.ToastUtils
 import com.teixeira0x.subtypo.utils.VideoUtils
-import com.teixeira0x.subtypo.viewmodels.ProjectsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 /**
@@ -42,17 +30,16 @@ import java.io.File
  *
  * @author Felipe Teixeira
  */
-class ProjectEditorFragment : BaseBottomSheetFragment() {
+@AndroidEntryPoint
+class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
 
   companion object {
 
     @JvmStatic
-    fun newInstance(project: Project? = null): ProjectEditorFragment {
-      return ProjectEditorFragment().also {
+    fun newInstance(projectId: Long = 0): ProjectEditorSheetFragment {
+      return ProjectEditorSheetFragment().also {
         it.arguments =
-          Bundle().apply {
-            putParcelable(BaseProjectActivity.KEY_PROJECT, project)
-          }
+          Bundle().apply { putLong(Constants.KEY_PROJECT_ID_ARG, projectId) }
       }
     }
   }
@@ -60,10 +47,11 @@ class ProjectEditorFragment : BaseBottomSheetFragment() {
   private var _binding: FragmentDialogProjectEditorBinding? = null
   private val binding: FragmentDialogProjectEditorBinding
     get() =
-      checkNotNull(_binding) { "ProjectEditorFragment has been destroyed!" }
+      checkNotNull(_binding) {
+        "ProjectEditorSheetFragment has been destroyed!"
+      }
 
-  private val projectsViewModel by
-    viewModels<ProjectsViewModel>(ownerProducer = { requireActivity() })
+  private val viewModel by viewModels<ProjectEditorViewModel>()
 
   private val videoPicker =
     registerForActivityResult(
@@ -72,15 +60,14 @@ class ProjectEditorFragment : BaseBottomSheetFragment() {
     )
 
   private var isExistingProject = false
-  private var project: Project? = null
+  private var projectId: Long = 0
   private var videoUri: Uri? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    project =
-      arguments?.getParcelableCompat<Project>(BaseProjectActivity.KEY_PROJECT)
-    isExistingProject = project != null
+    projectId = arguments?.getLong(Constants.KEY_PROJECT_ID_ARG) ?: 0
+    isExistingProject = projectId > 0
   }
 
   override fun onCreateView(
@@ -94,21 +81,35 @@ class ProjectEditorFragment : BaseBottomSheetFragment() {
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    configureListeners()
+    updateFields()
+  }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    videoPicker.unregister()
+    _binding = null
+  }
+
+  private fun updateFields() {
     if (isExistingProject) {
-      binding.videoIcon.setImageBitmap(
-        VideoUtils.getVideoThumbnail(project!!.videoPath)
-      )
-      binding.videoName.setText(project!!.videoName)
-      binding.tieName.setText(project!!.name)
-      binding.title.setText(R.string.proj_edit)
+      viewModel.getProject(projectId) { project ->
+        binding.videoIcon.setImageBitmap(
+          VideoUtils.getVideoThumbnail(project.videoUri)
+        )
+        binding.videoName.setText(project.videoName)
+        binding.tieName.setText(project.name)
+        binding.title.setText(R.string.proj_edit)
 
-      videoUri = Uri.fromFile(File(project!!.videoPath))
+        videoUri = Uri.fromFile(File(project.videoUri))
+      }
     } else {
       binding.title.setText(R.string.proj_new)
       binding.tieName.setText(R.string.proj_new)
     }
+  }
 
+  private fun configureListeners() {
     binding.chooseVideo.setOnClickListener {
       if (PermissionsHandler.isPermissionsGranted(requireContext())) {
         videoPicker.launch(arrayOf("video/*"))
@@ -121,12 +122,6 @@ class ProjectEditorFragment : BaseBottomSheetFragment() {
     binding.dialogButtons.save.setOnClickListener { createProject() }
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    videoPicker.unregister()
-    _binding = null
-  }
-
   private fun onChooseVideo(uri: Uri?) {
     if (uri != null) {
       val videoDocument = DocumentFile.fromSingleUri(requireContext(), uri)
@@ -137,6 +132,13 @@ class ProjectEditorFragment : BaseBottomSheetFragment() {
   }
 
   private fun createProject() {
+    if (
+      isExistingProject &&
+        viewModel.stateData.value ==
+          ProjectEditorViewModel.ProjectEditorState.Loading
+    ) {
+      return
+    }
 
     var videoUri = videoUri
     val name = binding.tieName.text.toString().trim()
@@ -146,18 +148,26 @@ class ProjectEditorFragment : BaseBottomSheetFragment() {
       name.isEmpty() -> ToastUtils.showShort(R.string.error_enter_name)
 
       else -> {
+        val videoUri = UriUtils.uri2File(videoUri).absolutePath
         isProjectCreating(true)
         if (isExistingProject) {
-          projectsViewModel.updateProject(project!!.id, name, videoUri) {
+          viewModel.updateProject(
+            id = projectId,
+            name = name,
+            videoUri = videoUri,
+          ) {
             dismiss()
           }
         } else {
-          projectsViewModel.createProject(name, videoUri) {
-            dismiss()
-            startActivity(
-              Intent(requireContext(), ProjectActivity::class.java)
-                .putExtra(BaseProjectActivity.KEY_PROJECT, it)
+          viewModel.createProject(
+            name = name,
+            videoUri = videoUri,
+          ) {
+            //startActivity(
+            //  Intent(requireContext(), ProjectActivity::class.java)
+            //    .putExtra(BaseProjectActivity.KEY_PROJECT, it)
             )
+            dismiss()
           }
         }
       }

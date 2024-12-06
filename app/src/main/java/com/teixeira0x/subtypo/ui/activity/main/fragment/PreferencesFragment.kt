@@ -1,4 +1,4 @@
-package com.teixeira0x.subtypo.fragments
+package com.teixeira0x.subtypo.ui.activity.main.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -9,11 +9,11 @@ import androidx.preference.PreferenceFragmentCompat
 import com.teixeira0x.subtypo.App
 import com.teixeira0x.subtypo.BuildConfig
 import com.teixeira0x.subtypo.R
-import com.teixeira0x.subtypo.preferences.PREF_ABOUT_GITHUB_KEY
-import com.teixeira0x.subtypo.preferences.PREF_ABOUT_VERSION_KEY
-import com.teixeira0x.subtypo.preferences.PREF_CONFIGURE_GENERAL_KEY
-import com.teixeira0x.subtypo.viewmodels.MainViewModel
-import com.teixeira0x.subtypo.viewmodels.PreferencesViewModel
+import com.teixeira0x.subtypo.prefs.PREF_ABOUT_GITHUB_KEY
+import com.teixeira0x.subtypo.prefs.PREF_ABOUT_VERSION_KEY
+import com.teixeira0x.subtypo.prefs.PREF_CONFIGURE_GENERAL_KEY
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.MainViewModel
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.PreferencesViewModel
 
 class PreferencesFragment : PreferenceFragmentCompat() {
 
@@ -42,7 +42,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     savedInstanceState: Bundle?,
     rootKey: String?,
   ) {
-    preferencesViewModel.observeCurrentPreferencesId(this) {
+    preferencesViewModel.currentPreferencesIdData.observe(this) {
       onBackPressedCallback.isEnabled = it != R.xml.preferences
       setPreferencesFromResource(it, rootKey)
       onPreferencesIdChange(it)
@@ -55,7 +55,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
       .onBackPressedDispatcher
       .addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-    mainViewModel.observeCurrentFragmentIndex(this) {
+    mainViewModel.currentFragmentIndexData.observe(this) {
       onBackPressedCallback.isEnabled =
         it == MainViewModel.FRAGMENT_SETTINGS_INDEX &&
           preferencesViewModel.currentPreferencesId != R.xml.preferences
@@ -68,21 +68,24 @@ class PreferencesFragment : PreferenceFragmentCompat() {
   }
 
   private fun onPreferencesIdChange(preferencesId: Int) {
-    if (preferencesId == R.xml.preferences) {
-      findPreference<Preference>(PREF_CONFIGURE_GENERAL_KEY)
-        ?.setOnPreferenceClickListener { _ ->
-          preferencesViewModel.currentPreferencesId = R.xml.preferences_general
-          true
-        }
+    when (preferencesId) {
+      R.xml.preferences -> {
+        findPreference<Preference>(PREF_CONFIGURE_GENERAL_KEY)
+          ?.setOnPreferenceClickListener { _ ->
+            preferencesViewModel.currentPreferencesId =
+              R.xml.preferences_general
+            true
+          }
 
-      findPreference<Preference>(PREF_ABOUT_GITHUB_KEY)
-        ?.setOnPreferenceClickListener { _ ->
-          App.instance.openUrl(App.APP_REPO_URL)
-          true
-        }
+        findPreference<Preference>(PREF_ABOUT_GITHUB_KEY)
+          ?.setOnPreferenceClickListener { _ ->
+            App.instance.openUrl(App.APP_REPO_URL)
+            true
+          }
 
-      findPreference<Preference>(PREF_ABOUT_VERSION_KEY)
-        ?.setSummary(versionSummary)
+        findPreference<Preference>(PREF_ABOUT_VERSION_KEY)
+          ?.setSummary(versionSummary)
+      }
     }
   }
 }

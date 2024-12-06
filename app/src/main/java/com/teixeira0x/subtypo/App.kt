@@ -8,8 +8,8 @@ import androidx.preference.PreferenceManager
 import com.blankj.utilcode.util.ThrowableUtils
 import com.google.android.material.color.DynamicColors
 import com.teixeira0x.subtypo.activities.CrashActivity
-import com.teixeira0x.subtypo.preferences.aparenceMaterialYou
-import com.teixeira0x.subtypo.preferences.aparenceUIMode
+import com.teixeira0x.subtypo.prefs.aparenceMaterialYou
+import com.teixeira0x.subtypo.prefs.aparenceUIMode
 import dagger.hilt.android.HiltAndroidApp
 import kotlin.system.exitProcess
 

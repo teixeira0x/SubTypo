@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.preferences
+package com.teixeira0x.subtypo.prefs
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.teixeira0x.subtypo.App

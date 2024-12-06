@@ -6,7 +6,7 @@
   android:layout_height="match_parent">
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/projects"
+    android:id="@+id/rv_projects"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="10dp"
@@ -19,5 +19,13 @@
     android:layout_centerInParent="true"
     android:textSize="14sp"
     android:text="@string/proj_no_projects" />
+
+  <ProgressBar
+    android:id="@+id/progress"
+    android:layout_height="45dp"
+    android:layout_width="45dp"
+    android:indeterminate="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="70dp" />
 
 </RelativeLayout>

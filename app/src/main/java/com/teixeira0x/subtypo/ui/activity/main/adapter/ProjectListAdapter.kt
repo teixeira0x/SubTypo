@@ -1,19 +1,4 @@
-/*
- * This file is part of SubTypo.
- *
- * SubTypo is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3 of
- * the License, or (at your option) any later version.
- *
- * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with SubTypo.
- * If not, see <https://www.gnu.org/licenses/>.
- */
-
-package com.teixeira0x.subtypo.adapters
+package com.teixeira0x.subtypo.ui.activity.main.adapter
 
 import android.animation.LayoutTransition
 import android.view.View
@@ -25,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.teixeira0x.subtypo.adapters.holders.BindingViewHolder
 import com.teixeira0x.subtypo.databinding.LayoutProjectItemBinding
-import com.teixeira0x.subtypo.models.Project
+import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.utils.ContextUtils.layoutInflater
 import com.teixeira0x.subtypo.utils.UiUtils
 import com.teixeira0x.subtypo.utils.VideoUtils
@@ -60,7 +45,7 @@ class ProjectListAdapter(
     holder.binding.apply {
       val project = projects[position]
 
-      videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.videoPath))
+      videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.videoUri))
       videoName.setText(project.videoName)
       name.setText(project.name)
 
@@ -131,7 +116,7 @@ class ProjectListAdapter(
 
       return oldProject.id == newProject.id &&
         oldProject.name == newProject.name &&
-        oldProject.videoPath == newProject.videoPath
+        oldProject.videoUri == newProject.videoUri
     }
   }
 }

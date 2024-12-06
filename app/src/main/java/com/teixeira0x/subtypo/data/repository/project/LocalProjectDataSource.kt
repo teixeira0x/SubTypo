@@ -51,7 +51,7 @@ constructor(private val db: SubTypoDatabase) : ProjectDataSource {
     projectDao.update(project.toEntity())
   }
 
-  override suspend fun removeProject(id: Long) {
-    projectDao.remove(id)
+  override suspend fun removeProject(id: Long): Int {
+    return projectDao.remove(id)
   }
 }

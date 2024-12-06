@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.handlers
+package com.teixeira0x.subtypo.ui.activity.main.handler
 
 import android.Manifest
 import android.app.Activity

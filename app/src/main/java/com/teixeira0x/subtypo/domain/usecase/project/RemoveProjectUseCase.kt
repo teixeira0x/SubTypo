@@ -22,7 +22,7 @@ class RemoveProjectUseCase
 @Inject
 constructor(private val repository: ProjectRepository) {
 
-  operator suspend fun invoke(id: Long) {
+  operator suspend fun invoke(id: Long): Int {
     return repository.removeProject(id)
   }
 }

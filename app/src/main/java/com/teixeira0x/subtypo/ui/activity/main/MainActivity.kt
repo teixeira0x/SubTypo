@@ -1,16 +1,20 @@
-package com.teixeira0x.subtypo.activities
+package com.teixeira0x.subtypo.ui.activity.main
 
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import com.google.android.material.R.attr
 import com.google.android.material.color.MaterialColors
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.ActivityMainBinding
-import com.teixeira0x.subtypo.fragments.sheets.ProjectEditorFragment
-import com.teixeira0x.subtypo.handlers.PermissionsHandler
-import com.teixeira0x.subtypo.viewmodels.MainViewModel
+import com.teixeira0x.subtypo.ui.activity.BaseActivity
+import com.teixeira0x.subtypo.ui.activity.main.fragment.sheet.ProjectEditorSheetFragment
+import com.teixeira0x.subtypo.ui.activity.main.handler.PermissionsHandler
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
   private var _binding: ActivityMainBinding? = null
@@ -18,6 +22,9 @@ class MainActivity : BaseActivity() {
     get() = checkNotNull(_binding) { "MainActivity has been destroyed!" }
 
   private val mainViewModel by viewModels<MainViewModel>()
+  private val permissionsHandler by lazy {
+    PermissionsHandler(this, activityResultRegistry)
+  }
 
   private val onBackPressedCallback =
     object : OnBackPressedCallback(false) {
@@ -33,28 +40,13 @@ class MainActivity : BaseActivity() {
     }
 
   override val statusBarColor: Int
-    get() =
-      MaterialColors.getColor(
-        this,
-        com.google.android.material.R.attr.colorOnSurfaceInverse,
-        0,
-      )
+    get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
 
   override val navigationBarColor: Int
-    get() =
-      MaterialColors.getColor(
-        this,
-        com.google.android.material.R.attr.colorOnSurfaceInverse,
-        0,
-      )
+    get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
 
   override val navigationBarDividerColor: Int
-    get() =
-      MaterialColors.getColor(
-        this,
-        com.google.android.material.R.attr.colorOnSurfaceInverse,
-        0,
-      )
+    get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
 
   override fun bindView(): View {
     _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -65,9 +57,11 @@ class MainActivity : BaseActivity() {
     super.onCreate(savedInstanceState)
     setSupportActionBar(binding.toolbar)
 
-    lifecycle.addObserver(PermissionsHandler(this, activityResultRegistry))
+    lifecycle.addObserver(permissionsHandler)
     onBackPressedDispatcher.addCallback(onBackPressedCallback)
-    mainViewModel.observeCurrentFragmentIndex(this) { onFragmentChanged(it) }
+    mainViewModel.currentFragmentIndexData.observe(this) {
+      onFragmentChanged(it)
+    }
 
     configureListeners()
   }
@@ -85,7 +79,8 @@ class MainActivity : BaseActivity() {
 
     binding.fabNewProject.setOnClickListener {
       mainViewModel.currentFragmentIndex = MainViewModel.FRAGMENT_PROJECTS_INDEX
-      ProjectEditorFragment.newInstance().show(supportFragmentManager, null)
+      ProjectEditorSheetFragment.newInstance()
+        .show(supportFragmentManager, null)
     }
 
     binding.bottomNavigation.setOnItemSelectedListener { item ->

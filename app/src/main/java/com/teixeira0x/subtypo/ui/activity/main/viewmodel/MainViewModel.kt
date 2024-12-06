@@ -1,8 +1,7 @@
-package com.teixeira0x.subtypo.viewmodels
+package com.teixeira0x.subtypo.ui.activity.main.viewmodel
 
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
@@ -15,16 +14,12 @@ class MainViewModel : ViewModel() {
   private val _currentFragmentIndex =
     MutableLiveData<Int>(FRAGMENT_PROJECTS_INDEX)
 
+  val currentFragmentIndexData: LiveData<Int>
+    get() = _currentFragmentIndex
+
   var currentFragmentIndex: Int
     get() = _currentFragmentIndex.value!!
     set(value) {
       _currentFragmentIndex.value = value
     }
-
-  fun observeCurrentFragmentIndex(
-    owner: LifecycleOwner,
-    observer: Observer<Int>,
-  ) {
-    _currentFragmentIndex.observe(owner, observer)
-  }
 }

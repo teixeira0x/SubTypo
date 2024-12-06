@@ -166,7 +166,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
             //startActivity(
             //  Intent(requireContext(), ProjectActivity::class.java)
             //    .putExtra(BaseProjectActivity.KEY_PROJECT, it)
-            )
+            //)
             dismiss()
           }
         }

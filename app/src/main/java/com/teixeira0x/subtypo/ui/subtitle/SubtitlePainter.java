@@ -81,7 +81,7 @@ final class SubtitlePainter {
       return;
     }
 
-    this.text = subtitleFormat.generateSpan(text);
+    this.text = new SpannableStringBuilder(text);
     drawTextLayout(canvas);
   }
 

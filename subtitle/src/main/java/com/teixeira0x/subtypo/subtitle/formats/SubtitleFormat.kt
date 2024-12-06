@@ -15,7 +15,6 @@
 
 package com.teixeira0x.subtypo.subtitle.formats
 
-import android.text.SpannableStringBuilder
 import com.teixeira0x.subtypo.subtitle.models.Paragraph
 import com.teixeira0x.subtypo.subtitle.models.SyntaxError
 
@@ -71,14 +70,6 @@ protected constructor(val name: String, val extension: String) {
    * @return List of recovered paragraphs.
    */
   abstract fun parseText(text: String): MutableList<Paragraph>
-
-  /**
-   * Generate span based on caption format for given text.
-   *
-   * @param text Paragraph text to generate spans.
-   * @return Spannable text.
-   */
-  abstract fun generateSpan(text: String): SpannableStringBuilder
 
   protected fun addError(error: SyntaxError) {
     _errorList.add(error)

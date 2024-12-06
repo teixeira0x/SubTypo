@@ -15,9 +15,6 @@
 
 package com.teixeira0x.subtypo.subtitle.formats
 
-import android.os.Build
-import android.text.Html
-import android.text.SpannableStringBuilder
 import com.teixeira0x.subtypo.subtitle.models.Paragraph
 import com.teixeira0x.subtypo.subtitle.models.SyntaxError
 import com.teixeira0x.subtypo.subtitle.models.Time
@@ -146,20 +143,5 @@ class SubRipFormat : SubtitleFormat("SubRip", ".srt") {
       addError(SyntaxError("Invalid time code", lineIndex))
       null
     }
-  }
-
-  /**
-   * Generate span based on caption format for given text.
-   *
-   * @param text Paragraph text to generate spans.
-   * @return Spannable text.
-   */
-  override fun generateSpan(text: String): SpannableStringBuilder {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      Html.fromHtml(text.replace("\n", "<br/>"), Html.FROM_HTML_MODE_LEGACY)
-    } else {
-      Html.fromHtml(text.replace("\n", "<br/>"))
-    }
-      as SpannableStringBuilder
   }
 }

@@ -53,6 +53,8 @@ android {
           }
 
         storeFile = signingKeyFile
+        storePassword = System.getenv("SIGNING_KEY_PASSWORD")
+            ?: throw GradleException("KEY_PASSWORD not set")
         keyAlias =
           System.getenv("SIGNING_KEY_ALIAS")
             ?: throw GradleException("KEY_ALIAS not set")

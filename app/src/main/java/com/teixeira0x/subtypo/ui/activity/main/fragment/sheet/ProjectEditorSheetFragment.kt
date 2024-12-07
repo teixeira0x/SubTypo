@@ -1,6 +1,5 @@
 package com.teixeira0x.subtypo.ui.activity.main.fragment.sheet
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,10 +11,8 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import com.blankj.utilcode.util.UriUtils
 import com.teixeira0x.subtypo.R
-import com.teixeira0x.subtypo.activities.project.BaseProjectActivity
-import com.teixeira0x.subtypo.activities.project.ProjectActivity
 import com.teixeira0x.subtypo.databinding.FragmentDialogProjectEditorBinding
-import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToProjectActivity
 import com.teixeira0x.subtypo.ui.activity.main.handler.PermissionsHandler
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectEditorViewModel
 import com.teixeira0x.subtypo.ui.fragment.sheet.BaseBottomSheetFragment
@@ -140,7 +137,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
       return
     }
 
-    var videoUri = videoUri
+    var uri = videoUri
     val name = binding.tieName.text.toString().trim()
 
     when {
@@ -148,7 +145,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
       name.isEmpty() -> ToastUtils.showShort(R.string.error_enter_name)
 
       else -> {
-        val videoUri = UriUtils.uri2File(videoUri).absolutePath
+        val videoUri = UriUtils.uri2File(uri).absolutePath
         isProjectCreating(true)
         if (isExistingProject) {
           viewModel.updateProject(
@@ -159,14 +156,8 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
             dismiss()
           }
         } else {
-          viewModel.createProject(
-            name = name,
-            videoUri = videoUri,
-          ) {
-            //startActivity(
-            //  Intent(requireContext(), ProjectActivity::class.java)
-            //    .putExtra(BaseProjectActivity.KEY_PROJECT, it)
-            //)
+          viewModel.createProject(name = name, videoUri = videoUri) { id ->
+            navigateToProjectActivity(requireContext(), id)
             dismiss()
           }
         }

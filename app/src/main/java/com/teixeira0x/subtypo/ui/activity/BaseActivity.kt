@@ -19,6 +19,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.R
 import com.google.android.material.color.MaterialColors
 import com.teixeira0x.subtypo.App
 
@@ -30,28 +31,13 @@ import com.teixeira0x.subtypo.App
 abstract class BaseActivity : AppCompatActivity() {
 
   protected open val statusBarColor: Int
-    get() =
-      MaterialColors.getColor(
-        this,
-        com.google.android.material.R.attr.colorSurface,
-        0,
-      )
+    get() = MaterialColors.getColor(this, R.attr.colorSurface, 0)
 
   protected open val navigationBarColor: Int
-    get() =
-      MaterialColors.getColor(
-        this,
-        com.google.android.material.R.attr.colorSurface,
-        0,
-      )
+    get() = MaterialColors.getColor(this, R.attr.colorSurface, 0)
 
   protected open val navigationBarDividerColor: Int
-    get() =
-      MaterialColors.getColor(
-        this,
-        com.google.android.material.R.attr.colorOutlineVariant,
-        0,
-      )
+    get() = MaterialColors.getColor(this, R.attr.colorOutlineVariant, 0)
 
   protected val app: App
     get() = App.instance

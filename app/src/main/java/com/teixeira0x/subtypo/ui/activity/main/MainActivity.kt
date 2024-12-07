@@ -49,8 +49,9 @@ class MainActivity : BaseActivity() {
     get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
 
   override fun bindView(): View {
-    _binding = ActivityMainBinding.inflate(layoutInflater)
-    return binding.root
+    return ActivityMainBinding.inflate(layoutInflater)
+      .also { _binding = it }
+      .root
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

@@ -27,7 +27,7 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activities.project.ProjectActivity"
+      android:name=".ui.activity.project.ProjectActivity"
       android:configChanges="screenSize"
       android:exported="false" />
     <activity

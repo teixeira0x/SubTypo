@@ -12,6 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.FragmentProjectsBinding
 import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToProjectActivity
 import com.teixeira0x.subtypo.ui.activity.main.adapter.ProjectListAdapter
 import com.teixeira0x.subtypo.ui.activity.main.fragment.sheet.ProjectEditorSheetFragment
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel
@@ -32,10 +33,7 @@ class ProjectsFragment : Fragment() {
   private val projectsAdapter by lazy {
     ProjectListAdapter(
       onProjectClick = { _, project ->
-        //  startActivity(
-        //    Intent(requireContext(), ProjectActivity::class.java)
-        //     .putExtra(BaseProjectActivity.KEY_PROJECT, project)
-        // )
+        navigateToProjectActivity(requireContext(), project.id)
       }
     ) { view, project ->
       when (view.id) {
@@ -44,7 +42,7 @@ class ProjectsFragment : Fragment() {
             .show(childFragmentManager, null)
         }
         R.id.delete_option -> deleteProject(project)
-        else -> {}
+      // else -> {}
       }
     }
   }

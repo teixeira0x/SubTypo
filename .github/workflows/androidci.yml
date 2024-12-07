@@ -11,6 +11,12 @@ on:
       - '**.md'
   workflow_dispatch:
 
+env:
+  # Signing info
+  SIGNING_KEY_BASE64: ${{ secrets.SIGNING_KEY_BASE64 }}
+  SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+  SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+
 jobs:
   build:
     name: Build APKs

@@ -68,14 +68,19 @@ android {
       )
     }
   }
+  
+  kapt {
+    correctErrorTypes = true
+    arguments {
+      arg("room.schemaLocation", "$projectDir/schemas")
+    }
+  }
 
   buildFeatures {
     viewBinding = true
     buildConfig = true
   }
 }
-
-kapt { correctErrorTypes = true }
 
 dependencies {
   coreLibraryDesugaring(libs.android.desugar)

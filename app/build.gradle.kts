@@ -48,7 +48,7 @@ android {
             ?: throw GradleException("SIGNING_KEY_BASE64 not set")
 
         val signingKeyFile =
-          file("$buildDir/signing-key.jks").apply {
+          file("./signing-key.jks").apply {
             writeBytes(Base64.getDecoder().decode(encodedKey))
           }
 

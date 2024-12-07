@@ -14,6 +14,7 @@
  */
 
 import com.teixeira0x.subtypo.build.BuildConfig
+import java.util.Base64
 
 plugins {
   id("com.android.application")
@@ -40,40 +41,46 @@ android {
   }
 
   signingConfigs {
-    create("general") {
-      storeFile = file("test.keystore")
-      keyAlias = "test"
-      keyPassword = "teixeira0x"
-      storePassword = "teixeira0x"
+    if (System.getenv("SIGNING_KEY_BASE64") != null) {
+      create("release") {
+        val encodedKey =
+          System.getenv("SIGNING_KEY_BASE64")
+            ?: throw GradleException("SIGNING_KEY_BASE64 not set")
+
+        val signingKeyFile =
+          file("$buildDir/signing-key.jks").apply {
+            writeBytes(Base64.getDecoder().decode(encodedKey))
+          }
+
+        storeFile = signingKeyFile
+        keyAlias =
+          System.getenv("SIGNING_KEY_ALIAS")
+            ?: throw GradleException("KEY_ALIAS not set")
+        keyPassword =
+          System.getenv("SIGNING_KEY_PASSWORD")
+            ?: throw GradleException("KEY_PASSWORD not set")
+      }
+    }
+  }
+
+  buildTypes {
+    debug { isDebuggable = true }
+
+    release {
+      signingConfig = signingConfigs.findByName("release")
+      isMinifyEnabled = true
+      proguardFiles(
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro",
+      )
     }
   }
 
   compileOptions { isCoreLibraryDesugaringEnabled = true }
 
-  buildTypes {
-    release {
-      isMinifyEnabled = false
-      signingConfig = signingConfigs.getByName("general")
-      proguardFiles(
-        getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro",
-      )
-    }
-    debug {
-      isMinifyEnabled = false
-      signingConfig = signingConfigs.getByName("general")
-      proguardFiles(
-        getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro",
-      )
-    }
-  }
-  
   kapt {
     correctErrorTypes = true
-    arguments {
-      arg("room.schemaLocation", "$projectDir/schemas")
-    }
+    arguments { arg("room.schemaLocation", "$projectDir/schemas") }
   }
 
   buildFeatures {

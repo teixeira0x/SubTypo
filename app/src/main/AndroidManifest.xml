@@ -31,7 +31,7 @@
       android:configChanges="screenSize"
       android:exported="false" />
     <activity
-      android:name=".activities.CrashActivity"
+      android:name=".ui.activity.crash.CrashActivity"
       android:exported="false" />
 
   </application>

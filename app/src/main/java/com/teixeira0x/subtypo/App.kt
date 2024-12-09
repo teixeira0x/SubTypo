@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.blankj.utilcode.util.ThrowableUtils
 import com.google.android.material.color.DynamicColors
-import com.teixeira0x.subtypo.activities.CrashActivity
 import com.teixeira0x.subtypo.prefs.aparenceMaterialYou
 import com.teixeira0x.subtypo.prefs.aparenceUIMode
+import com.teixeira0x.subtypo.ui.activity.crash.CrashActivity
 import dagger.hilt.android.HiltAndroidApp
 import kotlin.system.exitProcess
 
@@ -62,7 +62,7 @@ class App : Application() {
     startActivity(
       Intent(this, CrashActivity::class.java).apply {
         putExtra(
-          CrashActivity.KEY_EXTRA_ERROR,
+          CrashActivity.KEY_EXTRA_CRASH_ERROR,
           ThrowableUtils.getFullStackTrace(throwable),
         )
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

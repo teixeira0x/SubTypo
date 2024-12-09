@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.activities
+package com.teixeira0x.subtypo.ui.activity.crash
 
 import android.icu.util.Calendar
 import android.os.Build
@@ -22,20 +22,18 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import com.blankj.utilcode.util.ClipboardUtils
 import com.blankj.utilcode.util.DeviceUtils
+import com.google.android.material.R.attr
+import com.google.android.material.color.MaterialColors
 import com.teixeira0x.subtypo.App
 import com.teixeira0x.subtypo.BuildConfig
 import com.teixeira0x.subtypo.databinding.ActivityCrashBinding
+import com.teixeira0x.subtypo.ui.activity.BaseActivity
 import java.util.Date
 
-/**
- * Activity to handle application crash.
- *
- * @author Felipe Teixeira
- */
 class CrashActivity : BaseActivity() {
 
   companion object {
-    const val KEY_EXTRA_ERROR = "key_extra_error"
+    const val KEY_EXTRA_CRASH_ERROR = "key_extra_error"
   }
 
   private var _binding: ActivityCrashBinding? = null
@@ -65,13 +63,22 @@ class CrashActivity : BaseActivity() {
     get() =
       StringBuilder("Version: ")
         .append(BuildConfig.VERSION_NAME)
-        .append("\n")
-        .append("Build: ")
+        .append(". ")
+        .append("Build type: ")
         .append(BuildConfig.BUILD_TYPE)
         .toString()
 
   private val date: Date
     get() = Calendar.getInstance().time
+
+  override val statusBarColor: Int
+    get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
+
+  override val navigationBarColor: Int
+    get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
+
+  override val navigationBarDividerColor: Int
+    get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
 
   override fun bindView(): View {
     _binding = ActivityCrashBinding.inflate(layoutInflater)
@@ -90,21 +97,24 @@ class CrashActivity : BaseActivity() {
       }
     )
 
-    binding.log.text =
-      StringBuilder()
-        .append("$softwareInfo\n")
-        .append("$appInfo\n\n")
-        .append("$date\n\n")
-        .append(intent.getStringExtra(KEY_EXTRA_ERROR))
-        .toString()
+    binding.apply {
+      tvError.setText(
+        StringBuilder()
+          .append("$appInfo\n")
+          .append("$softwareInfo\n")
+          .append("$date\n\n")
+          .append(intent.getStringExtra(KEY_EXTRA_CRASH_ERROR))
+          .toString()
+      )
 
-    binding.copyAndReportIssue.setOnClickListener {
-      ClipboardUtils.copyText(binding.log.text.toString())
-      app.openUrl(App.APP_REPO_OPEN_ISSUE)
+      btnCopyAndReport.setOnClickListener {
+        ClipboardUtils.copyText(tvError.text.toString())
+        app.openUrl(App.APP_REPO_OPEN_ISSUE)
+      }
+      btnCopy.setOnClickListener {
+        ClipboardUtils.copyText(tvError.text.toString())
+      }
+      btnCloseApp.setOnClickListener { finishAffinity() }
     }
-    binding.copy.setOnClickListener {
-      ClipboardUtils.copyText(binding.log.text.toString())
-    }
-    binding.closeApp.setOnClickListener { finishAffinity() }
   }
 }

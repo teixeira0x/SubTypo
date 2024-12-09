@@ -38,7 +38,7 @@
   </FrameLayout>
 
   <FrameLayout
-    android:id="@+id/controller_container"
+    android:id="@+id/player_controller_container"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     app:layout_constraintStart_toStartOf="@id/player_container"

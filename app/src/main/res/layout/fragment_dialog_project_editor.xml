@@ -59,7 +59,7 @@
         android:alpha="0.5"
         android:layout_centerHorizontal="true"
         android:textSize="12sp"
-        android:layout_alignBottom="@id/video_icon"
+        android:layout_alignBottom="@id/video_thumbnail"
         android:text="@string/proj_click_choose_video" />
 
     </RelativeLayout>

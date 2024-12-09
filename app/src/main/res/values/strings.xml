@@ -63,6 +63,8 @@
   <string name="proj_current_video_position">Current video position: %1$s</string>
   <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>
 
+  <string name="proj_error_unable_to_load">Unable to load this project..</string>
+
   <string name="proj_subtitle_add">Add Subtitle</string>
   <string name="proj_subtitle_edit">Edit Subtitle</string>
   <string name="proj_subtitle_list">Subtitles</string>

@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.R
 import com.google.android.material.color.MaterialColors
 import com.teixeira0x.subtypo.App
+import com.teixeira0x.subtypo.ui.fragment.dialog.ProgressDialogFragment
 
 /**
  * Base activity for all application activities.
@@ -29,6 +30,8 @@ import com.teixeira0x.subtypo.App
  * @author Felipe Teixeira
  */
 abstract class BaseActivity : AppCompatActivity() {
+
+  private var progressDialog: ProgressDialogFragment? = null
 
   protected open val statusBarColor: Int
     get() = MaterialColors.getColor(this, R.attr.colorSurface, 0)
@@ -55,5 +58,19 @@ abstract class BaseActivity : AppCompatActivity() {
     }
     super.onCreate(savedInstanceState)
     setContentView(bindView())
+  }
+
+  protected fun showProgressDialog(message: String? = null) {
+    ProgressDialogFragment.newInstance(message)
+      .also {
+        dismissProgressDialog() // Dismiss previous dialog
+        progressDialog = it
+      }
+      .show(supportFragmentManager, null)
+  }
+
+  protected fun dismissProgressDialog() {
+    progressDialog?.also { it.dismiss() }
+    progressDialog = null
   }
 }

@@ -91,7 +91,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
   private fun updateFields() {
     if (isExistingProject) {
       viewModel.getProject(projectId) { project ->
-        binding.videoIcon.setImageBitmap(
+        binding.videoThumbnail.setImageBitmap(
           VideoUtils.getVideoThumbnail(project.videoUri)
         )
         binding.videoName.setText(project.videoName)
@@ -122,7 +122,9 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
   private fun onChooseVideo(uri: Uri?) {
     if (uri != null) {
       val videoDocument = DocumentFile.fromSingleUri(requireContext(), uri)
-      binding.videoIcon.setImageBitmap(VideoUtils.getVideoThumbnailFromUri(uri))
+      binding.videoThumbnail.setImageBitmap(
+        VideoUtils.getVideoThumbnailFromUri(uri)
+      )
       binding.videoName.setText(videoDocument?.name)
       this.videoUri = uri
     }

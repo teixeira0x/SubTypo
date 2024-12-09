@@ -13,15 +13,11 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.ext
+package com.teixeira0x.subtypo.utils
 
-import android.content.Context
-import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
-import com.teixeira0x.subtypo.ui.dialog.ProgressDialogBuilder
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 /**
  * Calls [CoroutineScope.cancel] only if a job is active in the scope.
@@ -43,24 +39,4 @@ fun CoroutineScope.cancelIfActive(message: String, cause: Throwable? = null) =
 fun CoroutineScope.cancelIfActive(exception: CancellationException? = null) {
   val job = coroutineContext[Job]
   job?.cancel(exception)
-}
-
-inline fun CoroutineScope.launchWithProgress(
-  uiContext: Context,
-  crossinline configureBuilder: ProgressDialogBuilder.() -> Unit = {},
-  crossinline invokeOnCompletion: (throwable: Throwable?) -> Unit = {},
-  crossinline action: suspend CoroutineScope.() -> Unit,
-): Job {
-  val builder = ProgressDialogBuilder(uiContext)
-  builder.configureBuilder()
-
-  val dialog = builder.show()
-
-  return launch { action() }
-    .also { job ->
-      job.invokeOnCompletion { throwable ->
-        runOnUiThread { dialog.dismiss() }
-        invokeOnCompletion(throwable)
-      }
-    }
 }

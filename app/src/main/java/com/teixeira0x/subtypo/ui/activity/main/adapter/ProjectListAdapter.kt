@@ -8,9 +8,9 @@ import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.teixeira0x.subtypo.adapters.holders.BindingViewHolder
 import com.teixeira0x.subtypo.databinding.LayoutProjectItemBinding
 import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.ui.adapter.holder.BindingViewHolder
 import com.teixeira0x.subtypo.utils.ContextUtils.layoutInflater
 import com.teixeira0x.subtypo.utils.UiUtils
 import com.teixeira0x.subtypo.utils.VideoUtils

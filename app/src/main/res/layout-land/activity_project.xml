@@ -23,17 +23,17 @@
   </com.google.android.material.appbar.AppBarLayout>
 
   <FrameLayout
-    android:id="@+id/video_container"
+    android:id="@+id/player_container"
     android:layout_width="0dp"
     android:layout_height="0dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toStartOf="@id/divider"
-    app:layout_constraintBottom_toTopOf="@id/controller_container"
+    app:layout_constraintBottom_toTopOf="@id/player_controller_container"
     app:layout_constraintTop_toBottomOf="@id/app_bar">
 
     <include
-      android:id="@+id/video_content"
-      layout="@layout/layout_project_video_content" />
+      android:id="@+id/player_content"
+      layout="@layout/layout_player_content" />
 
   </FrameLayout>
 
@@ -41,14 +41,14 @@
     android:id="@+id/controller_container"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="@id/video_container"
-    app:layout_constraintEnd_toEndOf="@id/video_container"
+    app:layout_constraintStart_toStartOf="@id/player_container"
+    app:layout_constraintEnd_toEndOf="@id/player_container"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/video_container">
+    app:layout_constraintTop_toBottomOf="@id/player_container">
 
     <include
-      android:id="@+id/controller_content"
-      layout="@layout/layout_project_video_controller_content" />
+      android:id="@+id/player_controller_content"
+      layout="@layout/layout_player_controller_content" />
 
   </FrameLayout>
 
@@ -57,28 +57,28 @@
     android:layout_width="@dimen/divider_size"
     android:layout_height="0dp"
     android:background="?attr/colorOutlineVariant"
-    app:layout_constraintStart_toEndOf="@id/video_container"
-    app:layout_constraintEnd_toStartOf="@id/paragraphs_container"
+    app:layout_constraintStart_toEndOf="@id/player_container"
+    app:layout_constraintEnd_toStartOf="@id/cues_container"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toBottomOf="@id/app_bar" />
 
   <FrameLayout
-    android:id="@+id/paragraphs_container"
+    android:id="@+id/cues_container"
     android:layout_width="0dp"
     android:layout_height="0dp"
     app:layout_constraintStart_toEndOf="@id/divider"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/bottom_divider"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toBottomOf="@id/app_bar">
 
     <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/paragraphs"
+      android:id="@+id/rv_cues"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:padding="5dp" />
 
     <TextView
-      android:id="@+id/no_paragraphs"
+      android:id="@+id/no_cues"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textSize="14sp"
@@ -87,23 +87,5 @@
 
   </FrameLayout>
 
-  <View
-    android:id="@+id/bottom_divider"
-    android:layout_width="0dp"
-    android:layout_height="@dimen/divider_size"
-    android:background="?attr/colorOutlineVariant"
-    app:layout_constraintStart_toEndOf="@id/divider"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/time_line"
-    app:layout_constraintTop_toBottomOf="@id/paragraphs_container" />
-
-  <com.teixeira0x.subtypo.ui.TimeLineView
-    android:id="@+id/time_line"
-    android:layout_width="0dp"
-    android:layout_height="40dp"
-    app:layout_constraintStart_toEndOf="@id/divider"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/bottom_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

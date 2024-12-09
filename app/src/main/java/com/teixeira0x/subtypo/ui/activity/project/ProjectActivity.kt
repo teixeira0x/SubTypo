@@ -97,7 +97,8 @@ class ProjectActivity : BaseActivity() {
   private fun observeViewModel() {
     viewModel.stateData.observe(this) { state ->
       when (state) {
-        is ProjectState.Loading -> showProgressDialog(R.string.proj_initializing)
+        is ProjectState.Loading ->
+          showProgressDialog(getString(R.string.proj_initializing))
         is ProjectState.Loaded -> {
           updateUI(state.projectData)
           dismissProgressDialog()

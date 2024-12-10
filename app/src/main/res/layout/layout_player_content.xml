@@ -8,11 +8,19 @@
   <com.teixeira0x.subtypo.ui.view.VideoView
     android:id="@+id/video_view"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"/>
 
   <com.teixeira0x.subtypo.ui.view.SubtitleView
     android:id="@+id/subtitle_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintTop_toTopOf="@id/video_view"
+    app:layout_constraintStart_toStartOf="@id/video_view"
+    app:layout_constraintEnd_toEndOf="@id/video_view"
+    app:layout_constraintBottom_toBottomOf="@id/video_view"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

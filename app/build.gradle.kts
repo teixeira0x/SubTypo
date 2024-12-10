@@ -123,6 +123,4 @@ dependencies {
   implementation("com.google.dagger:hilt-android:$hiltVersion")
 
   debugImplementation(libs.common.leakcanary)
-
-  implementation(project(":subtitle"))
 }

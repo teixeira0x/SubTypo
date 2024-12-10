@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "420a8959a26d6ee5537d520652da89e5",
+    "identityHash": "867606ffbf07fe37b7eb5f7ac97170a9",
     "entities": [
       {
         "tableName": "projects",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `videoUri` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `videoUri` TEXT NOT NULL, `cues` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -25,38 +25,6 @@
             "columnName": "videoUri",
             "affinity": "TEXT",
             "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "subtitles",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `projectId` INTEGER NOT NULL, `name` TEXT NOT NULL, `cues` TEXT NOT NULL, FOREIGN KEY(`projectId`) REFERENCES `projects`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "projectId",
-            "columnName": "projectId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
           },
           {
             "fieldPath": "cues",
@@ -71,36 +39,14 @@
             "id"
           ]
         },
-        "indices": [
-          {
-            "name": "index_subtitles_projectId",
-            "unique": false,
-            "columnNames": [
-              "projectId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_subtitles_projectId` ON `${TABLE_NAME}` (`projectId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "projects",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "projectId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '420a8959a26d6ee5537d520652da89e5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '867606ffbf07fe37b7eb5f7ac97170a9')"
     ]
   }
 }

@@ -19,7 +19,6 @@ import com.teixeira0x.subtypo.data.db.SubTypoDatabase
 import com.teixeira0x.subtypo.data.mapper.ProjectDataMapper.toEntity
 import com.teixeira0x.subtypo.data.mapper.ProjectDataMapper.toModel
 import com.teixeira0x.subtypo.domain.model.Project
-import com.teixeira0x.subtypo.domain.model.ProjectData
 import com.teixeira0x.subtypo.domain.repository.project.ProjectDataSource
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -37,10 +36,6 @@ constructor(private val db: SubTypoDatabase) : ProjectDataSource {
 
   override fun getProject(id: Long): Flow<Project?> {
     return projectDao.findById(id).map { it?.toModel() }
-  }
-
-  override fun getProjectData(id: Long): Flow<ProjectData?> {
-    return projectDao.getProjectData(id).map { it?.toModel() }
   }
 
   override suspend fun insertProject(project: Project): Long {

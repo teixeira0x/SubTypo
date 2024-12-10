@@ -20,8 +20,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.teixeira0x.subtypo.R
-import com.teixeira0x.subtypo.domain.model.ProjectData
-import com.teixeira0x.subtypo.domain.usecase.project.GetProjectDataUseCase
+import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.domain.usecase.project.GetProjectUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -29,20 +29,19 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class ProjectViewModel
 @Inject
-constructor(private val getProjectDataUseCase: GetProjectDataUseCase) :
-  ViewModel() {
+constructor(private val getProjectUseCase: GetProjectUseCase) : ViewModel() {
 
   private val _state = MutableLiveData<ProjectState>(ProjectState.Loading)
 
   val stateData: LiveData<ProjectState>
     get() = _state
 
-  fun loadProjectData(id: Long) {
+  fun loadProject(id: Long) {
     viewModelScope.launch {
-      getProjectDataUseCase(id).collect { projectData ->
+      getProjectUseCase(id).collect { project ->
         _state.postValue(
-          if (projectData != null) {
-            ProjectState.Loaded(projectData)
+          if (project != null) {
+            ProjectState.Loaded(project)
           } else ProjectState.Error(R.string.proj_error_unable_to_load)
         )
       }
@@ -52,7 +51,7 @@ constructor(private val getProjectDataUseCase: GetProjectDataUseCase) :
   sealed interface ProjectState {
     object Loading : ProjectState
 
-    class Loaded(val projectData: ProjectData) : ProjectState
+    class Loaded(val project: Project) : ProjectState
 
     class Error(val message: Int) : ProjectState
   }

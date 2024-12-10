@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.domain.usecase.project.GetProjectUseCase
 import com.teixeira0x.subtypo.domain.usecase.project.InsertProjectUseCase
-import com.teixeira0x.subtypo.domain.usecase.project.RemoveProjectUseCase
 import com.teixeira0x.subtypo.domain.usecase.project.UpdateProjectUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -20,7 +20,6 @@ constructor(
   private val getProjectUseCase: GetProjectUseCase,
   private val insertProjectUseCase: InsertProjectUseCase,
   private val updateProjectUseCase: UpdateProjectUseCase,
-  private val removeProjectUseCase: RemoveProjectUseCase,
 ) : ViewModel() {
 
   private val _state =
@@ -29,42 +28,46 @@ constructor(
   val stateData: LiveData<ProjectEditorState>
     get() = _state
 
-  fun getProject(id: Long, onCollect: (Project) -> Unit) {
+  fun loadProject(id: Long) {
     viewModelScope.launch {
       getProjectUseCase(id).collect { project ->
-        if (project != null) {
-          _state.postValue(ProjectEditorState.Loaded)
-          onCollect(project)
-        }
+        _state.postValue(ProjectEditorState.Loaded(project))
       }
     }
   }
 
-  fun createProject(name: String, videoUri: String, onInsert: (Long) -> Unit) {
+  fun createProject(name: String, videoUri: String) {
     viewModelScope.launch {
       val id =
-        insertProjectUseCase(Project(id = 0, name = name, videoUri = videoUri))
+        insertProjectUseCase(
+          Project(id = 0, name = name, videoUri = videoUri, cues = emptyList())
+        )
 
-      onInsert(id)
+      _state.value = ProjectEditorState.Created(id, true)
     }
   }
 
-  fun updateProject(
-    id: Long,
-    name: String,
-    videoUri: String,
-    onUpdate: () -> Unit,
-  ) {
+  fun updateProject(id: Long, name: String, videoUri: String) {
     viewModelScope.launch {
-      updateProjectUseCase(Project(id = id, name = name, videoUri = videoUri))
+      val project = getProjectUseCase(id).first()
 
-      onUpdate()
+      updateProjectUseCase(project!!.copy(name = name, videoUri = videoUri))
+      _state.value = ProjectEditorState.Created(id, false)
     }
+  }
+
+  fun onCreating() {
+    _state.postValue(ProjectEditorState.Creating)
   }
 
   sealed interface ProjectEditorState {
     object Loading : ProjectEditorState
 
-    object Loaded : ProjectEditorState
+    data class Loaded(val project: Project?) : ProjectEditorState
+
+    object Creating : ProjectEditorState
+
+    data class Created(val projectId: Long, val openProject: Boolean) :
+      ProjectEditorState
   }
 }

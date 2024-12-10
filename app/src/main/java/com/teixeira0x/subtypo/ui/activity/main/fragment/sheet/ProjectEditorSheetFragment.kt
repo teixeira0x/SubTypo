@@ -6,15 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import com.blankj.utilcode.util.UriUtils
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.FragmentDialogProjectEditorBinding
+import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToProjectActivity
 import com.teixeira0x.subtypo.ui.activity.main.handler.PermissionsHandler
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectEditorViewModel
+import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectEditorViewModel.ProjectEditorState
 import com.teixeira0x.subtypo.ui.fragment.sheet.BaseBottomSheetFragment
 import com.teixeira0x.subtypo.utils.Constants
 import com.teixeira0x.subtypo.utils.ToastUtils
@@ -23,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 /**
- * BottomSheet to edit or create a new {@link Project}.
+ * BottomSheet to edit or create a new Project.
  *
  * @author Felipe Teixeira
  */
@@ -56,7 +57,6 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
       this::onChooseVideo,
     )
 
-  private var isExistingProject = false
   private var projectId: Long = 0
   private var videoUri: Uri? = null
 
@@ -64,7 +64,6 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
     super.onCreate(savedInstanceState)
 
     projectId = arguments?.getLong(Constants.KEY_PROJECT_ID_ARG) ?: 0
-    isExistingProject = projectId > 0
   }
 
   override fun onCreateView(
@@ -78,35 +77,6 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    configureListeners()
-    updateFields()
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    videoPicker.unregister()
-    _binding = null
-  }
-
-  private fun updateFields() {
-    if (isExistingProject) {
-      viewModel.getProject(projectId) { project ->
-        binding.videoThumbnail.setImageBitmap(
-          VideoUtils.getVideoThumbnail(project.videoUri)
-        )
-        binding.videoName.setText(project.videoName)
-        binding.tieName.setText(project.name)
-        binding.title.setText(R.string.proj_edit)
-
-        videoUri = Uri.fromFile(File(project.videoUri))
-      }
-    } else {
-      binding.title.setText(R.string.proj_new)
-      binding.tieName.setText(R.string.proj_new)
-    }
-  }
-
-  private fun configureListeners() {
     binding.chooseVideo.setOnClickListener {
       if (PermissionsHandler.isPermissionsGranted(requireContext())) {
         videoPicker.launch(arrayOf("video/*"))
@@ -116,62 +86,104 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
     }
 
     binding.dialogButtons.cancel.setOnClickListener { dismiss() }
-    binding.dialogButtons.save.setOnClickListener { createProject() }
+    binding.dialogButtons.save.setOnClickListener {
+      if (isValidParams()) {
+        viewModel.onCreating()
+      }
+    }
+    viewModel.loadProject(projectId)
+    observeViewModel()
   }
 
-  private fun onChooseVideo(uri: Uri?) {
-    if (uri != null) {
-      val videoDocument = DocumentFile.fromSingleUri(requireContext(), uri)
-      binding.videoThumbnail.setImageBitmap(
-        VideoUtils.getVideoThumbnailFromUri(uri)
-      )
-      binding.videoName.setText(videoDocument?.name)
-      this.videoUri = uri
-    }
+  override fun onDestroyView() {
+    super.onDestroyView()
+    videoPicker.unregister()
+    _binding = null
   }
 
-  private fun createProject() {
-    if (
-      isExistingProject &&
-        viewModel.stateData.value ==
-          ProjectEditorViewModel.ProjectEditorState.Loading
-    ) {
-      return
-    }
-
-    var uri = videoUri
-    val name = binding.tieName.text.toString().trim()
-
-    when {
-      videoUri == null -> ToastUtils.showShort(R.string.error_choose_video)
-      name.isEmpty() -> ToastUtils.showShort(R.string.error_enter_name)
-
-      else -> {
-        val videoUri = UriUtils.uri2File(uri).absolutePath
-        isProjectCreating(true)
-        if (isExistingProject) {
-          viewModel.updateProject(
-            id = projectId,
-            name = name,
-            videoUri = videoUri,
-          ) {
-            dismiss()
+  private fun observeViewModel() {
+    viewModel.stateData.observe(this) { state ->
+      when (state) {
+        is ProjectEditorState.Loading -> onLoadingChange(true)
+        is ProjectEditorState.Loaded -> {
+          onLoadingChange(false)
+          updateUI(state.project)
+        }
+        is ProjectEditorState.Creating -> createProject()
+        is ProjectEditorState.Created -> {
+          if (state.openProject) {
+            navigateToProjectActivity(requireContext(), state.projectId)
           }
-        } else {
-          viewModel.createProject(name = name, videoUri = videoUri) { id ->
-            navigateToProjectActivity(requireContext(), id)
-            dismiss()
-          }
+          dismiss()
         }
       }
     }
   }
 
-  private fun isProjectCreating(isCreating: Boolean) {
-    binding.progressIndicator.isVisible = isCreating
-    binding.tieName.isEnabled = !isCreating
-    binding.dialogButtons.cancel.isEnabled = !isCreating
-    binding.dialogButtons.save.isEnabled = !isCreating
-    setCancelable(!isCreating)
+  private fun updateUI(project: Project?) {
+    if (project != null) {
+      binding.videoThumbnail.setImageBitmap(
+        VideoUtils.getVideoThumbnail(project.videoUri)
+      )
+      binding.videoName.setText(project.videoName)
+      binding.tieName.setText(project.name)
+      binding.title.setText(R.string.proj_edit)
+
+      videoUri = Uri.fromFile(File(project.videoUri))
+    } else {
+      binding.title.setText(R.string.proj_new)
+      binding.tieName.setText(R.string.proj_new)
+    }
+  }
+
+  private fun createProject() {
+    onLoadingChange(true)
+
+    if (projectId > 0) {
+      viewModel.updateProject(
+        id = projectId,
+        name = binding.tieName.text.toString().trim(),
+        videoUri = UriUtils.uri2File(videoUri!!).absolutePath,
+      )
+    } else {
+      viewModel.createProject(
+        name = binding.tieName.text.toString().trim(),
+        videoUri = UriUtils.uri2File(videoUri!!).absolutePath,
+      )
+    }
+  }
+
+  private fun onLoadingChange(isLoading: Boolean) {
+    binding.chooseVideo.isClickable = !isLoading
+    binding.tieName.isEnabled = !isLoading
+    binding.dialogButtons.cancel.isEnabled = !isLoading
+    binding.dialogButtons.save.isEnabled = !isLoading
+    setCancelable(!isLoading)
+  }
+
+  private fun onChooseVideo(uri: Uri?) {
+    if (uri != null) {
+      val videoDocument = DocumentFile.fromSingleUri(requireContext(), uri)
+      binding.videoThumbnail.setImageBitmap(VideoUtils.getVideoThumbnail(uri))
+      binding.videoName.setText(videoDocument?.name)
+      this.videoUri = uri
+    }
+  }
+
+  private fun isValidParams(): Boolean {
+    val name = binding.tieName.text.toString().trim()
+
+    return when {
+      videoUri == null -> {
+        ToastUtils.showShort(R.string.error_choose_video)
+        false
+      }
+      name.isEmpty() -> {
+        ToastUtils.showShort(R.string.error_enter_name)
+        false
+      }
+
+      else -> true
+    }
   }
 }

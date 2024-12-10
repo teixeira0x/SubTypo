@@ -21,7 +21,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import com.teixeira0x.subtypo.domain.model.Cue
-import com.teixeira0x.subtypo.domain.model.Subtitle
 
 class SubtitleView
 @JvmOverloads
@@ -53,10 +52,11 @@ constructor(
     }
   }
 
-  fun setCues(subtitle: Subtitle, videoPosition: Long) {
+  fun setCues(cues: List<Cue>, videoPosition: Long) {
     this.cues =
-      subtitle.cues.filter {
-        it.startTime >= videoPosition && it.endTime <= videoPosition
+      cues.filter {
+        it.startTime <= videoPosition && it.endTime >= videoPosition
       }
+    invalidate()
   }
 }

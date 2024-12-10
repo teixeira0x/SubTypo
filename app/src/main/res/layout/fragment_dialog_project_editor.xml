@@ -6,13 +6,6 @@
   android:padding="@dimen/dialog_padding"
   android:orientation="vertical">
 
-  <com.google.android.material.progressindicator.LinearProgressIndicator
-    android:id="@+id/progress_indicator"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:visibility="invisible"
-    android:indeterminate="true" />
-
   <TextView
     android:id="@+id/title"
     android:layout_width="match_parent"

@@ -18,9 +18,7 @@ package com.teixeira0x.subtypo.data.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
-import com.teixeira0x.subtypo.data.db.entity.ProjectDataEntity
 import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -30,10 +28,6 @@ interface ProjectDao {
 
   @Query("SELECT * FROM projects WHERE id = :id")
   fun findById(id: Long): Flow<ProjectEntity?>
-
-  @Transaction
-  @Query("SELECT * FROM projects WHERE id = :id")
-  fun getProjectData(id: Long): Flow<ProjectDataEntity?>
 
   @Insert suspend fun insert(project: ProjectEntity): Long
 

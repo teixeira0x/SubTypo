@@ -15,36 +15,16 @@
 
 package com.teixeira0x.subtypo.data.mapper
 
-import com.teixeira0x.subtypo.data.db.entity.ProjectDataEntity
 import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
-import com.teixeira0x.subtypo.data.mapper.SubtitleDataMapper.toEntity
-import com.teixeira0x.subtypo.data.mapper.SubtitleDataMapper.toModel
 import com.teixeira0x.subtypo.domain.model.Project
-import com.teixeira0x.subtypo.domain.model.ProjectData
 
 object ProjectDataMapper {
 
   fun ProjectEntity.toModel(): Project {
-    return Project(id = id, name = name, videoUri = videoUri)
-  }
-
-  fun ProjectDataEntity.toModel(): ProjectData {
-    return ProjectData(
-      id = project.id,
-      name = project.name,
-      videoUri = project.videoUri,
-      subtitles = subtitles.map { it.toModel() },
-    )
+    return Project(id = id, name = name, videoUri = videoUri, cues = cues)
   }
 
   fun Project.toEntity(): ProjectEntity {
-    return ProjectEntity(id = id, name = name, videoUri = videoUri)
-  }
-
-  fun ProjectData.toEntity(): ProjectDataEntity {
-    return ProjectDataEntity(
-      project = ProjectEntity(id = id, name = name, videoUri = videoUri),
-      subtitles = subtitles.map { it.toEntity() },
-    )
+    return ProjectEntity(id = id, name = name, videoUri = videoUri, cues = cues)
   }
 }

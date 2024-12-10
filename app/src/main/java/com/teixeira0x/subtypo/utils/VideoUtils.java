@@ -3,41 +3,35 @@ package com.teixeira0x.subtypo.utils;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import androidx.annotation.Nullable;
 import com.teixeira0x.subtypo.App;
+import java.io.File;
+import java.io.IOException;
 
 public class VideoUtils {
 
-  @Nullable
-  public static Bitmap getVideoThumbnail(String videoPath) {
-    Bitmap thumbnail = null;
-    MediaMetadataRetriever retriever = null;
-
-    try {
-      retriever = new MediaMetadataRetriever();
-      retriever.setDataSource(videoPath);
-      thumbnail = retriever.getFrameAtTime();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return thumbnail;
+  public static Bitmap getVideoThumbnail(String path) {
+    return getVideoThumbnail(Uri.fromFile(new File(path)));
   }
 
-  public static Bitmap getVideoThumbnailFromUri(Uri uri) {
+  public static Bitmap getVideoThumbnail(Uri uri) {
     Bitmap thumbnail = null;
-    MediaMetadataRetriever retriever = null;
+    var retriever = new MediaMetadataRetriever();
 
     try {
-      retriever = new MediaMetadataRetriever();
       retriever.setDataSource(App.getInstance(), uri);
       thumbnail = retriever.getFrameAtTime();
     } catch (Exception e) {
       e.printStackTrace();
+    } finally {
+      try {
+        retriever.release();
+      } catch (IOException ioe) {
+        // Nothing
+      }
     }
 
     return thumbnail;
   }
-  
+
   private VideoUtils() {}
 }

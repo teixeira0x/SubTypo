@@ -16,7 +16,6 @@
 package com.teixeira0x.subtypo.data.repository.project
 
 import com.teixeira0x.subtypo.domain.model.Project
-import com.teixeira0x.subtypo.domain.model.ProjectData
 import com.teixeira0x.subtypo.domain.repository.project.ProjectRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -32,10 +31,6 @@ constructor(private val localDataSource: LocalProjectDataSource) :
 
   override fun getProject(id: Long): Flow<Project?> {
     return localDataSource.getProject(id)
-  }
-
-  override fun getProjectData(id: Long): Flow<ProjectData?> {
-    return localDataSource.getProjectData(id)
   }
 
   override suspend fun insertProject(project: Project): Long {

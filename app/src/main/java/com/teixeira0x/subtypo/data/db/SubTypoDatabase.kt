@@ -20,17 +20,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.teixeira0x.subtypo.data.db.converter.CueConverter
 import com.teixeira0x.subtypo.data.db.dao.ProjectDao
-import com.teixeira0x.subtypo.data.db.dao.SubtitleDao
 import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
-import com.teixeira0x.subtypo.data.db.entity.SubtitleEntity
 
-@Database(
-  entities = [ProjectEntity::class, SubtitleEntity::class],
-  version = 1,
-  exportSchema = true,
-)
+@Database(entities = [ProjectEntity::class], version = 1, exportSchema = true)
 @TypeConverters(CueConverter::class)
 abstract class SubTypoDatabase : RoomDatabase() {
   abstract val projectDao: ProjectDao
-  abstract val subtitleDao: SubtitleDao
 }

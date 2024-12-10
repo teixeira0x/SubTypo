@@ -17,10 +17,12 @@ package com.teixeira0x.subtypo.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.teixeira0x.subtypo.domain.model.Cue
 
 @Entity(tableName = "projects")
 data class ProjectEntity(
   @PrimaryKey(autoGenerate = true) val id: Long,
   val name: String,
   val videoUri: String,
+  val cues: List<Cue>,
 )

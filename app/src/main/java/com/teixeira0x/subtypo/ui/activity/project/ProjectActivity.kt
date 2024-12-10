@@ -20,13 +20,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.R.attr
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.ActivityProjectBinding
-import com.teixeira0x.subtypo.domain.model.ProjectData
+import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.activity.BaseActivity
+import com.teixeira0x.subtypo.ui.activity.project.adapter.CueListAdapter
 import com.teixeira0x.subtypo.ui.activity.project.player.PlayerControlLayoutHandler
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel.ProjectState
@@ -36,6 +38,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProjectActivity : BaseActivity() {
+
+  private val cueListAdapter by lazy { CueListAdapter() }
 
   private val viewModel by viewModels<ProjectViewModel>()
 
@@ -68,9 +72,11 @@ class ProjectActivity : BaseActivity() {
         viewModels<VideoViewModel>().value,
       )
     )
+    binding.rvCues.layoutManager = LinearLayoutManager(this)
+    binding.rvCues.adapter = cueListAdapter
 
     val projectId = intent?.extras?.getLong(Constants.KEY_PROJECT_ID_ARG)
-    viewModel.loadProjectData(projectId ?: 0)
+    viewModel.loadProject(projectId ?: 0)
     observeViewModel()
   }
 
@@ -100,7 +106,7 @@ class ProjectActivity : BaseActivity() {
         is ProjectState.Loading ->
           showProgressDialog(getString(R.string.proj_initializing))
         is ProjectState.Loaded -> {
-          updateUI(state.projectData)
+          updateUI(state.project)
           dismissProgressDialog()
         }
         is ProjectState.Error -> {
@@ -111,12 +117,10 @@ class ProjectActivity : BaseActivity() {
     }
   }
 
-  private fun updateUI(projectData: ProjectData) {
-    supportActionBar?.apply {
-      title = projectData.name
-      subtitle = projectData.subtitles.firstOrNull()?.name
-    }
-    binding.playerContent.videoView.setUri(projectData.videoUri)
+  private fun updateUI(project: Project) {
+    supportActionBar?.title = project.name
+    binding.playerContent.videoView.setUri(project.videoUri)
+    cueListAdapter.submitList(project.cues)
   }
 
   private fun handleError(message: Int, isCritical: Boolean = false) {

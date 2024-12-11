@@ -3,6 +3,7 @@
   <string name="app_name" translatable="false">SubTypo</string>
   <string name="close_app">Close app</string>
   <string name="about">About</string>
+  <string name="about_libs">Libraries</string>
   <string name="settings">Settings</string>
   <string name="delete">Delete</string>
   <string name="rename">Rename</string>
@@ -48,6 +49,8 @@
   <string name="pref_about_github" translatable="false">GitHub</string>
   <string name="pref_about_github_summary">This app is open source!</string>
   <string name="pref_about_version">Version</string>
+  <string name="pref_about_libraries">Libraries</string>
+  <string name="pref_about_libraries_summary">Libraries used in the application.</string>
 
   <!-- Project -->
   <string name="projects">Projects</string>

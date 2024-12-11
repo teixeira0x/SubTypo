@@ -17,6 +17,9 @@ package com.teixeira0x.subtypo.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import com.mikepenz.aboutlibraries.LibsBuilder.Companion.BUNDLE_TITLE
+import com.teixeira0x.subtypo.R
+import com.teixeira0x.subtypo.ui.activity.about.ThemedLibsActivity
 import com.teixeira0x.subtypo.ui.activity.project.ProjectActivity
 import com.teixeira0x.subtypo.utils.Constants
 
@@ -29,10 +32,19 @@ object Navigator {
    * @param projectId The ID of the project to open.
    */
   fun navigateToProjectActivity(context: Context, projectId: Long) {
-    val intent =
+    context.startActivity(
       Intent(context, ProjectActivity::class.java).apply {
         putExtra(Constants.KEY_PROJECT_ID_ARG, projectId)
       }
-    context.startActivity(intent)
+    )
+  }
+
+  /** Navigate to Libraries activity. */
+  fun navigateToLibsActivity(context: Context) {
+    context.startActivity(
+      Intent(context, ThemedLibsActivity::class.java).apply {
+        putExtra(BUNDLE_TITLE, context.getString(R.string.about_libs))
+      }
+    )
   }
 }

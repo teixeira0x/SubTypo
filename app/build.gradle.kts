@@ -23,6 +23,7 @@ plugins {
   id("kotlin-kapt")
 
   id("com.google.dagger.hilt.android")
+  id("com.mikepenz.aboutlibraries.plugin")
 }
 
 android {
@@ -41,12 +42,9 @@ android {
   }
 
   signingConfigs {
-    if (System.getenv("SIGNING_KEY_BASE64") != null) {
+    val encodedKey = System.getenv("SIGNING_KEY_BASE64")
+    if (encodedKey != null) {
       create("release") {
-        val encodedKey =
-          System.getenv("SIGNING_KEY_BASE64")
-            ?: throw GradleException("SIGNING_KEY_BASE64 not set")
-
         val signingKeyFile =
           file("./signing-key.jks").apply {
             writeBytes(Base64.getDecoder().decode(encodedKey))
@@ -91,6 +89,11 @@ android {
     dataBinding = true
     buildConfig = true
   }
+
+  aboutLibraries {
+    // Remove the "generated" timestamp to allow for reproducible builds
+    excludeFields = arrayOf("generated")
+  }
 }
 
 dependencies {
@@ -121,6 +124,9 @@ dependencies {
   val hiltVersion = "2.50"
   kapt("com.google.dagger:hilt-compiler:$hiltVersion")
   implementation("com.google.dagger:hilt-android:$hiltVersion")
+
+  implementation("com.mikepenz:aboutlibraries:11.2.3")
+  implementation("com.mikepenz:aboutlibraries-core:11.2.3")
 
   debugImplementation(libs.common.leakcanary)
 }

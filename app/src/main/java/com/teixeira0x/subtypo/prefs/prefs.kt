@@ -20,6 +20,7 @@ import com.teixeira0x.subtypo.App
 
 const val PREF_CONFIGURE_GENERAL_KEY = "pref_configure_general_key"
 const val PREF_ABOUT_GITHUB_KEY = "pref_about_github_key"
+const val PREF_ABOUT_LIBRARIES_KEY = "pref_about_libraries_key"
 const val PREF_ABOUT_VERSION_KEY = "pref_about_version_key"
 
 const val PREF_APARENCE_UI_MODE_KEY = "pref_aparence_ui_mode_key"

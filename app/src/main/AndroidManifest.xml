@@ -34,5 +34,9 @@
       android:name=".ui.activity.crash.CrashActivity"
       android:exported="false" />
 
+    <activity
+      android:name=".ui.activity.about.ThemedLibsActivity"
+      android:exported="false" />
+
   </application>
 </manifest>

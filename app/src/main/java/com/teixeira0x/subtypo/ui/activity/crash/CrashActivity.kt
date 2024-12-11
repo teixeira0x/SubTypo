@@ -81,8 +81,9 @@ class CrashActivity : BaseActivity() {
     get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
 
   override fun bindView(): View {
-    _binding = ActivityCrashBinding.inflate(layoutInflater)
-    return binding.root
+    return ActivityCrashBinding.inflate(layoutInflater)
+      .also { _binding = it }
+      .root
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,5 +117,10 @@ class CrashActivity : BaseActivity() {
       }
       btnCloseApp.setOnClickListener { finishAffinity() }
     }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    _binding = null
   }
 }

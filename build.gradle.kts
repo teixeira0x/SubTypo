@@ -27,6 +27,7 @@ plugins {
   alias(libs.plugins.android.library) apply false
   alias(libs.plugins.kotlin.android) apply false
   id("com.google.dagger.hilt.android") version "2.50" apply false
+  id("com.mikepenz.aboutlibraries.plugin") version "11.2.3" apply false
 }
 
 fun Project.configureBaseExtension() {

@@ -63,7 +63,6 @@ class MainActivity : BaseActivity() {
     mainViewModel.currentFragmentIndexData.observe(this) {
       onFragmentChanged(it)
     }
-
     configureListeners()
   }
 

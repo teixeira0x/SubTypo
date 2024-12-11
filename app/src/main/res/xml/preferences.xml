@@ -26,6 +26,12 @@
       app:summary="@string/pref_about_github_summary" />
 
     <Preference
+      app:icon="@drawable/ic_library"
+      app:key="pref_about_libraries_key"
+      app:title="@string/pref_about_libraries"
+      app:summary="@string/pref_about_libraries_summary" />
+
+    <Preference
       app:icon="@drawable/ic_information_outline"
       app:key="pref_about_version_key"
       app:title="@string/pref_about_version" />

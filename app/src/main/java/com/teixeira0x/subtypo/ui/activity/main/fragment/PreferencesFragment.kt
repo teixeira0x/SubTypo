@@ -10,8 +10,10 @@ import com.teixeira0x.subtypo.App
 import com.teixeira0x.subtypo.BuildConfig
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.prefs.PREF_ABOUT_GITHUB_KEY
+import com.teixeira0x.subtypo.prefs.PREF_ABOUT_LIBRARIES_KEY
 import com.teixeira0x.subtypo.prefs.PREF_ABOUT_VERSION_KEY
 import com.teixeira0x.subtypo.prefs.PREF_CONFIGURE_GENERAL_KEY
+import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToLibsActivity
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.MainViewModel
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.PreferencesViewModel
 
@@ -80,6 +82,12 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         findPreference<Preference>(PREF_ABOUT_GITHUB_KEY)
           ?.setOnPreferenceClickListener { _ ->
             App.instance.openUrl(App.APP_REPO_URL)
+            true
+          }
+
+        findPreference<Preference>(PREF_ABOUT_LIBRARIES_KEY)
+          ?.setOnPreferenceClickListener { _ ->
+            navigateToLibsActivity(requireContext())
             true
           }
 

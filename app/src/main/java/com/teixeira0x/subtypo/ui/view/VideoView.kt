@@ -44,14 +44,14 @@ constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
   companion object {
-    private const val LANDSCAPE_ASPECT_RATIO = 1.5f
+    private const val HORIZONTAL_ASPECT_RATIO = 1.7777778f
 
     private const val DEFAULT_SEEK_BACK_MS = 5_000L
 
     private const val DEFAULT_SEEK_FOWARD_MS = 5_000L
   }
 
-  private val componentListener = ComponentListener(this)
+  private val componentListener = ComponentListener()
   private val contentFrame = AspectRatioFrameLayout(context)
   private val surfaceView = SurfaceView(context)
   private val _player =
@@ -62,11 +62,9 @@ constructor(
 
   init {
     contentFrame.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT)
+    contentFrame.setAspectRatio(LANDSCAPE_ASPECT_RATIO)
     contentFrame.addView(surfaceView, 0)
     addView(contentFrame)
-
-    layoutParams =
-      ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1)
 
     _player.addListener(componentListener)
     _player.setVideoSurfaceView(surfaceView)
@@ -112,8 +110,7 @@ constructor(
     player.prepare()
   }
 
-  private class ComponentListener(private val videoView: VideoView) :
-    Player.Listener {
+  private inner class ComponentListener : Player.Listener {
 
     override fun onVideoSizeChanged(videoSize: VideoSize) {
 
@@ -123,14 +120,15 @@ constructor(
         if (height == 0 || width == 0) 0F
         else (width * videoSize.pixelWidthHeightRatio) / height
 
-      if (videoAspectRatio > LANDSCAPE_ASPECT_RATIO) {
-        videoView.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        videoView.contentFrame.setAspectRatio(videoAspectRatio)
+      if (videoAspectRatio >= HORIZONTAL_ASPECT_RATIO) {
+        contentFrame.setAspectRatio(HORIZONTAL_ASPECT_RATIO)
+
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
       } else {
-        videoView.layoutParams.height =
-          videoView.context.resources.getDimensionPixelSize(
-            R.dimen.video_view_height_max
-          )
+        contentFrame.setAspectRatio(videoAspectRatio)
+
+        layoutParams.height =
+          context.resources.getDimensionPixelSize(R.dimen.video_view_height_max)
       }
     }
   }

@@ -62,7 +62,7 @@ constructor(
 
   init {
     contentFrame.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT)
-    contentFrame.setAspectRatio(LANDSCAPE_ASPECT_RATIO)
+    contentFrame.setAspectRatio(HORIZONTAL_ASPECT_RATIO)
     contentFrame.addView(surfaceView, 0)
     addView(contentFrame)
 

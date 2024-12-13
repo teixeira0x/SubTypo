@@ -13,24 +13,23 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.db
+package com.teixeira0x.subtypo.data.mapper
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.teixeira0x.subtypo.data.db.converter.CueConverter
-import com.teixeira0x.subtypo.data.db.dao.ProjectDao
-import com.teixeira0x.subtypo.data.db.dao.SubtitleDao
-import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
 import com.teixeira0x.subtypo.data.db.entity.SubtitleEntity
+import com.teixeira0x.subtypo.domain.model.Subtitle
 
-@Database(
-  entities = [ProjectEntity::class, SubtitleEntity::class],
-  version = 2,
-  exportSchema = true,
-)
-@TypeConverters(CueConverter::class)
-abstract class SubTypoDatabase : RoomDatabase() {
-  abstract val projectDao: ProjectDao
-  abstract val subtitleDao: SubtitleDao
+object SubtitleDataMapper {
+
+  fun SubtitleEntity.toModel(): Subtitle {
+    return Subtitle(id = id, projectId = projectId, name = name, cues = cues)
+  }
+
+  fun Subtitle.toEntity(): SubtitleEntity {
+    return SubtitleEntity(
+      id = id,
+      projectId = projectId,
+      name = name,
+      cues = cues,
+    )
+  }
 }

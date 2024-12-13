@@ -26,16 +26,17 @@ class SRTFormat : SubtitleFormat("SubRip", ".srt") {
   override fun toText(cues: List<Cue>): String {
     val sb = StringBuilder()
     for (i in cues.indices) {
-      val cue = cues[i]
-      sb
-        .append(i + 1)
-        .append("\n")
-        .append(cue.startTime.getFormattedTime())
-        .append(" --> ")
-        .append(cue.endTime.getFormattedTime())
-        .append("\n")
-        .append(cue.text)
-        .append("\n\n")
+      with(cues[i]) {
+        sb
+          .append(i + 1)
+          .append("\n")
+          .append(startTime.getFormattedTime())
+          .append(" --> ")
+          .append(endTime.getFormattedTime())
+          .append("\n")
+          .append(text)
+          .append("\n\n")
+      }
     }
     return sb.toString().trim()
   }

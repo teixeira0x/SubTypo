@@ -14,7 +14,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"/>
 
-  <com.teixeira0x.subtypo.ui.view.SubtitleView
+  <com.teixeira0x.subtypo.ui.view.SubtitleViewWrapper
     android:id="@+id/subtitle_view"
     android:layout_width="0dp"
     android:layout_height="0dp"

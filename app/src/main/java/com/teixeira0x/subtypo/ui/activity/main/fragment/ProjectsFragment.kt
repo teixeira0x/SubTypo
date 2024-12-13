@@ -42,7 +42,6 @@ class ProjectsFragment : Fragment() {
             .show(childFragmentManager, null)
         }
         R.id.delete_option -> deleteProject(project)
-      // else -> {}
       }
     }
   }
@@ -58,8 +57,6 @@ class ProjectsFragment : Fragment() {
   }
 
   override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(v, savedInstanceState)
-
     projectsViewModel.stateData.observe(this) { state ->
       when (state) {
         is Loading -> {

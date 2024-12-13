@@ -28,6 +28,7 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.LayoutPlayerContentBinding
 import com.teixeira0x.subtypo.databinding.LayoutPlayerControllerContentBinding
+import com.teixeira0x.subtypo.domain.model.Cue
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.VideoViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.VideoViewModel.VideoState
 import com.teixeira0x.subtypo.utils.TimeUtils.getFormattedTime
@@ -50,22 +51,27 @@ class PlayerControlLayoutHandler(
         is VideoViewModel.VideoState.Ended -> onVideoEnded()
       }
     }
+
+    viewModel.cues.observe(owner) { cues ->
+      playerBinding.subtitleView.setCues(cues, viewModel.videoPosition.value!!)
+    }
+
     configureListeners()
   }
 
   override fun onDestroy(owner: LifecycleOwner) {
+    updateProgressAction?.let { handler.removeCallbacks(it) }
+    updateProgressAction = null
+
     if (playerBinding.videoView.isPlaying) {
       playerBinding.videoView.stop()
     }
     playerBinding.videoView.release()
-
-    updateProgressAction?.let { handler.removeCallbacks(it) }
-    updateProgressAction = null
   }
 
   override fun onPause(owner: LifecycleOwner) {
     if (playerBinding.videoView.isPlaying) {
-      playerBinding.videoView.pause()
+      pause()
     }
   }
 
@@ -96,11 +102,9 @@ class PlayerControlLayoutHandler(
 
     playerControllerBinding.play.setOnClickListener {
       if (playerBinding.videoView.isPlaying) {
-        playerControllerBinding.play.setImageResource(R.drawable.ic_play)
-        playerBinding.videoView.pause()
+        pause()
       } else {
-        playerControllerBinding.play.setImageResource(R.drawable.ic_pause)
-        playerBinding.videoView.play()
+        play()
       }
     }
 
@@ -125,11 +129,11 @@ class PlayerControlLayoutHandler(
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
           isPlaying = playerBinding.videoView.isPlaying
-          if (isPlaying) playerBinding.videoView.pause()
+          if (isPlaying) pause()
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
-          if (isPlaying) playerBinding.videoView.play()
+          if (isPlaying) play()
         }
       }
     )
@@ -147,6 +151,8 @@ class PlayerControlLayoutHandler(
       currentPosition.getFormattedTime()
     )
     playerControllerBinding.seekBar.progress = currentPosition.toInt()
+
+    playerBinding.subtitleView.setCues(viewModel.cues.value!!, currentPosition)
   }
 
   private fun onVideoEnded() {
@@ -162,5 +168,19 @@ class PlayerControlLayoutHandler(
     if (player.isPlaying) {
       updateProgressAction?.let { handler.post(it) }
     }
+  }
+
+  fun setCues(cues: List<Cue>) {
+    viewModel.onUpdateCues(cues)
+  }
+
+  fun play() {
+    playerControllerBinding.play.setImageResource(R.drawable.ic_pause)
+    playerBinding.videoView.play()
+  }
+
+  fun pause() {
+    playerControllerBinding.play.setImageResource(R.drawable.ic_play)
+    playerBinding.videoView.pause()
   }
 }

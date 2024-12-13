@@ -20,18 +20,21 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.R.attr
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.ActivityProjectBinding
-import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.activity.BaseActivity
 import com.teixeira0x.subtypo.ui.activity.project.adapter.CueListAdapter
+import com.teixeira0x.subtypo.ui.activity.project.fragment.sheet.CueEditorSheetFragment
 import com.teixeira0x.subtypo.ui.activity.project.player.PlayerControlLayoutHandler
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel.ProjectState
+import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel
+import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel.SubtitleState
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.VideoViewModel
 import com.teixeira0x.subtypo.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,14 +42,30 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProjectActivity : BaseActivity() {
 
-  private val cueListAdapter by lazy { CueListAdapter() }
+  private lateinit var playerControlLayoutHandler: PlayerControlLayoutHandler
 
-  private val viewModel by viewModels<ProjectViewModel>()
+  private val projectViewModel by viewModels<ProjectViewModel>()
+  private val videoViewModel by viewModels<VideoViewModel>()
+  private val subtitleViewModel by viewModels<SubtitleViewModel>()
 
   private var _binding: ActivityProjectBinding? = null
 
   private val binding: ActivityProjectBinding
     get() = checkNotNull(_binding) { "Activity has been destroyed!" }
+
+  private val cueListAdapter by lazy {
+    CueListAdapter { index, _ ->
+      val subtitleId = subtitleViewModel.selectedSubtitleId
+      if (subtitleId > 0) {
+        CueEditorSheetFragment.newInstance(
+            videoViewModel.videoPosition.value!!,
+            subtitleId,
+            index,
+          )
+          .show(supportFragmentManager, null)
+      }
+    }
+  }
 
   override val statusBarColor: Int
     get() = MaterialColors.getColor(this, attr.colorOnSurfaceInverse, 0)
@@ -65,19 +84,16 @@ class ProjectActivity : BaseActivity() {
       onBackPressedDispatcher.onBackPressed()
     }
 
-    lifecycle.addObserver(
+    playerControlLayoutHandler =
       PlayerControlLayoutHandler(
         binding.playerContent,
         binding.playerControllerContent,
-        viewModels<VideoViewModel>().value,
+        videoViewModel,
       )
-    )
-    binding.rvCues.layoutManager = LinearLayoutManager(this)
-    binding.rvCues.adapter = cueListAdapter
 
-    val projectId = intent?.extras?.getLong(Constants.KEY_PROJECT_ID_ARG)
-    viewModel.loadProject(projectId ?: 0)
-    observeViewModel()
+    lifecycle.addObserver(playerControlLayoutHandler)
+
+    initialize()
   }
 
   override fun onDestroy() {
@@ -100,13 +116,40 @@ class ProjectActivity : BaseActivity() {
     return super.onOptionsItemSelected(item)
   }
 
+  private fun initialize() {
+    binding.rvCues.layoutManager = LinearLayoutManager(this)
+    binding.rvCues.adapter = cueListAdapter
+    observeViewModel()
+    configureListeners()
+    loadProject()
+  }
+
+  private fun configureListeners() {
+    binding.fabAddCue.setOnClickListener {
+      val subtitleId = subtitleViewModel.selectedSubtitleId
+      if (subtitleId > 0) {
+        CueEditorSheetFragment.newInstance(
+            videoViewModel.videoPosition.value!!,
+            subtitleId,
+          )
+          .show(supportFragmentManager, null)
+      }
+    }
+  }
+
+  private fun loadProject() {
+    val projectId = intent?.extras?.getLong(Constants.KEY_PROJECT_ID_ARG)
+    projectViewModel.loadProject(projectId ?: 0)
+    subtitleViewModel.loadSubtitles(projectId ?: 0)
+  }
+
   private fun observeViewModel() {
-    viewModel.stateData.observe(this) { state ->
+    projectViewModel.stateData.observe(this) { state ->
       when (state) {
         is ProjectState.Loading ->
           showProgressDialog(getString(R.string.proj_initializing))
         is ProjectState.Loaded -> {
-          updateUI(state.project)
+          onProjectLoaded(state)
           dismissProgressDialog()
         }
         is ProjectState.Error -> {
@@ -115,12 +158,39 @@ class ProjectActivity : BaseActivity() {
         }
       }
     }
+
+    subtitleViewModel.stateData.observe(this) { state ->
+      when (state) {
+        is SubtitleState.Loading -> {
+          binding.cuesLoading.isVisible = true
+          binding.rvCues.isVisible = false
+          binding.noCues.isVisible = false
+        }
+        is SubtitleState.Loaded -> {
+          onSubtitlesLoaded(state)
+        }
+        else -> {}
+      }
+    }
   }
 
-  private fun updateUI(project: Project) {
+  private fun onProjectLoaded(stateLoaded: ProjectState.Loaded) {
+    val project = stateLoaded.project
     supportActionBar?.title = project.name
     binding.playerContent.videoView.setUri(project.videoUri)
-    cueListAdapter.submitList(project.cues)
+  }
+
+  private fun onSubtitlesLoaded(stateLoaded: SubtitleState.Loaded) {
+    val selectedSubtitle = stateLoaded.selectedSubtitle
+    val cues = selectedSubtitle?.cues ?: emptyList()
+
+    supportActionBar?.subtitle = selectedSubtitle?.name
+    playerControlLayoutHandler.setCues(cues)
+    cueListAdapter.submitList(cues)
+
+    binding.cuesLoading.isVisible = false
+    binding.rvCues.isVisible = true
+    binding.noCues.isVisible = cues.isEmpty()
   }
 
   private fun handleError(message: Int, isCritical: Boolean = false) {

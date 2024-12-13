@@ -19,7 +19,6 @@ import java.util.Base64
 plugins {
   id("com.android.application")
   id("kotlin-android")
-  id("kotlin-parcelize")
   id("kotlin-kapt")
 
   id("com.google.dagger.hilt.android")

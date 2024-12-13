@@ -1,10 +1,22 @@
+/*
+ * This file is part of SubTypo.
+ *
+ * SubTypo is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * SubTypo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with SubTypo.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.teixeira0x.subtypo.ui.activity.main.adapter
 
-import android.animation.LayoutTransition
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +24,6 @@ import com.teixeira0x.subtypo.databinding.LayoutProjectItemBinding
 import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.adapter.holder.BindingViewHolder
 import com.teixeira0x.subtypo.utils.ContextUtils.layoutInflater
-import com.teixeira0x.subtypo.utils.UiUtils
 import com.teixeira0x.subtypo.utils.VideoUtils
 
 typealias ProjectViewHolder = BindingViewHolder<LayoutProjectItemBinding>
@@ -21,10 +32,6 @@ class ProjectListAdapter(
   val onProjectClick: (view: View, project: Project) -> Unit,
   val onProjectOptionClick: (view: View, project: Project) -> Unit,
 ) : RecyclerView.Adapter<ProjectViewHolder>() {
-
-  companion object {
-    const val DEFAULT_CHEVRON_ROTATION = -90f
-  }
 
   private var projects = listOf<Project>()
 
@@ -49,20 +56,9 @@ class ProjectListAdapter(
       videoName.setText(project.videoName)
       name.setText(project.name)
 
-      root.setLayoutTransition(
-        LayoutTransition().apply {
-          enableTransitionType(LayoutTransition.CHANGING)
-        }
-      )
-
       root.setOnClickListener { onProjectClick(it, project) }
-      root.setOnLongClickListener {
-        toggleOptionsVisibility(optionsContainer, chevron)
-        true
-      }
-      chevron.setOnClickListener {
-        toggleOptionsVisibility(optionsContainer, chevron)
-      }
+      root.setOnLongClickListener { toggleItemOptionsVisibility() }
+      chevron.setOnClickListener { toggleItemOptionsVisibility() }
 
       options.editOption.setOnClickListener {
         onProjectOptionClick(it, project)
@@ -83,15 +79,13 @@ class ProjectListAdapter(
     result.dispatchUpdatesTo(this)
   }
 
-  private fun toggleOptionsVisibility(
-    optionsContainer: FrameLayout,
-    chevron: ImageView,
-  ) {
+  private fun LayoutProjectItemBinding.toggleItemOptionsVisibility(): Boolean {
     optionsContainer.isVisible = !optionsContainer.isVisible
-    UiUtils.rotateView(
-      chevron,
-      if (optionsContainer.isVisible) 0f else DEFAULT_CHEVRON_ROTATION,
-    )
+    chevron
+      .animate()
+      .rotation(if (optionsContainer.isVisible) 0f else -90f)
+      .start()
+    return true
   }
 
   class ProjectDiffCallback(

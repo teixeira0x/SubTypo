@@ -13,24 +13,29 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.db
+package com.teixeira0x.subtypo.data.db.dao
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.teixeira0x.subtypo.data.db.converter.CueConverter
-import com.teixeira0x.subtypo.data.db.dao.ProjectDao
-import com.teixeira0x.subtypo.data.db.dao.SubtitleDao
-import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.teixeira0x.subtypo.data.db.entity.SubtitleEntity
+import kotlinx.coroutines.flow.Flow
 
-@Database(
-  entities = [ProjectEntity::class, SubtitleEntity::class],
-  version = 2,
-  exportSchema = true,
-)
-@TypeConverters(CueConverter::class)
-abstract class SubTypoDatabase : RoomDatabase() {
-  abstract val projectDao: ProjectDao
-  abstract val subtitleDao: SubtitleDao
+@Dao
+interface SubtitleDao {
+
+  @Query("SELECT * FROM subtitles WHERE projectId = :projectId")
+  fun getAll(projectId: Long): Flow<List<SubtitleEntity>>
+
+  @Query("SELECT * FROM subtitles WHERE id = :id")
+  fun findById(id: Long): Flow<SubtitleEntity?>
+
+  @Insert suspend fun insert(subtitle: SubtitleEntity): Long
+
+  @Update(entity = SubtitleEntity::class)
+  suspend fun update(subtitle: SubtitleEntity)
+
+  @Query("DELETE FROM subtitles WHERE id = :id")
+  suspend fun remove(id: Long): Int
 }

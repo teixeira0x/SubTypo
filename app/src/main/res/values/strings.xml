@@ -64,16 +64,8 @@
   <string name="proj_choose_video">Choose video</string>
   <string name="proj_click_choose_video">Click to choose video</string>
   <string name="proj_current_video_position">Current video position: %1$s</string>
-  <string name="proj_no_subtitles">Without subtitles click "+" to add subtitles!</string>
 
   <string name="proj_error_unable_to_load">Unable to load this project..</string>
-
-  <string name="proj_subtitle_add">Add Subtitle</string>
-  <string name="proj_subtitle_edit">Edit Subtitle</string>
-  <string name="proj_subtitle_list">Subtitles</string>
-  <string name="proj_subtitle_list_empty">No subtitles, click \"+\" to add.</string>
-  <string name="proj_subtitle_enter_name">Enter name</string>
-  <string name="proj_subtitle_enter_format">Enter format</string>
 
   <string name="proj_export_subtitle">Export Subtitle</string>
   <string name="proj_export_subtitle_saved">Saved on path:  %1$s</string>
@@ -91,9 +83,20 @@
   <!-- Subtitles -->
   <string name="subtitles">Subtitles</string>
   <string name="subtitle_loading">Loading subtitles..</string>
-  <string name="subtitle_paragraph">Paragraph</string>
-  <string name="subtitle_paragraph_enter_start_time">Enter start time</string>
-  <string name="subtitle_paragraph_enter_end_time">Enter end time</string>
-  <string name="subtitle_paragraph_enter_text">Enter text</string>
-  <string name="subtitle_paragraph_invalid_time">This is not a valid time.</string>
+  <string name="subtitle_add">Add Subtitle</string>
+  <string name="subtitle_edit">Edit Subtitle</string>
+  <string name="subtitle_list">Subtitles</string>
+  <string name="subtitle_list_empty">No subtitles, click \"+\" to add.</string>
+  <string name="subtitle_enter_name">Enter name</string>
+  <string name="subtitle_enter_format">Enter format</string>
+  <string name="subtitle_error_remove">Unable to delete this subtitle</string>
+  
+  <string name="subtitle_cue_list_empty">Empty text list click the \"+\" below to add new text.</string>
+  <string name="subtitle_cue_add">Add text</string>
+  <string name="subtitle_cue_edit">Edit text</string>
+  <string name="subtitle_cue_enter_start_time">Enter start time</string>
+  <string name="subtitle_cue_enter_end_time">Enter end time</string>
+  <string name="subtitle_cue_enter_text">Enter text</string>
+  <string name="subtitle_cue_invalid_time">This is not a valid time.</string>
+
 </resources>

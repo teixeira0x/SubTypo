@@ -16,7 +16,9 @@
 package com.teixeira0x.subtypo.data.di
 
 import com.teixeira0x.subtypo.data.repository.project.ProjectRepositoryImpl
+import com.teixeira0x.subtypo.data.repository.subtitle.SubtitleRepositoryImpl
 import com.teixeira0x.subtypo.domain.repository.project.ProjectRepository
+import com.teixeira0x.subtypo.domain.repository.subtitle.SubtitleRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,4 +34,10 @@ abstract class RepositoryModule {
   abstract fun bindsProjectRepository(
     repository: ProjectRepositoryImpl
   ): ProjectRepository
+
+  @Binds
+  @Singleton
+  abstract fun bindsSubtitleRepository(
+    repository: SubtitleRepositoryImpl
+  ): SubtitleRepository
 }

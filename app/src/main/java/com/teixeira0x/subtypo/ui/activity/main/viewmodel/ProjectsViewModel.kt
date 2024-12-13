@@ -27,10 +27,10 @@ constructor(
     get() = _state
 
   init {
-    getAllProjects()
+    loadProjects()
   }
 
-  fun getAllProjects() {
+  private fun loadProjects() {
     viewModelScope.launch {
       getAllProjectsUseCase().collect { projects ->
         _state.postValue(ProjectsState.Loaded(projects))

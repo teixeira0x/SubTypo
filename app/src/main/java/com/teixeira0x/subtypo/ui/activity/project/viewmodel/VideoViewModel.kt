@@ -18,14 +18,20 @@ package com.teixeira0x.subtypo.ui.activity.project.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.teixeira0x.subtypo.domain.model.Cue
 
 class VideoViewModel : ViewModel() {
-
   private val _videoState = MutableLiveData<VideoState>()
   val videoState: LiveData<VideoState>
     get() = _videoState
 
-  private val playerPosition = MutableLiveData<Long>(0L)
+  private val _cues = MutableLiveData<List<Cue>>(emptyList())
+  val cues: LiveData<List<Cue>>
+    get() = _cues
+
+  private val _videoPosition = MutableLiveData<Long>(0L)
+  val videoPosition: LiveData<Long>
+    get() = _videoPosition
 
   fun onVideoReady() {
     _videoState.value = VideoState.Ready
@@ -36,8 +42,12 @@ class VideoViewModel : ViewModel() {
   }
 
   fun onUpdateProgress(currentPosition: Long) {
-    playerPosition.value = currentPosition
+    _videoPosition.value = currentPosition
     _videoState.value = VideoState.Playing(currentPosition)
+  }
+
+  fun onUpdateCues(cues: List<Cue>) {
+    _cues.value = cues
   }
 
   sealed interface VideoState {

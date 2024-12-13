@@ -32,15 +32,19 @@ class ProjectViewModel
 constructor(private val getProjectUseCase: GetProjectUseCase) : ViewModel() {
 
   private val _state = MutableLiveData<ProjectState>(ProjectState.Loading)
-
   val stateData: LiveData<ProjectState>
     get() = _state
+
+  private val _openedProjectId = MutableLiveData<Long>(0)
+  val openedProjectId: Long
+    get() = _openedProjectId.value!!
 
   fun loadProject(id: Long) {
     viewModelScope.launch {
       getProjectUseCase(id).collect { project ->
         _state.postValue(
           if (project != null) {
+            _openedProjectId.value = id
             ProjectState.Loaded(project)
           } else ProjectState.Error(R.string.proj_error_unable_to_load)
         )

@@ -13,18 +13,10 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.mapper
+package com.teixeira0x.subtypo.data
 
-import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
-import com.teixeira0x.subtypo.domain.model.Project
+sealed class ValidationResult {
+  object Success : ValidationResult()
 
-object ProjectDataMapper {
-
-  fun ProjectEntity.toModel(): Project {
-    return Project(id = id, name = name, videoUri = videoUri)
-  }
-
-  fun Project.toEntity(): ProjectEntity {
-    return ProjectEntity(id = id, name = name, videoUri = videoUri)
-  }
+  class Error(val message: String) : ValidationResult()
 }

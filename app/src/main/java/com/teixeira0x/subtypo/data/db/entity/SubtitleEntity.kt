@@ -13,18 +13,30 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.mapper
+package com.teixeira0x.subtypo.data.db.entity
 
-import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
-import com.teixeira0x.subtypo.domain.model.Project
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.teixeira0x.subtypo.domain.model.Cue
 
-object ProjectDataMapper {
-
-  fun ProjectEntity.toModel(): Project {
-    return Project(id = id, name = name, videoUri = videoUri)
-  }
-
-  fun Project.toEntity(): ProjectEntity {
-    return ProjectEntity(id = id, name = name, videoUri = videoUri)
-  }
-}
+@Entity(
+  tableName = "subtitles",
+  foreignKeys =
+    [
+      ForeignKey(
+        entity = ProjectEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["projectId"],
+        onDelete = ForeignKey.CASCADE,
+      )
+    ],
+  indices = [Index(value = ["projectId"])],
+)
+data class SubtitleEntity(
+  @PrimaryKey(autoGenerate = true) val id: Long,
+  val projectId: Long,
+  val name: String,
+  val cues: List<Cue>,
+)

@@ -5,12 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.domain.model.Subtitle
 import com.teixeira0x.subtypo.domain.usecase.project.GetProjectUseCase
 import com.teixeira0x.subtypo.domain.usecase.project.InsertProjectUseCase
 import com.teixeira0x.subtypo.domain.usecase.project.UpdateProjectUseCase
+import com.teixeira0x.subtypo.domain.usecase.subtitle.InsertSubtitleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -20,6 +21,7 @@ constructor(
   private val getProjectUseCase: GetProjectUseCase,
   private val insertProjectUseCase: InsertProjectUseCase,
   private val updateProjectUseCase: UpdateProjectUseCase,
+  private val insertSubtitleUseCase: InsertSubtitleUseCase,
 ) : ViewModel() {
 
   private val _state =
@@ -38,20 +40,20 @@ constructor(
 
   fun createProject(name: String, videoUri: String) {
     viewModelScope.launch {
-      val id =
-        insertProjectUseCase(
-          Project(id = 0, name = name, videoUri = videoUri, cues = emptyList())
-        )
+      val projectId =
+        insertProjectUseCase(Project(id = 0, name = name, videoUri = videoUri))
 
-      _state.value = ProjectEditorState.Created(id, true)
+      insertSubtitleUseCase(
+        Subtitle(projectId = projectId, name = "subtitle", cues = emptyList())
+      )
+
+      _state.value = ProjectEditorState.Created(projectId, true)
     }
   }
 
   fun updateProject(id: Long, name: String, videoUri: String) {
     viewModelScope.launch {
-      val project = getProjectUseCase(id).first()
-
-      updateProjectUseCase(project!!.copy(name = name, videoUri = videoUri))
+      updateProjectUseCase(Project(name = name, videoUri = videoUri))
       _state.value = ProjectEditorState.Created(id, false)
     }
   }

@@ -17,6 +17,6 @@
     android:id="@+id/message"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
-    android:textSize="16sp"
-    android:layout_marginTop="@dimen/margin_small" />
+    android:textSize="14sp"
+    android:layout_marginTop="@dimen/margin_medium" />
 </LinearLayout>

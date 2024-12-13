@@ -53,13 +53,6 @@
   <string name="proj_choose_video">Selecionar vídeo</string>
   <string name="proj_click_choose_video">Clique para escolher o vídeo</string>
   <string name="proj_current_video_position">Posição atual do vídeo: %1$s</string>
-  <string name="proj_no_subtitles">Sem legendas clique em \"+\" para adicionar legendas!</string>
-  <string name="proj_subtitle_add">Adicionar Legenda</string>
-  <string name="proj_subtitle_edit">Editar Legenda</string>
-  <string name="proj_subtitle_list">Legendas</string>
-  <string name="proj_subtitle_list_empty">Sem legendas, clique \"+\" para adicionar.</string>
-  <string name="proj_subtitle_enter_name">Digite o nome</string>
-  <string name="proj_subtitle_enter_format">Digite o formato</string>
   <string name="proj_export_subtitle">Exportar Legenda</string>
   <string name="proj_export_subtitle_saved">Salvo no caminho:  %1$s</string>
   <string name="proj_export_subtitle_error">Falha ao exportar a legenda</string>
@@ -75,8 +68,11 @@
   <!-- Subtitles -->
   <string name="subtitles">Legendas</string>
   <string name="subtitle_loading">Carregando legendas..</string>
-  <string name="subtitle_paragraph">Parágrafo</string>
-  <string name="subtitle_paragraph_enter_start_time">Digite o tempo inicial</string>
-  <string name="subtitle_paragraph_enter_end_time">Digite o tempo final</string>
-  <string name="subtitle_paragraph_enter_text">Digite o texto</string>
+  <string name="subtitle_add">Adicionar Legenda</string>
+  <string name="subtitle_edit">Editar Legenda</string>
+  <string name="subtitle_list">Legendas</string>
+  <string name="subtitle_list_empty">Sem legendas, clique \"+\" para adicionar.</string>
+  <string name="subtitle_enter_name">Digite o nome</string>
+  <string name="subtitle_enter_format">Digite o formato</string>
+
 </resources>

@@ -13,18 +13,18 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.mapper
+package com.teixeira0x.subtypo.domain.usecase.subtitle
 
-import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
-import com.teixeira0x.subtypo.domain.model.Project
+import com.teixeira0x.subtypo.domain.model.Subtitle
+import com.teixeira0x.subtypo.domain.repository.subtitle.SubtitleRepository
+import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
-object ProjectDataMapper {
+class GetAllSubtitlesUseCase
+@Inject
+constructor(private val repository: SubtitleRepository) {
 
-  fun ProjectEntity.toModel(): Project {
-    return Project(id = id, name = name, videoUri = videoUri)
-  }
-
-  fun Project.toEntity(): ProjectEntity {
-    return ProjectEntity(id = id, name = name, videoUri = videoUri)
+  operator fun invoke(projectId: Long): Flow<List<Subtitle>> {
+    return repository.getAll(projectId)
   }
 }

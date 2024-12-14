@@ -17,16 +17,21 @@ package com.teixeira0x.subtypo.ui.activity.project.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.FragmentSubtitleListBinding
 import com.teixeira0x.subtypo.ui.activity.project.adapter.SubtitleListAdapter
+import com.teixeira0x.subtypo.ui.activity.project.fragment.sheet.SubtitleEditorSheetFragment
+import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel.SubtitleState
+import com.teixeira0x.subtypo.ui.utils.showConfirmDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,15 +42,28 @@ class SubtitleListFragment : Fragment() {
   private val binding: FragmentSubtitleListBinding
     get() = checkNotNull(_binding) { "SubtitleListFragment has been destroyed" }
 
+  private val projectViewModel by
+    viewModels<ProjectViewModel>(ownerProducer = { requireActivity() })
+
   private val subtitleViewModel by
     viewModels<SubtitleViewModel>(ownerProducer = { requireActivity() })
 
   private val subtitleListAdapter by lazy {
     SubtitleListAdapter(
-      onSubtitleClick = { subtitle -> },
-      editSubtitle = { subtitle -> },
+      onSubtitleClick = { subtitle ->
+        subtitleViewModel.setSelectedSubtitle(subtitle.id)
+      },
+      editSubtitle = { subtitle ->
+        SubtitleEditorSheetFragment.newInstance(subtitle.id)
+          .show(childFragmentManager, null)
+      },
       deleteSubtitle = { subtitle ->
-        subtitleViewModel.removeSubtitle(subtitle.id)
+        requireContext().showConfirmDialog(
+          title = R.string.delete,
+          message = R.string.subtitle_remove_msg,
+        ) { _, _ ->
+          subtitleViewModel.removeSubtitle(subtitle.id)
+        }
       },
     )
   }
@@ -63,6 +81,7 @@ class SubtitleListFragment : Fragment() {
   override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
     binding.rvSubtitles.layoutManager = LinearLayoutManager(requireContext())
     binding.rvSubtitles.adapter = subtitleListAdapter
+    ensureToolbarMenu()
     observeViewModel()
   }
 
@@ -83,9 +102,24 @@ class SubtitleListFragment : Fragment() {
             state.selectedSubtitle?.id ?: 0,
           )
         }
-        is SubtitleState.Removed -> {}
         is SubtitleState.Error -> {}
+        else -> {}
       }
+    }
+  }
+
+  private fun ensureToolbarMenu() {
+    binding.toolbar.menu.apply {
+      add(R.string.subtitle_add)
+        .setIcon(R.drawable.ic_plus)
+        .setOnMenuItemClickListener {
+          SubtitleEditorSheetFragment.newInstance(
+              projectId = projectViewModel.openedProjectId
+            )
+            .show(childFragmentManager, null)
+          true
+        }
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
     }
   }
 }

@@ -28,6 +28,7 @@ import com.teixeira0x.subtypo.databinding.FragmentCueEditorBinding
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.CueEditorViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.CueEditorViewModel.CueEditorState
 import com.teixeira0x.subtypo.ui.fragment.sheet.BaseBottomSheetFragment
+import com.teixeira0x.subtypo.ui.utils.showConfirmDialog
 import com.teixeira0x.subtypo.utils.Constants
 import com.teixeira0x.subtypo.utils.EditTextUtils.afterTextChanged
 import com.teixeira0x.subtypo.utils.TimeUtils.getFormattedTime
@@ -129,13 +130,19 @@ class CueEditorSheetFragment : BaseBottomSheetFragment() {
       binding.tieStartTime.setText(videoPosition.getFormattedTime())
       binding.tieEndTime.setText((videoPosition + 2000).getFormattedTime())
     }
+    validateFields()
   }
 
   private fun configureListeners() {
     binding.apply {
       deleteCue.isEnabled = cueIndex >= 0
       deleteCue.setOnClickListener {
-        cueViewModel.removeCue(subtitleId, cueIndex)
+        requireContext().showConfirmDialog(
+          title = R.string.remove,
+          message = R.string.subtitle_cue_remove_msg,
+        ) { _, _ ->
+          cueViewModel.removeCue(subtitleId, cueIndex)
+        }
       }
       dialogButtons.cancel.setOnClickListener { dismiss() }
       dialogButtons.save.setOnClickListener {
@@ -179,7 +186,6 @@ class CueEditorSheetFragment : BaseBottomSheetFragment() {
     binding.tieText.afterTextChanged {
       validateText(binding.tilText, it.toString())
     }
-    validateFields()
   }
 
   private fun validateFields() {

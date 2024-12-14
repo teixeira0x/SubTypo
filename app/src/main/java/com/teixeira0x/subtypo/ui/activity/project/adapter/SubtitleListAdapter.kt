@@ -58,6 +58,7 @@ class SubtitleListAdapter(
       options.editOption.setOnClickListener { editSubtitle(subtitle) }
       options.deleteOption.setOnClickListener { deleteSubtitle(subtitle) }
 
+      root.setOnClickListener { onSubtitleClick(subtitle) }
       root.setOnLongClickListener { toggleItemOptionsVisibility() }
       imgChevron.setOnClickListener { toggleItemOptionsVisibility() }
     }

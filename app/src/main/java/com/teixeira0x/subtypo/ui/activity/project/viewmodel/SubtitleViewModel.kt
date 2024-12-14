@@ -47,9 +47,13 @@ constructor(
   fun loadSubtitles(projectId: Long) {
     viewModelScope.launch {
       getAllSubtitlesUseCase(projectId).collect { subtitles ->
-        val selectedSubtitle = subtitles.firstOrNull()
-        _state.postValue(SubtitleState.Loaded(subtitles, selectedSubtitle))
+        val selectedSubtitle =
+          if (selectedSubtitleId > 0) {
+            subtitles.firstOrNull { it.id == selectedSubtitleId }
+          } else subtitles.firstOrNull()
+
         _selectedSubtitleId.value = selectedSubtitle?.id ?: 0
+        _state.postValue(SubtitleState.Loaded(subtitles, selectedSubtitle))
       }
     }
   }
@@ -66,10 +70,29 @@ constructor(
     }
   }
 
+  fun setSelectedSubtitle(newSelectedSubtitleId: Long) {
+    viewModelScope.launch {
+      val currentState = _state.value
+      if (currentState is SubtitleState.Loaded) {
+        val newSelectedSubtitle =
+          currentState.subtitles.firstOrNull { it.id == newSelectedSubtitleId }
+        if (newSelectedSubtitle != null) {
+          _selectedSubtitleId.value = newSelectedSubtitleId
+          _state.postValue(
+            SubtitleState.Loaded(
+              subtitles = currentState.subtitles,
+              selectedSubtitle = newSelectedSubtitle,
+            )
+          )
+        }
+      }
+    }
+  }
+
   sealed interface SubtitleState {
     object Loading : SubtitleState
 
-    class Loaded(
+    data class Loaded(
       val subtitles: List<Subtitle>,
       val selectedSubtitle: Subtitle?,
     ) : SubtitleState

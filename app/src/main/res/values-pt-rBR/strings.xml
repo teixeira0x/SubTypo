@@ -2,7 +2,9 @@
 <resources>
   <string name="close_app">Fechar aplicativo</string>
   <string name="about">Sobre</string>
+  <string name="about_libs">Bibliotecas</string>
   <string name="settings">Configurações</string>
+  <string name="remove">Remover</string>
   <string name="delete">Deletar</string>
   <string name="rename">Renomear</string>
   <string name="edit">Editar</string>
@@ -16,6 +18,7 @@
   <string name="export">Exportar</string>
   <string name="copy_and_report_issue">Copiar e relatar problema</string>
   <!-- Messages -->
+  <string name="msg_please_wait">Por favor, aguarde.</string>
   <string name="msg_delete_confirmation">Você tem certeza que deseja excluir: %1$s</string>
   <string name="msg_video_not_chosen">Vídeo não escolhido</string>
   <!-- Permission -->
@@ -32,19 +35,20 @@
   <string name="pref_category_appearance">Aparência</string>
   <string name="pref_configure_general">Geral</string>
   <string name="pref_configure_general_summary">Configurações gerais do aplicativo.</string>
-  <string name="pref_appearance_ui_mode">Modo IU</string>
+  <string name="pref_appearance_ui_mode">Modo de UI</string>
   <string name="pref_appearance_ui_mode_summary">Escolha o modo claro ou escuro</string>
   <string name="pref_appearance_ui_mode_value_light">Claro</string>
   <string name="pref_appearance_ui_mode_value_dark">Escuro</string>
   <string name="pref_appearance_ui_mode_value_follow">Seguir o Sistema</string>
-  <string name="pref_appearance_materialyou">Material You</string>
   <string name="pref_appearance_materialyou_summary">O aplicativo segue as cores do tema do dispositivo (requer reinicialização do aplicativo).</string>
   <string name="pref_about_github_summary">Esse aplicativo é de código aberto!</string>
   <string name="pref_about_version">Versão</string>
+  <string name="pref_about_libraries">Bibliotecas</string>
+  <string name="pref_about_libraries_summary">Bibliotecas utilizadas no aplicativo.</string>
   <!-- Project -->
   <string name="projects">Projetos</string>
-  <string name="proj_initializing">Inicializando projeto..</string>
-  <string name="proj_saving">Salvando projeto..</string>
+  <string name="proj_initializing">Inicializando projeto.</string>
+  <string name="proj_saving">Salvando projeto.</string>
   <string name="proj_close">Fechar Projeto</string>
   <string name="proj_no_projects">Sem projetos, clique \"+\" para criar projetos!</string>
   <string name="proj_new">Novo Projeto</string>
@@ -53,6 +57,7 @@
   <string name="proj_choose_video">Selecionar vídeo</string>
   <string name="proj_click_choose_video">Clique para escolher o vídeo</string>
   <string name="proj_current_video_position">Posição atual do vídeo: %1$s</string>
+  <string name="proj_error_unable_to_load">Não foi possível carregar este projeto.</string>
   <string name="proj_export_subtitle">Exportar Legenda</string>
   <string name="proj_export_subtitle_saved">Salvo no caminho:  %1$s</string>
   <string name="proj_export_subtitle_error">Falha ao exportar a legenda</string>
@@ -67,12 +72,21 @@
   <string name="error_saving_project">Ocorreu um erro ao tentar salvar o projeto</string>
   <!-- Subtitles -->
   <string name="subtitles">Legendas</string>
-  <string name="subtitle_loading">Carregando legendas..</string>
+  <string name="subtitle_loading">Carregando legendas.</string>
   <string name="subtitle_add">Adicionar Legenda</string>
   <string name="subtitle_edit">Editar Legenda</string>
+  <string name="subtitle_remove_msg">Você tem certeza que deseja deletar esta legenda?</string>
   <string name="subtitle_list">Legendas</string>
   <string name="subtitle_list_empty">Sem legendas, clique \"+\" para adicionar.</string>
   <string name="subtitle_enter_name">Digite o nome</string>
   <string name="subtitle_enter_format">Digite o formato</string>
-
+  <string name="subtitle_error_remove">Não foi possível excluir esta legenda</string>
+  <string name="subtitle_cue_list_empty">Clique em \"+\" abaixo para adicionar um novo texto.</string>
+  <string name="subtitle_cue_add">Adicionar texto</string>
+  <string name="subtitle_cue_edit">Editar Texto</string>
+  <string name="subtitle_cue_remove_msg">Tem certeza de que deseja remover este texto?</string>
+  <string name="subtitle_cue_enter_start_time">Digite o tempo inicial</string>
+  <string name="subtitle_cue_enter_end_time">Digite o tempo final</string>
+  <string name="subtitle_cue_enter_text">Digite o texto</string>
+  <string name="subtitle_cue_invalid_time">Este não é um tempo válido.</string>
 </resources>

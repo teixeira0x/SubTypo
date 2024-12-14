@@ -20,7 +20,7 @@
   <string name="copy_and_report_issue">Copy and report issue</string>
 
   <!-- Messages -->
-  <string name="msg_please_wait">Please wait..</string>
+  <string name="msg_please_wait">Please wait.</string>
   <string name="msg_delete_confirmation">Are you sure to delete: %1$s</string>
   <string name="msg_video_not_chosen">Video not chosen</string>
 
@@ -45,7 +45,7 @@
   <string name="pref_appearance_ui_mode_value_light">Light</string>
   <string name="pref_appearance_ui_mode_value_dark">Dark</string>
   <string name="pref_appearance_ui_mode_value_follow">Follow System</string>
-  <string name="pref_appearance_materialyou">Material You</string>
+  <string name="pref_appearance_materialyou" translatable="false">Material You</string>
   <string name="pref_appearance_materialyou_summary">The app follows the device\'s theme colors (requires app restart).</string>
   <string name="pref_about_github" translatable="false">GitHub</string>
   <string name="pref_about_github_summary">This app is open source!</string>
@@ -55,8 +55,8 @@
 
   <!-- Project -->
   <string name="projects">Projects</string>
-  <string name="proj_initializing">Initializing project..</string>
-  <string name="proj_saving">Saving project..</string>
+  <string name="proj_initializing">Initializing project.</string>
+  <string name="proj_saving">Saving project.</string>
   <string name="proj_close">Close Project</string>
   <string name="proj_no_projects">Without projects click "+" to create projects!</string>
   <string name="proj_new">New Project</string>
@@ -66,7 +66,7 @@
   <string name="proj_click_choose_video">Click to choose video</string>
   <string name="proj_current_video_position">Current video position: %1$s</string>
 
-  <string name="proj_error_unable_to_load">Unable to load this project..</string>
+  <string name="proj_error_unable_to_load">Unable to load this project.</string>
 
   <string name="proj_export_subtitle">Export Subtitle</string>
   <string name="proj_export_subtitle_saved">Saved on path:  %1$s</string>
@@ -83,7 +83,7 @@
   <string name="error_saving_project">An error occurred when trying to save the project</string>
   <!-- Subtitles -->
   <string name="subtitles">Subtitles</string>
-  <string name="subtitle_loading">Loading subtitles..</string>
+  <string name="subtitle_loading">Loading subtitles.</string>
   <string name="subtitle_add">Add Subtitle</string>
   <string name="subtitle_edit">Edit Subtitle</string>
   <string name="subtitle_remove_msg">Are you sure you want to delete this subtitle?</string>

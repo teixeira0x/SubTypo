@@ -37,7 +37,7 @@
   <!-- Preferences -->
   <string name="pref_category_configure">Configure</string>
   <string name="pref_category_about">About</string>
-  <string name="pref_category_aparence">Aparence</string>
+  <string name="pref_category_aparence">Appearance</string>
   <string name="pref_configure_general">General</string>
   <string name="pref_configure_general_summary">General application settings.</string>
   <string name="pref_aparence_ui_mode">UI Mode</string>

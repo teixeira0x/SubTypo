@@ -31,9 +31,9 @@ class UIModePreference : Preference {
 
     val items =
       arrayOf(
-        getString(R.string.pref_aparence_ui_mode_value_follow),
-        getString(R.string.pref_aparence_ui_mode_value_light),
-        getString(R.string.pref_aparence_ui_mode_value_dark),
+        getString(R.string.pref_appearance_ui_mode_value_follow),
+        getString(R.string.pref_appearance_ui_mode_value_light),
+        getString(R.string.pref_appearance_ui_mode_value_dark),
       )
 
     val prefs = sharedPreferences ?: return

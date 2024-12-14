@@ -23,18 +23,18 @@ const val PREF_ABOUT_GITHUB_KEY = "pref_about_github_key"
 const val PREF_ABOUT_LIBRARIES_KEY = "pref_about_libraries_key"
 const val PREF_ABOUT_VERSION_KEY = "pref_about_version_key"
 
-const val PREF_APARENCE_UI_MODE_KEY = "pref_aparence_ui_mode_key"
-const val PREF_APARENCE_MATERIALYOU_KEY = "pref_aparence_materialyou_key"
+const val PREF_APPEARANCE_UI_MODE_KEY = "pref_appearance_ui_mode_key"
+const val PREF_APPEARANCE_MATERIALYOU_KEY = "pref_appearance_materialyou_key"
 
 val defaultPrefs = App.instance.defaultPrefs
 
-val aparenceUIMode: Int
+val appearanceUIMode: Int
   get() =
-    when (defaultPrefs.getInt(PREF_APARENCE_UI_MODE_KEY, 0)) {
+    when (defaultPrefs.getInt(PREF_APPEARANCE_UI_MODE_KEY, 0)) {
       1 -> AppCompatDelegate.MODE_NIGHT_NO
       2 -> AppCompatDelegate.MODE_NIGHT_YES
       else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     }
 
-val aparenceMaterialYou: Boolean
-  get() = defaultPrefs.getBoolean(PREF_APARENCE_MATERIALYOU_KEY, true)
+val appearanceMaterialYou: Boolean
+  get() = defaultPrefs.getBoolean(PREF_APPEARANCE_MATERIALYOU_KEY, true)

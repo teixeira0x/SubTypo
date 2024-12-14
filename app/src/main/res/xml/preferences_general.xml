@@ -5,20 +5,20 @@
 
   <PreferenceCategory
     app:iconSpaceReserved="false"
-    app:title="@string/pref_category_aparence">
+    app:title="@string/pref_category_appearance">
 
     <com.teixeira0x.subtypo.ui.prefs.UIModePreference
       app:icon="@drawable/ic_ui_mode"
-      app:key="pref_aparence_ui_mode_key"
-      app:title="@string/pref_aparence_ui_mode"
-      app:summary="@string/pref_aparence_ui_mode_summary" />
+      app:key="pref_appearance_ui_mode_key"
+      app:title="@string/pref_appearance_ui_mode"
+      app:summary="@string/pref_appearance_ui_mode_summary" />
 
     <SwitchPreferenceCompat
       app:defaultValue="true"
       app:icon="@drawable/ic_palette"
-      app:key="pref_aparence_materialyou_key"
-      app:title="@string/pref_aparence_materialyou"
-      app:summary="@string/pref_aparence_materialyou_summary" />
+      app:key="pref_appearance_materialyou_key"
+      app:title="@string/pref_appearance_materialyou"
+      app:summary="@string/pref_appearance_materialyou_summary" />
 
   </PreferenceCategory>
 

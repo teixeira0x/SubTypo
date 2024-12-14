@@ -29,16 +29,16 @@
   <!-- Preferences -->
   <string name="pref_category_configure">Configurar</string>
   <string name="pref_category_about">Sobre</string>
-  <string name="pref_category_aparence">Aparência</string>
+  <string name="pref_category_appearance">Aparência</string>
   <string name="pref_configure_general">Geral</string>
   <string name="pref_configure_general_summary">Configurações gerais do aplicativo.</string>
-  <string name="pref_aparence_ui_mode">Modo IU</string>
-  <string name="pref_aparence_ui_mode_summary">Escolha o modo claro ou escuro</string>
-  <string name="pref_aparence_ui_mode_value_light">Claro</string>
-  <string name="pref_aparence_ui_mode_value_dark">Escuro</string>
-  <string name="pref_aparence_ui_mode_value_follow">Seguir o Sistema</string>
-  <string name="pref_aparence_materialyou">Material You</string>
-  <string name="pref_aparence_materialyou_summary">O aplicativo segue as cores do tema do dispositivo (requer reinicialização do aplicativo).</string>
+  <string name="pref_appearance_ui_mode">Modo IU</string>
+  <string name="pref_appearance_ui_mode_summary">Escolha o modo claro ou escuro</string>
+  <string name="pref_appearance_ui_mode_value_light">Claro</string>
+  <string name="pref_appearance_ui_mode_value_dark">Escuro</string>
+  <string name="pref_appearance_ui_mode_value_follow">Seguir o Sistema</string>
+  <string name="pref_appearance_materialyou">Material You</string>
+  <string name="pref_appearance_materialyou_summary">O aplicativo segue as cores do tema do dispositivo (requer reinicialização do aplicativo).</string>
   <string name="pref_about_github_summary">Esse aplicativo é de código aberto!</string>
   <string name="pref_about_version">Versão</string>
   <!-- Project -->

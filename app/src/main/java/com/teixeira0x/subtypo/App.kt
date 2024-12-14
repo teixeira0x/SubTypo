@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.blankj.utilcode.util.ThrowableUtils
 import com.google.android.material.color.DynamicColors
-import com.teixeira0x.subtypo.prefs.aparenceMaterialYou
-import com.teixeira0x.subtypo.prefs.aparenceUIMode
+import com.teixeira0x.subtypo.prefs.appearanceMaterialYou
+import com.teixeira0x.subtypo.prefs.appearanceUIMode
 import com.teixeira0x.subtypo.ui.activity.crash.CrashActivity
 import dagger.hilt.android.HiltAndroidApp
 import kotlin.system.exitProcess
@@ -37,14 +37,14 @@ class App : Application() {
     instance = this
     super.onCreate()
 
-    if (aparenceMaterialYou) {
+    if (appearanceMaterialYou) {
       DynamicColors.applyToActivitiesIfAvailable(this)
     }
     updateUIMode()
   }
 
   fun updateUIMode() {
-    AppCompatDelegate.setDefaultNightMode(aparenceUIMode)
+    AppCompatDelegate.setDefaultNightMode(appearanceUIMode)
   }
 
   fun openUrl(url: String) {

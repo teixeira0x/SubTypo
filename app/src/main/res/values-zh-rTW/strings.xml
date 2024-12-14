@@ -29,16 +29,16 @@
     <!-- Preferences -->
     <string name="pref_category_configure">設定</string>
     <string name="pref_category_about">關於</string>
-    <string name="pref_category_aparence">外觀</string>
+    <string name="pref_category_appearance">外觀</string>
     <string name="pref_configure_general">一般</string>
     <string name="pref_configure_general_summary">一般設定</string>
-    <string name="pref_aparence_ui_mode">UI模式</string>
-    <string name="pref_aparence_ui_mode_summary">亮暗主題選擇</string>
-    <string name="pref_aparence_ui_mode_value_light">亮色主題</string>
-    <string name="pref_aparence_ui_mode_value_dark">暗色主題</string>
-    <string name="pref_aparence_ui_mode_value_follow">跟隨系統</string>
-    <string name="pref_aparence_materialyou">Material You</string>
-    <string name="pref_aparence_materialyou_summary">應用將取用裝置的動態顏色(需要重新啟動應用)。</string>
+    <string name="pref_appearance_ui_mode">UI模式</string>
+    <string name="pref_appearance_ui_mode_summary">亮暗主題選擇</string>
+    <string name="pref_appearance_ui_mode_value_light">亮色主題</string>
+    <string name="pref_appearance_ui_mode_value_dark">暗色主題</string>
+    <string name="pref_appearance_ui_mode_value_follow">跟隨系統</string>
+    <string name="pref_appearance_materialyou">Material You</string>
+    <string name="pref_appearance_materialyou_summary">應用將取用裝置的動態顏色(需要重新啟動應用)。</string>
     <string name="pref_about_github_summary">此應用是開源的！</string>
     <string name="pref_about_version">版本</string>
     <!-- Project -->

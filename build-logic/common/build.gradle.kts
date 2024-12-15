@@ -12,16 +12,20 @@
  * You should have received a copy of the GNU General Public License along with SubTypo.
  * If not, see <https://www.gnu.org/licenses/>.
  */
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-  id("java-library")
-  id("org.jetbrains.kotlin.jvm")
+plugins { `kotlin-dsl` }
+
+repositories {
+  gradlePluginPortal()
+  google()
+  mavenCentral()
 }
 
 tasks.withType<KotlinCompile>().configureEach {
   compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
 }
 
-dependencies { api(gradleApi()) }
+dependencies {}

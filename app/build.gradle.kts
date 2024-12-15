@@ -14,7 +14,10 @@
  */
 
 import com.teixeira0x.subtypo.build.BuildConfig
-import java.util.Base64
+import com.teixeira0x.subtypo.build.SigningKeyUtils.getSigningKeyAlias
+import com.teixeira0x.subtypo.build.SigningKeyUtils.getSigningKeyPass
+import com.teixeira0x.subtypo.build.SigningKeyUtils.writeSigningKey
+import com.teixeira0x.subtypo.build.signingKeyFile
 
 plugins {
   id("com.android.application")
@@ -41,33 +44,25 @@ android {
   }
 
   signingConfigs {
-    val encodedKey = System.getenv("SIGNING_KEY_BASE64")
-    if (encodedKey != null) {
-      create("release") {
-        val signingKeyFile =
-          file("./signing-key.jks").apply {
-            writeBytes(Base64.getDecoder().decode(encodedKey))
-          }
+    writeSigningKey()
 
-        storeFile = signingKeyFile
-        storePassword =
-          System.getenv("SIGNING_KEY_PASSWORD")
-            ?: throw GradleException("KEY_PASSWORD not set")
-        keyAlias =
-          System.getenv("SIGNING_KEY_ALIAS")
-            ?: throw GradleException("KEY_ALIAS not set")
-        keyPassword =
-          System.getenv("SIGNING_KEY_PASSWORD")
-            ?: throw GradleException("KEY_PASSWORD not set")
+    val alias: String? = getSigningKeyAlias()
+    val pass: String? = getSigningKeyPass()
+
+    if (alias != null && pass != null) {
+      create("release") {
+        storeFile = signingKeyFile.get().asFile
+        storePassword = pass
+        keyAlias = alias
+        keyPassword = pass
       }
     }
   }
 
   buildTypes {
-    debug { isDebuggable = true }
-
     release {
-      signingConfig = signingConfigs.findByName("release")
+      signingConfigs.findByName("release")?.also { signingConfig = it }
+
       isMinifyEnabled = true
       proguardFiles(
         getDefaultProguardFile("proguard-android-optimize.txt"),

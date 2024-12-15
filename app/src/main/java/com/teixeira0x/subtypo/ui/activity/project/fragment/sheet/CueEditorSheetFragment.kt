@@ -28,9 +28,9 @@ import com.teixeira0x.subtypo.databinding.FragmentCueEditorBinding
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.CueEditorViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.CueEditorViewModel.CueEditorState
 import com.teixeira0x.subtypo.ui.fragment.sheet.BaseBottomSheetFragment
+import com.teixeira0x.subtypo.ui.utils.EditTextUtils.afterTextChanged
 import com.teixeira0x.subtypo.ui.utils.showConfirmDialog
 import com.teixeira0x.subtypo.utils.Constants
-import com.teixeira0x.subtypo.utils.EditTextUtils.afterTextChanged
 import com.teixeira0x.subtypo.utils.TimeUtils.getFormattedTime
 import com.teixeira0x.subtypo.utils.TimeUtils.getMilliseconds
 import dagger.hilt.android.AndroidEntryPoint

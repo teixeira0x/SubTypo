@@ -1,4 +1,4 @@
-package com.teixeira0x.subtypo.utils
+package com.teixeira0x.subtypo.ui.utils
 
 import android.content.Context
 import android.view.LayoutInflater

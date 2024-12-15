@@ -13,7 +13,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.utils
+package com.teixeira0x.subtypo.ui.utils
 
 import android.text.Editable
 import android.text.TextWatcher

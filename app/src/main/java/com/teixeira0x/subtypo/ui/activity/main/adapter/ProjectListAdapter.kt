@@ -23,8 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teixeira0x.subtypo.databinding.LayoutProjectItemBinding
 import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.adapter.holder.BindingViewHolder
-import com.teixeira0x.subtypo.utils.ContextUtils.layoutInflater
-import com.teixeira0x.subtypo.utils.VideoUtils
+import com.teixeira0x.subtypo.ui.utils.ContextUtils.layoutInflater
+import com.teixeira0x.subtypo.ui.utils.VideoUtils.getVideoThumbnail
 
 typealias ProjectViewHolder = BindingViewHolder<LayoutProjectItemBinding>
 
@@ -52,7 +52,7 @@ class ProjectListAdapter(
     holder.binding.apply {
       val project = projects[position]
 
-      videoIcon.setImageBitmap(VideoUtils.getVideoThumbnail(project.videoUri))
+      videoIcon.setImageBitmap(root.context.getVideoThumbnail(project.videoUri))
       videoName.setText(project.videoName)
       name.setText(project.name)
 

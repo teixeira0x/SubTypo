@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.teixeira0x.subtypo.databinding.LayoutSubtitleItemBinding
 import com.teixeira0x.subtypo.domain.model.Subtitle
 import com.teixeira0x.subtypo.ui.adapter.holder.BindingViewHolder
-import com.teixeira0x.subtypo.utils.ContextUtils.layoutInflater
+import com.teixeira0x.subtypo.ui.utils.ContextUtils.layoutInflater
 
 typealias SubtitleViewHolder = BindingViewHolder<LayoutSubtitleItemBinding>
 

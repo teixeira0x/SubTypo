@@ -13,13 +13,14 @@ import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.FragmentDialogProjectEditorBinding
 import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToProjectActivity
-import com.teixeira0x.subtypo.ui.activity.main.handler.PermissionsHandler
+import com.teixeira0x.subtypo.ui.activity.main.permission.PermissionsHandler
+import com.teixeira0x.subtypo.ui.activity.main.permission.PermissionsHandler.Companion.isPermissionsGranted
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectEditorViewModel
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectEditorViewModel.ProjectEditorState
 import com.teixeira0x.subtypo.ui.fragment.sheet.BaseBottomSheetFragment
+import com.teixeira0x.subtypo.ui.utils.VideoUtils.getVideoThumbnail
+import com.teixeira0x.subtypo.ui.utils.showToastShort
 import com.teixeira0x.subtypo.utils.Constants
-import com.teixeira0x.subtypo.utils.ToastUtils
-import com.teixeira0x.subtypo.utils.VideoUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -78,7 +79,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     binding.chooseVideo.setOnClickListener {
-      if (PermissionsHandler.isPermissionsGranted(requireContext())) {
+      if (requireContext().isPermissionsGranted()) {
         videoPicker.launch(arrayOf("video/*"))
       } else {
         PermissionsHandler.showPermissionSettingsDialog(requireContext())
@@ -123,7 +124,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
   private fun updateUI(project: Project?) {
     if (project != null) {
       binding.videoThumbnail.setImageBitmap(
-        VideoUtils.getVideoThumbnail(project.videoUri)
+        requireContext().getVideoThumbnail(project.videoUri)
       )
       binding.videoName.setText(project.videoName)
       binding.tieName.setText(project.name)
@@ -164,7 +165,9 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
   private fun onChooseVideo(uri: Uri?) {
     if (uri != null) {
       val videoDocument = DocumentFile.fromSingleUri(requireContext(), uri)
-      binding.videoThumbnail.setImageBitmap(VideoUtils.getVideoThumbnail(uri))
+      binding.videoThumbnail.setImageBitmap(
+        requireContext().getVideoThumbnail(uri)
+      )
       binding.videoName.setText(videoDocument?.name)
       this.videoUri = uri
     }
@@ -175,11 +178,11 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
 
     return when {
       videoUri == null -> {
-        ToastUtils.showShort(R.string.error_choose_video)
+        requireContext().showToastShort(R.string.error_choose_video)
         false
       }
       name.isEmpty() -> {
-        ToastUtils.showShort(R.string.error_enter_name)
+        requireContext().showToastShort(R.string.error_enter_name)
         false
       }
 

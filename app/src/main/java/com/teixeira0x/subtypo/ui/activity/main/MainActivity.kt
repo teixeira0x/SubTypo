@@ -10,7 +10,7 @@ import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.ActivityMainBinding
 import com.teixeira0x.subtypo.ui.activity.BaseActivity
 import com.teixeira0x.subtypo.ui.activity.main.fragment.sheet.ProjectEditorSheetFragment
-import com.teixeira0x.subtypo.ui.activity.main.handler.PermissionsHandler
+import com.teixeira0x.subtypo.ui.activity.main.permission.PermissionsHandler
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

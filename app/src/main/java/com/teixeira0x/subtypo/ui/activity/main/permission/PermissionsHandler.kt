@@ -13,24 +13,23 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.ui.activity.main.handler
+package com.teixeira0x.subtypo.ui.activity.main.permission
 
 import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
+import com.teixeira0x.subtypo.ui.utils.permission.checkPermissions
 
 /**
  * Manages the permissions required for the application to function.
@@ -43,19 +42,22 @@ public class PermissionsHandler(
 ) : DefaultLifecycleObserver {
 
   companion object {
-    const val KEY_PERMISSION = "key_read_media_video_files"
+    private const val KEY_PERMISSION = "key_read_media_video_files"
+
+    private val permissions: Array<String>
+      get() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          arrayOf(Manifest.permission.READ_MEDIA_VIDEO)
+        } else {
+          arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+          )
+        }
 
     @JvmStatic
-    fun isPermissionsGranted(context: Context): Boolean {
-      return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        checkSelfPermission(context, Manifest.permission.READ_MEDIA_VIDEO) ==
-          PackageManager.PERMISSION_GRANTED
-      } else {
-        checkSelfPermission(
-          context,
-          Manifest.permission.READ_EXTERNAL_STORAGE,
-        ) == PackageManager.PERMISSION_GRANTED
-      }
+    fun Context.isPermissionsGranted(): Boolean {
+      return checkPermissions(permissions)
     }
 
     /**
@@ -81,16 +83,6 @@ public class PermissionsHandler(
 
   private lateinit var reqPermissions: ActivityResultLauncher<Array<String>>
 
-  private val readExternalStoragePermission =
-    arrayOf(
-      Manifest.permission.READ_EXTERNAL_STORAGE
-    ) // [READ_EXTERNAL_STORAGE] For devices below api 33 (Android 13).
-
-  private val readMediaVideoPermission =
-    arrayOf(
-      Manifest.permission.READ_MEDIA_VIDEO
-    ) // [READ_MEDIA_VIDEO] For devices with api 33 (Android 13) or above.
-
   override fun onCreate(owner: LifecycleOwner) {
     reqPermissions =
       registry.register(
@@ -105,17 +97,6 @@ public class PermissionsHandler(
 
   override fun onDestroy(owner: LifecycleOwner) {
     reqPermissions.unregister()
-  }
-
-  /** Launch the permission request on the screen. */
-  fun requestPermissions() {
-    reqPermissions.launch(
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        readMediaVideoPermission
-      } else {
-        readExternalStoragePermission
-      }
-    )
   }
 
   /**
@@ -164,5 +145,10 @@ public class PermissionsHandler(
       .setPositiveButton(R.string.grant) { _, _ -> requestPermissions() }
       .setNegativeButton(R.string.no, null)
       .show()
+  }
+
+  /** Launch the permission request on the screen. */
+  fun requestPermissions() {
+    reqPermissions.launch(permissions)
   }
 }

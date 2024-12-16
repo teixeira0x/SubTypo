@@ -11,7 +11,17 @@
 
   <item
     android:id="@+id/menu_import"
-    android:icon="@drawable/ic_export_variant"
+    android:icon="@drawable/ic_import"
     android:title="@string/proj_import_subtitle" />
 
+  <item
+    android:id="@+id/menu_open_drawer"
+    android:icon="@drawable/ic_subtitle"
+    android:title="@string/subtitles" />
+
+  <item
+    android:id="@+id/menu_close_project"
+    android:icon="@drawable/ic_close"
+    android:title="@string/proj_close" />
+    
 </menu>

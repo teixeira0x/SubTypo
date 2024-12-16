@@ -20,7 +20,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.graphics.Insets
+import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.core.view.updatePaddingRelative
@@ -106,11 +108,26 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    if (menu is MenuBuilder) {
+      menu.setOptionalIconsVisible(true)
+    }
+
     menuInflater.inflate(R.menu.activity_project_menu, menu)
     return super.onCreateOptionsMenu(menu)
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.menu_open_drawer -> {
+        binding.drawerLayout.apply {
+          if (!isDrawerOpen(GravityCompat.END)) {
+            openDrawer(GravityCompat.END)
+          }
+        }
+      }
+      R.id.menu_close_project -> finish()
+      else -> Unit
+    }
     /*when (item.itemId) {
       R.id.menu_import -> subtitlePickerHandler.launchPicker()
       R.id.menu_export -> subtitleExporterHandler.launchExporter()

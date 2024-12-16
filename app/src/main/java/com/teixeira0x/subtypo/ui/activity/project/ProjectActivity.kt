@@ -20,15 +20,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.graphics.Insets
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
+import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.R.attr
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.ActivityProjectBinding
-import com.teixeira0x.subtypo.ui.activity.BaseActivity
+import com.teixeira0x.subtypo.ui.activity.BaseEdgeToEdgeActivity
 import com.teixeira0x.subtypo.ui.activity.project.adapter.CueListAdapter
+import com.teixeira0x.subtypo.ui.activity.project.fragment.SubtitleListFragment
 import com.teixeira0x.subtypo.ui.activity.project.fragment.sheet.CueEditorSheetFragment
 import com.teixeira0x.subtypo.ui.activity.project.player.PlayerControlLayoutHandler
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel
@@ -40,7 +44,7 @@ import com.teixeira0x.subtypo.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProjectActivity : BaseActivity() {
+class ProjectActivity : BaseEdgeToEdgeActivity() {
 
   private lateinit var playerControlLayoutHandler: PlayerControlLayoutHandler
 
@@ -114,6 +118,23 @@ class ProjectActivity : BaseActivity() {
     }*/
 
     return super.onOptionsItemSelected(item)
+  }
+
+  override fun onApplySystemBarInsets(insets: Insets) {
+    _binding?.apply {
+      appBar.updatePadding(top = insets.top)
+      toolbar.updatePaddingRelative(start = insets.left, end = insets.right)
+
+      mainContent.updatePadding(
+        left = insets.left,
+        right = insets.right,
+        bottom = insets.bottom,
+      )
+
+      fragmentSubtitles
+        .getFragment<SubtitleListFragment>()
+        .onApplySystemBarInsets(insets)
+    }
   }
 
   private fun initialize() {

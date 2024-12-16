@@ -5,18 +5,16 @@
   android:layout_width="match_parent"
   android:id="@+id/drawer_layout">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar"
-      android:layout_width="0dp"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/shape_toolbar"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior"
       app:elevation="1dp">
 
       <com.google.android.material.appbar.MaterialToolbar
@@ -26,89 +24,96 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-      android:id="@+id/player_container"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toTopOf="@id/player_controller_container"
-      app:layout_constraintTop_toBottomOf="@id/app_bar">
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/main_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-      <include
-        android:id="@+id/player_content"
-        layout="@layout/layout_player_content" />
-
-    </FrameLayout>
-
-    <FrameLayout
-      android:id="@+id/player_controller_container"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toTopOf="@id/divider"
-      app:layout_constraintTop_toBottomOf="@id/player_container">
-
-      <include
-        android:id="@+id/player_controller_content"
-        layout="@layout/layout_player_controller_content" />
-
-    </FrameLayout>
-
-    <View
-      android:id="@+id/divider"
-      android:layout_width="0dp"
-      android:layout_height="@dimen/divider_size"
-      android:background="?attr/colorOutlineVariant"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toTopOf="@id/cues_container"
-      app:layout_constraintTop_toBottomOf="@id/player_controller_container" />
-
-    <FrameLayout
-      android:id="@+id/cues_container"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/divider">
-
-      <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_cues"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp" />
-
-      <ProgressBar
-        android:id="@+id/cues_loading"
-        android:layout_height="30dp"
-        android:layout_width="30dp"
-        android:indeterminate="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70dp" />
-
-      <TextView
-        android:id="@+id/no_cues"
-        android:layout_width="wrap_content"
+      <FrameLayout
+        android:id="@+id/player_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_gravity="center"
-        android:text="@string/subtitle_cue_list_empty" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/player_controller_container"
+        app:layout_constraintTop_toTopOf="parent">
 
-      <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_cue"
-        android:layout_width="wrap_content"
+        <include
+          android:id="@+id/player_content"
+          layout="@layout/layout_player_content" />
+
+      </FrameLayout>
+
+      <FrameLayout
+        android:id="@+id/player_controller_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:src="@drawable/ic_plus"
-        android:layout_gravity="bottom|center_horizontal" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintTop_toBottomOf="@id/player_container">
 
-    </FrameLayout>
+        <include
+          android:id="@+id/player_controller_content"
+          layout="@layout/layout_player_controller_content" />
 
+      </FrameLayout>
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+      <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/divider_size"
+        android:background="?attr/colorOutlineVariant"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cues_container"
+        app:layout_constraintTop_toBottomOf="@id/player_controller_container" />
+
+      <FrameLayout
+        android:id="@+id/cues_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/rv_cues"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:padding="5dp" />
+
+        <ProgressBar
+          android:id="@+id/cues_loading"
+          android:layout_height="30dp"
+          android:layout_width="30dp"
+          android:indeterminate="true"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="70dp" />
+
+        <TextView
+          android:id="@+id/no_cues"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="14sp"
+          android:layout_gravity="center"
+          android:text="@string/subtitle_cue_list_empty" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+          android:id="@+id/fab_add_cue"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="25dp"
+          android:src="@drawable/ic_plus"
+          android:layout_gravity="bottom|center_horizontal" />
+
+      </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
   <com.google.android.material.navigation.NavigationView
     android:layout_height="match_parent"

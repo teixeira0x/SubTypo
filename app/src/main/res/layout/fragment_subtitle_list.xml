@@ -5,12 +5,17 @@
   android:layout_width="match_parent"
   android:orientation="vertical">
 
+  <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/app_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/shape_toolbar"
+      app:elevation="1dp">
+
   <com.google.android.material.appbar.MaterialToolbar
     android:id="@+id/toolbar"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:background="@drawable/shape_toolbar"
-    android:elevation="1dp">
+    android:layout_width="match_parent">
 
     <TextView
       android:layout_height="wrap_content"
@@ -21,7 +26,10 @@
 
   </com.google.android.material.appbar.MaterialToolbar>
 
+</com.google.android.material.appbar.AppBarLayout>
+
   <RelativeLayout
+    android:id="@+id/subtitle_list_container"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 

@@ -10,7 +10,7 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import com.blankj.utilcode.util.UriUtils
 import com.teixeira0x.subtypo.R
-import com.teixeira0x.subtypo.databinding.FragmentDialogProjectEditorBinding
+import com.teixeira0x.subtypo.databinding.FragmentProjectEditorBinding
 import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToProjectActivity
 import com.teixeira0x.subtypo.ui.activity.main.permission.PermissionsHandler
@@ -43,8 +43,8 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
     }
   }
 
-  private var _binding: FragmentDialogProjectEditorBinding? = null
-  private val binding: FragmentDialogProjectEditorBinding
+  private var _binding: FragmentProjectEditorBinding? = null
+  private val binding: FragmentProjectEditorBinding
     get() =
       checkNotNull(_binding) {
         "ProjectEditorSheetFragment has been destroyed!"
@@ -72,7 +72,7 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?,
   ): View {
-    return FragmentDialogProjectEditorBinding.inflate(inflater)
+    return FragmentProjectEditorBinding.inflate(inflater)
       .also { _binding = it }
       .root
   }
@@ -140,17 +140,16 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
   private fun createProject() {
     onLoadingChange(true)
 
+    val name = binding.tieName.text.toString().trim()
+    val videoUri =
+      if (videoUri != null) {
+        UriUtils.uri2File(videoUri!!).absolutePath
+      } else ""
+
     if (projectId > 0) {
-      viewModel.updateProject(
-        id = projectId,
-        name = binding.tieName.text.toString().trim(),
-        videoUri = UriUtils.uri2File(videoUri!!).absolutePath,
-      )
+      viewModel.updateProject(id = projectId, name = name, videoUri = videoUri)
     } else {
-      viewModel.createProject(
-        name = binding.tieName.text.toString().trim(),
-        videoUri = UriUtils.uri2File(videoUri!!).absolutePath,
-      )
+      viewModel.createProject(name = name, videoUri = videoUri)
     }
   }
 
@@ -177,12 +176,8 @@ class ProjectEditorSheetFragment : BaseBottomSheetFragment() {
     val name = binding.tieName.text.toString().trim()
 
     return when {
-      videoUri == null -> {
-        requireContext().showToastShort(R.string.error_choose_video)
-        false
-      }
       name.isEmpty() -> {
-        requireContext().showToastShort(R.string.error_enter_name)
+        requireContext().showToastShort(R.string.proj_error_enter_name)
         false
       }
 

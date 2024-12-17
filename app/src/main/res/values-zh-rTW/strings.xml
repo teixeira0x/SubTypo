@@ -50,8 +50,6 @@
     <string name="proj_new">新建專案</string>
     <string name="proj_edit">編輯專案</string>
     <string name="proj_enter_name">輸入名稱</string>
-    <string name="proj_choose_video">選取影片</string>
-    <string name="proj_click_choose_video">點按選取影片</string>
     <string name="proj_current_video_position">當前影片位置：%1$s</string>
     <string name="proj_export_subtitle">匯出字幕</string>
     <string name="proj_export_subtitle_saved">匯出到：%1$s</string>
@@ -60,11 +58,6 @@
     <string name="proj_import_subtitle">匯入字幕</string>
     <string name="proj_import_subtitle_success">匯入成功</string>
     <string name="proj_import_subtitle_error">無法匯入此字幕</string>
-    <!-- Errors -->
-    <string name="error_choose_video">請選取影片</string>
-    <string name="error_enter_name">請輸入名稱</string>
-    <string name="error_loading_project">載入專案時出錯</string>
-    <string name="error_saving_project">儲存專案時出錯</string>
     <!-- Subtitles -->
     <string name="subtitles">字幕</string>
     <string name="subtitle_loading">載入字幕…</string>

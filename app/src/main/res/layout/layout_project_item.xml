@@ -18,7 +18,7 @@
       android:layout_height="wrap_content">
 
       <ImageView
-        android:id="@+id/video_icon"
+        android:id="@+id/video_thumbnail"
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:scaleType="fitCenter"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_toEndOf="@id/video_icon"
+        android:layout_toEndOf="@id/video_thumbnail"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:ellipsize="end"
         android:layout_toLeftOf="@id/chevron"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_small"
-        android:layout_toEndOf="@id/video_icon"
+        android:layout_toEndOf="@id/video_thumbnail"
         android:layout_below="@id/name"
         android:layout_toLeftOf="@id/chevron"
         android:textSize="13sp" />

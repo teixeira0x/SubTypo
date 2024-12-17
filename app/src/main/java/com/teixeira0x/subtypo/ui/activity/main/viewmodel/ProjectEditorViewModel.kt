@@ -26,7 +26,6 @@ constructor(
 
   private val _state =
     MutableLiveData<ProjectEditorState>(ProjectEditorState.Loading)
-
   val stateData: LiveData<ProjectEditorState>
     get() = _state
 

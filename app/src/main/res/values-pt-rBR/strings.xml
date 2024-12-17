@@ -54,8 +54,6 @@
   <string name="proj_new">Novo Projeto</string>
   <string name="proj_edit">Editar Projeto</string>
   <string name="proj_enter_name">Insira o nome</string>
-  <string name="proj_choose_video">Selecionar vídeo</string>
-  <string name="proj_click_choose_video">Clique para escolher o vídeo</string>
   <string name="proj_current_video_position">Posição atual do vídeo: %1$s</string>
   <string name="proj_error_unable_to_load">Não foi possível carregar este projeto.</string>
   <string name="proj_export_subtitle">Exportar Legenda</string>
@@ -65,11 +63,6 @@
   <string name="proj_import_subtitle">Importar Legenda</string>
   <string name="proj_import_subtitle_success">Importado com sucesso</string>
   <string name="proj_import_subtitle_error">Não é possível importar esta legenda</string>
-  <!-- Errors -->
-  <string name="error_choose_video">Por favor, escolha um vídeo</string>
-  <string name="error_enter_name">Insira um nome</string>
-  <string name="error_loading_project">Ocorreu um erro ao tentar carregar o projeto</string>
-  <string name="error_saving_project">Ocorreu um erro ao tentar salvar o projeto</string>
   <!-- Subtitles -->
   <string name="subtitles">Legendas</string>
   <string name="subtitle_loading">Carregando legendas.</string>

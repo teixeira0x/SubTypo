@@ -52,7 +52,13 @@ class ProjectListAdapter(
     holder.binding.apply {
       val project = projects[position]
 
-      videoIcon.setImageBitmap(root.context.getVideoThumbnail(project.videoUri))
+      val videoUri = project.videoUri
+      if (videoUri.isNotEmpty()) {
+        videoThumbnail.setImageBitmap(
+          root.context.getVideoThumbnail(project.videoUri)
+        )
+      }
+
       videoName.setText(project.videoName)
       name.setText(project.name)
 

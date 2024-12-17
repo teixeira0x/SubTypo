@@ -53,7 +53,7 @@
         android:layout_centerHorizontal="true"
         android:textSize="12sp"
         android:layout_alignBottom="@id/video_thumbnail"
-        android:text="@string/proj_click_choose_video" />
+        android:text="@string/proj_video_choose_click" />
 
     </RelativeLayout>
 
@@ -63,7 +63,7 @@
     android:id="@+id/til_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium"
     android:hint="@string/proj_enter_name"
     style="@style/AppTheme.TextInputLayout">
 

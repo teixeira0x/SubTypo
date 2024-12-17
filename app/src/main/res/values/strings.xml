@@ -73,10 +73,10 @@
   <string name="proj_new">New Project</string>
   <string name="proj_edit">Edit Project</string>
   <string name="proj_enter_name">Enter a name</string>
-  <string name="proj_choose_video">Choose video</string>
-  <string name="proj_click_choose_video">Click to choose video</string>
+  <string name="proj_video_choose_click">Click to choose video (Optional)</string>
   <string name="proj_current_video_position">Current video position: %1$s</string>
 
+  <string name="proj_error_enter_name">Please enter a name</string>
   <string name="proj_error_unable_to_load">Unable to load this project.</string>
 
   <string name="proj_export_subtitle">Export Subtitle</string>
@@ -87,11 +87,6 @@
   <string name="proj_import_subtitle">Import Subtitle</string>
   <string name="proj_import_subtitle_success">Imported successfully</string>
   <string name="proj_import_subtitle_error">Unable to import this subtitle</string>
-  <!-- Errors -->
-  <string name="error_choose_video">Please choose a video</string>
-  <string name="error_enter_name">Please enter a name</string>
-  <string name="error_loading_project">An error occurred when trying to load the project</string>
-  <string name="error_saving_project">An error occurred when trying to save the project</string>
   <!-- Subtitles -->
   <string name="subtitles">Subtitles</string>
   <string name="subtitle_loading">Loading subtitles.</string>

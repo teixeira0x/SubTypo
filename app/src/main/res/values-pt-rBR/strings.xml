@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="close_app">Fechar aplicativo</string>
   <string name="about">Sobre</string>
   <string name="about_libs">Bibliotecas</string>
@@ -45,6 +45,16 @@
   <string name="pref_about_version">Versão</string>
   <string name="pref_about_libraries">Bibliotecas</string>
   <string name="pref_about_libraries_summary">Bibliotecas utilizadas no aplicativo.</string>
+  <string name="video_player_show">Mostrar Reprodutor de Vídeo</string>
+  <string name="video_player_hide">Ocultar Reprodutor de Vídeo</string>
+  <string name="video_player_error_generic">A reprodução falhou</string>
+  <string name="video_player_error_drm_unsupported_scheme">Este aparelho não tem suporte ao esquema de DRM necessário</string>
+  <string name="video_player_error_no_decoder">Este aparelho não fornece um decodificador para <xliff:g id="mime_type">%1$s</xliff:g></string>
+  <string name="video_player_error_no_secure_decoder">Este aparelho não fornece um decodificador seguro para <xliff:g id="mime_type">%1$s</xliff:g></string>
+  <string name="video_player_error_querying_decoders">Não foi possível consultar os decodificadores do dispositivo</string>
+  <string name="video_player_error_instantiating_decoder">Não foi possível criar uma instância do decodificador <xliff:g id="decoder_name">%1$s</xliff:g></string>
+  <string name="video_player_error_unsupported_video">A mídia inclui faixas de vídeo, mas nenhuma pode ser reproduzida por este dispositivo</string>
+  <string name="video_player_error_unsupported_audio">A mídia inclui faixas de áudio, mas nenhuma pode ser reproduzida por este dispositivo</string>
   <!-- Project -->
   <string name="projects">Projetos</string>
   <string name="proj_initializing">Inicializando projeto.</string>
@@ -54,7 +64,9 @@
   <string name="proj_new">Novo Projeto</string>
   <string name="proj_edit">Editar Projeto</string>
   <string name="proj_enter_name">Insira o nome</string>
+  <string name="proj_video_choose_click">Clique para escolher um vídeo (opcional)</string>
   <string name="proj_current_video_position">Posição atual do vídeo: %1$s</string>
+  <string name="proj_error_enter_name">Por favor, insira um nome</string>
   <string name="proj_error_unable_to_load">Não foi possível carregar este projeto.</string>
   <string name="proj_export_subtitle">Exportar Legenda</string>
   <string name="proj_export_subtitle_saved">Salvo no caminho:  %1$s</string>

@@ -1,71 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="close_app">關閉應用</string>
-    <string name="about">關於</string>
-    <string name="settings">設定</string>
-    <string name="delete">刪除</string>
-    <string name="rename">重命名</string>
-    <string name="edit">編輯</string>
-    <string name="ok">好</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
-    <string name="cancel">取消</string>
-    <string name="save">儲存</string>
-    <string name="copy">複製</string>
-    <string name="grant">授權</string>
-    <string name="export">匯出</string>
-    <string name="copy_and_report_issue">複製並回報問題</string>
-    <!-- Messages -->
-    <string name="msg_delete_confirmation">你確定要刪除%1$s嗎？</string>
-    <string name="msg_video_not_chosen">影片未選擇</string>
-    <!-- Permission -->
-    <string name="permission_required">需要權限</string>
-    <string name="permission_required_detail">本應用需要權限以訪問影片和字幕檔案。如果沒有這些權限，某些功能可能沒法正常工作。</string>
-    <string name="permission_required_settings_detail">請於設定中手動授權以使本應用正常工作。</string>
-    <string name="permission_required_settings_goto">轉至設定</string>
-    <!-- Warn -->
-    <string name="warn_text_field_cannot_empty">文本不能為空</string>
-    <string name="warn_name_already_existing">名稱已存在</string>
-    <!-- Preferences -->
-    <string name="pref_category_configure">設定</string>
-    <string name="pref_category_about">關於</string>
-    <string name="pref_category_appearance">外觀</string>
-    <string name="pref_configure_general">一般</string>
-    <string name="pref_configure_general_summary">一般設定</string>
-    <string name="pref_appearance_ui_mode">UI模式</string>
-    <string name="pref_appearance_ui_mode_summary">亮暗主題選擇</string>
-    <string name="pref_appearance_ui_mode_value_light">亮色主題</string>
-    <string name="pref_appearance_ui_mode_value_dark">暗色主題</string>
-    <string name="pref_appearance_ui_mode_value_follow">跟隨系統</string>
-    <string name="pref_appearance_materialyou">Material You</string>
-    <string name="pref_appearance_materialyou_summary">應用將取用裝置的動態顏色(需要重新啟動應用)。</string>
-    <string name="pref_about_github_summary">此應用是開源的！</string>
-    <string name="pref_about_version">版本</string>
-    <!-- Project -->
-    <string name="projects">專案</string>
-    <string name="proj_initializing">初期化專案…</string>
-    <string name="proj_saving">儲存專案…</string>
-    <string name="proj_close">關閉專案</string>
-    <string name="proj_no_projects">無專案，點按「+」以新增！</string>
-    <string name="proj_new">新建專案</string>
-    <string name="proj_edit">編輯專案</string>
-    <string name="proj_enter_name">輸入名稱</string>
-    <string name="proj_current_video_position">當前影片位置：%1$s</string>
-    <string name="proj_export_subtitle">匯出字幕</string>
-    <string name="proj_export_subtitle_saved">匯出到：%1$s</string>
-    <string name="proj_export_subtitle_error">匯出字幕失敗</string>
-    <string name="proj_export_subtitle_error_no_subtitles">新增字幕以匯出。</string>
-    <string name="proj_import_subtitle">匯入字幕</string>
-    <string name="proj_import_subtitle_success">匯入成功</string>
-    <string name="proj_import_subtitle_error">無法匯入此字幕</string>
-    <!-- Subtitles -->
-    <string name="subtitles">字幕</string>
-    <string name="subtitle_loading">載入字幕…</string>
-    <string name="subtitle_add">新增字幕</string>
-    <string name="subtitle_edit">編輯字幕</string>
-    <string name="subtitle_list">字幕</string>
-    <string name="subtitle_list_empty">沒有字幕，點按「+」以新增。</string>
-    <string name="subtitle_enter_name">輸入名稱</string>
-    <string name="subtitle_enter_format">輸入格式</string>
-
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="close_app">關閉應用</string>
+  <string name="about">關於</string>
+  <string name="about_libs">Libraries</string>
+  <string name="settings">設定</string>
+  <string name="remove">Remove</string>
+  <string name="delete">刪除</string>
+  <string name="rename">重命名</string>
+  <string name="edit">編輯</string>
+  <string name="ok">好</string>
+  <string name="yes">是</string>
+  <string name="no">否</string>
+  <string name="cancel">取消</string>
+  <string name="save">儲存</string>
+  <string name="copy">複製</string>
+  <string name="grant">授權</string>
+  <string name="export">匯出</string>
+  <string name="copy_and_report_issue">複製並回報問題</string>
+  <!-- Messages -->
+  <string name="msg_please_wait">Please wait.</string>
+  <string name="msg_delete_confirmation">你確定要刪除%1$s嗎？</string>
+  <string name="msg_video_not_chosen">影片未選擇</string>
+  <!-- Permission -->
+  <string name="permission_required">需要權限</string>
+  <string name="permission_required_detail">本應用需要權限以訪問影片和字幕檔案。如果沒有這些權限，某些功能可能沒法正常工作。</string>
+  <string name="permission_required_settings_detail">請於設定中手動授權以使本應用正常工作。</string>
+  <string name="permission_required_settings_goto">轉至設定</string>
+  <!-- Warn -->
+  <string name="warn_text_field_cannot_empty">文本不能為空</string>
+  <string name="warn_name_already_existing">名稱已存在</string>
+  <!-- Preferences -->
+  <string name="pref_category_configure">設定</string>
+  <string name="pref_category_about">關於</string>
+  <string name="pref_category_appearance">Appearance</string>
+  <string name="pref_configure_general">一般</string>
+  <string name="pref_configure_general_summary">一般設定</string>
+  <string name="pref_appearance_ui_mode">UI Mode</string>
+  <string name="pref_appearance_ui_mode_summary">Choose light or dark mode</string>
+  <string name="pref_appearance_ui_mode_value_light">Light</string>
+  <string name="pref_appearance_ui_mode_value_dark">Dark</string>
+  <string name="pref_appearance_ui_mode_value_follow">Follow System</string>
+  <string name="pref_appearance_materialyou_summary">The app follows the device\'s theme colors (requires app restart).</string>
+  <string name="pref_about_github_summary">此應用是開源的！</string>
+  <string name="pref_about_version">版本</string>
+  <string name="pref_about_libraries">Libraries</string>
+  <string name="pref_about_libraries_summary">Libraries used in the application.</string>
+  <string name="video_player_show">Show Video Player</string>
+  <string name="video_player_hide">Hide Video Player</string>
+  <string name="video_player_error_generic">Playback failed</string>
+  <string name="video_player_error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>
+  <string name="video_player_error_no_decoder">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
+  <string name="video_player_error_no_secure_decoder">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
+  <string name="video_player_error_querying_decoders">Unable to query device decoders</string>
+  <string name="video_player_error_instantiating_decoder">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>
+  <string name="video_player_error_unsupported_video">Media includes video tracks, but none are playable by this device</string>
+  <string name="video_player_error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>
+  <!-- Project -->
+  <string name="projects">專案</string>
+  <string name="proj_initializing">Initializing project.</string>
+  <string name="proj_saving">Saving project.</string>
+  <string name="proj_close">關閉專案</string>
+  <string name="proj_no_projects">無專案，點按「+」以新增！</string>
+  <string name="proj_new">新建專案</string>
+  <string name="proj_edit">編輯專案</string>
+  <string name="proj_enter_name">輸入名稱</string>
+  <string name="proj_video_choose_click">Click to choose video (Optional)</string>
+  <string name="proj_current_video_position">當前影片位置：%1$s</string>
+  <string name="proj_error_enter_name">Please enter a name</string>
+  <string name="proj_error_unable_to_load">Unable to load this project.</string>
+  <string name="proj_export_subtitle">匯出字幕</string>
+  <string name="proj_export_subtitle_saved">匯出到：%1$s</string>
+  <string name="proj_export_subtitle_error">匯出字幕失敗</string>
+  <string name="proj_export_subtitle_error_no_subtitles">新增字幕以匯出。</string>
+  <string name="proj_import_subtitle">匯入字幕</string>
+  <string name="proj_import_subtitle_success">匯入成功</string>
+  <string name="proj_import_subtitle_error">無法匯入此字幕</string>
+  <!-- Subtitles -->
+  <string name="subtitles">字幕</string>
+  <string name="subtitle_loading">Loading subtitles.</string>
+  <string name="subtitle_add">Add Subtitle</string>
+  <string name="subtitle_edit">Edit Subtitle</string>
+  <string name="subtitle_remove_msg">Are you sure you want to delete this subtitle?</string>
+  <string name="subtitle_list">Subtitles</string>
+  <string name="subtitle_list_empty">No subtitles, click \"+\" to add.</string>
+  <string name="subtitle_enter_name">Enter name</string>
+  <string name="subtitle_enter_format">Enter format</string>
+  <string name="subtitle_error_remove">Unable to delete this subtitle</string>
+  <string name="subtitle_cue_list_empty">Empty text list click the \"+\" below to add new text.</string>
+  <string name="subtitle_cue_add">Add text</string>
+  <string name="subtitle_cue_edit">Edit text</string>
+  <string name="subtitle_cue_remove_msg">Are you sure you want to remove this text?</string>
+  <string name="subtitle_cue_enter_start_time">Enter start time</string>
+  <string name="subtitle_cue_enter_end_time">Enter end time</string>
+  <string name="subtitle_cue_enter_text">Enter text</string>
+  <string name="subtitle_cue_invalid_time">This is not a valid time.</string>
 </resources>

@@ -21,40 +21,53 @@ import androidx.lifecycle.ViewModel
 import com.teixeira0x.subtypo.domain.model.Cue
 
 class VideoViewModel : ViewModel() {
-  private val _videoState = MutableLiveData<VideoState>()
-  val videoState: LiveData<VideoState>
-    get() = _videoState
 
-  private val _cues = MutableLiveData<List<Cue>>(emptyList())
-  val cues: LiveData<List<Cue>>
-    get() = _cues
+  private val _videoEvent = MutableLiveData<VideoEvent>()
+  val videoEvent: LiveData<VideoEvent>
+    get() = _videoEvent
+
+  private val _videoUri = MutableLiveData<String>("")
+  val videoUriData: LiveData<String>
+    get() = _videoUri
 
   private val _videoPosition = MutableLiveData<Long>(0L)
-  val videoPosition: LiveData<Long>
-    get() = _videoPosition
+  val videoPosition: Long
+    get() = _videoPosition.value!!
 
-  fun onVideoReady() {
-    _videoState.value = VideoState.Ready
+  private val _cues = MutableLiveData<List<Cue>>(emptyList())
+  val cuesData: LiveData<List<Cue>>
+    get() = _cues
+
+  private val _isPlayerVisible = MutableLiveData<Boolean>(true)
+  val isPlayerVisibleData: LiveData<Boolean>
+    get() = _isPlayerVisible
+
+  fun doEvent(event: VideoEvent) {
+    _videoEvent.value = event
   }
 
-  fun onVideoEnded() {
-    _videoState.value = VideoState.Ended
+  fun loadVideo(videoUri: String) {
+    _videoUri.value = videoUri
+    if (videoUri.isEmpty()) {
+      _isPlayerVisible.value = false
+    }
   }
 
-  fun onUpdateProgress(currentPosition: Long) {
-    _videoPosition.value = currentPosition
-    _videoState.value = VideoState.Playing(currentPosition)
-  }
-
-  fun onUpdateCues(cues: List<Cue>) {
+  fun updateCues(cues: List<Cue>) {
     _cues.value = cues
   }
 
-  sealed interface VideoState {
-    object Ready : VideoState
+  fun setPlayerVisible(visible: Boolean) {
+    _isPlayerVisible.value = visible
+  }
 
-    data class Playing(val currentPosition: Long) : VideoState
+  fun saveVideoPosition(videoPosition: Long) {
+    _videoPosition.value = videoPosition
+  }
 
-    object Ended : VideoState
+  sealed class VideoEvent {
+    data object Pause : VideoEvent()
+
+    data object Play : VideoEvent()
   }
 }

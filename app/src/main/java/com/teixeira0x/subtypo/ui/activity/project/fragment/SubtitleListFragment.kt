@@ -81,6 +81,11 @@ class SubtitleListFragment : Fragment() {
       .root
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+  }
+
   override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
     binding.rvSubtitles.layoutManager = LinearLayoutManager(requireContext())
     binding.rvSubtitles.adapter = subtitleListAdapter

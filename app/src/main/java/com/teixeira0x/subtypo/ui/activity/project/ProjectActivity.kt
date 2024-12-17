@@ -36,7 +36,6 @@ import com.teixeira0x.subtypo.ui.activity.BaseEdgeToEdgeActivity
 import com.teixeira0x.subtypo.ui.activity.project.adapter.CueListAdapter
 import com.teixeira0x.subtypo.ui.activity.project.fragment.SubtitleListFragment
 import com.teixeira0x.subtypo.ui.activity.project.fragment.sheet.CueEditorSheetFragment
-import com.teixeira0x.subtypo.ui.activity.project.player.PlayerControlLayoutHandler
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel.ProjectState
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel
@@ -47,8 +46,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProjectActivity : BaseEdgeToEdgeActivity() {
-
-  private lateinit var playerControlLayoutHandler: PlayerControlLayoutHandler
 
   private val projectViewModel by viewModels<ProjectViewModel>()
   private val videoViewModel by viewModels<VideoViewModel>()
@@ -64,9 +61,8 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
       val subtitleId = subtitleViewModel.selectedSubtitleId
       if (subtitleId > 0) {
         CueEditorSheetFragment.newInstance(
-            videoViewModel.videoPosition.value!!,
-            subtitleId,
-            index,
+            subtitleId = subtitleId,
+            cueIndex = index,
           )
           .show(supportFragmentManager, null)
       }
@@ -90,15 +86,6 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
       onBackPressedDispatcher.onBackPressed()
     }
 
-    playerControlLayoutHandler =
-      PlayerControlLayoutHandler(
-        binding.playerContent,
-        binding.playerControllerContent,
-        videoViewModel,
-      )
-
-    lifecycle.addObserver(playerControlLayoutHandler)
-
     initialize()
   }
 
@@ -116,8 +103,26 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
     return super.onCreateOptionsMenu(menu)
   }
 
+  override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+    menu.findItem(R.id.menu_show_video).apply {
+      isVisible = videoViewModel.videoUriData.value!!.isNotEmpty()
+
+      if (videoViewModel.isPlayerVisibleData.value!!) {
+        setIcon(R.drawable.ic_video_off)
+        setTitle(R.string.video_player_hide)
+      } else {
+        setIcon(R.drawable.ic_video)
+        setTitle(R.string.video_player_show)
+      }
+    }
+
+    return super.onPrepareOptionsMenu(menu)
+  }
+
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
+      R.id.menu_show_video ->
+        videoViewModel.setPlayerVisible(!binding.playerContainer.isVisible)
       R.id.menu_open_drawer -> {
         binding.drawerLayout.apply {
           if (!isDrawerOpen(GravityCompat.END)) {
@@ -166,9 +171,10 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
     binding.fabAddCue.setOnClickListener {
       val subtitleId = subtitleViewModel.selectedSubtitleId
       if (subtitleId > 0) {
+        videoViewModel.doEvent(VideoViewModel.VideoEvent.Pause)
         CueEditorSheetFragment.newInstance(
-            videoViewModel.videoPosition.value!!,
-            subtitleId,
+            videoPosition = videoViewModel.videoPosition,
+            subtitleId = subtitleId,
           )
           .show(supportFragmentManager, null)
       }
@@ -210,12 +216,19 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
         else -> {}
       }
     }
+
+    videoViewModel.isPlayerVisibleData.observe(this) { visible ->
+      binding.playerContainer.isVisible = visible
+      binding.divider?.isVisible = visible
+      invalidateMenu()
+    }
   }
 
   private fun onProjectLoaded(stateLoaded: ProjectState.Loaded) {
     val project = stateLoaded.project
     supportActionBar?.title = project.name
-    binding.playerContent.videoView.setUri(project.videoUri)
+
+    videoViewModel.loadVideo(project.videoUri)
   }
 
   private fun onSubtitlesLoaded(stateLoaded: SubtitleState.Loaded) {
@@ -223,8 +236,8 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
     val cues = selectedSubtitle?.cues ?: emptyList()
 
     supportActionBar?.subtitle = selectedSubtitle?.name
-    playerControlLayoutHandler.setCues(cues)
     cueListAdapter.submitList(cues)
+    videoViewModel.updateCues(cues)
 
     binding.cuesLoading.isVisible = false
     binding.rvCues.isVisible = true

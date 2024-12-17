@@ -15,6 +15,12 @@
     android:title="@string/proj_import_subtitle" />
 
   <item
+    android:id="@+id/menu_show_video"
+    android:icon="@drawable/ic_video_off"
+    android:title="@string/video_player_hide"
+    android:visible="false" />
+
+  <item
     android:id="@+id/menu_open_drawer"
     android:icon="@drawable/ic_subtitle"
     android:title="@string/subtitles" />

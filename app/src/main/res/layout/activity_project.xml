@@ -36,39 +36,16 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/player_controller_container"
+        app:layout_constraintBottom_toTopOf="@id/cues_container"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-          android:id="@+id/player_content"
-          layout="@layout/layout_player_content" />
+        <androidx.fragment.app.FragmentContainerView
+          android:id="@+id/fragment_player"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:name="com.teixeira0x.subtypo.ui.activity.project.fragment.PlayerFragment" />
 
       </FrameLayout>
-
-      <FrameLayout
-        android:id="@+id/player_controller_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintTop_toBottomOf="@id/player_container">
-
-        <include
-          android:id="@+id/player_controller_content"
-          layout="@layout/layout_player_controller_content" />
-
-      </FrameLayout>
-
-      <View
-        android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/divider_size"
-        android:background="?attr/colorOutlineVariant"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cues_container"
-        app:layout_constraintTop_toBottomOf="@id/player_controller_container" />
 
       <FrameLayout
         android:id="@+id/cues_container"
@@ -77,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider">
+        app:layout_constraintTop_toBottomOf="@id/player_container">
 
         <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/rv_cues"

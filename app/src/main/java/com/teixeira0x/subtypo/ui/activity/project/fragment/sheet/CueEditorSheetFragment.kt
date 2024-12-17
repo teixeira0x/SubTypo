@@ -41,7 +41,7 @@ class CueEditorSheetFragment : BaseBottomSheetFragment() {
   companion object {
     @JvmStatic
     fun newInstance(
-      videoPosition: Long,
+      videoPosition: Long = 0L,
       subtitleId: Long,
       cueIndex: Int = -1,
     ): CueEditorSheetFragment {

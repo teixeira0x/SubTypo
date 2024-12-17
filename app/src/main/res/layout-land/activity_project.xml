@@ -36,27 +36,14 @@
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/divider"
-        app:layout_constraintBottom_toTopOf="@id/player_controller_container"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-          android:id="@+id/player_content"
-          layout="@layout/layout_player_content" />
-
-      </FrameLayout>
-
-      <FrameLayout
-        android:id="@+id/player_controller_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/player_container"
-        app:layout_constraintEnd_toEndOf="@id/player_container"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/player_container">
-
-        <include
-          android:id="@+id/player_controller_content"
-          layout="@layout/layout_player_controller_content" />
+        <androidx.fragment.app.FragmentContainerView
+          android:id="@+id/fragment_player"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:name="com.teixeira0x.subtypo.ui.activity.project.fragment.PlayerFragment" />
 
       </FrameLayout>
 

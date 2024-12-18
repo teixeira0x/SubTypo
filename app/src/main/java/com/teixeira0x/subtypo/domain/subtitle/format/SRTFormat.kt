@@ -19,6 +19,7 @@ import com.teixeira0x.subtypo.domain.model.Cue
 import com.teixeira0x.subtypo.domain.subtitle.exception.SubtitleParseException
 import com.teixeira0x.subtypo.utils.TimeUtils
 import com.teixeira0x.subtypo.utils.TimeUtils.getFormattedTime
+import com.teixeira0x.subtypo.utils.TimeUtils.getMilliseconds
 
 object SRTFormat : SubtitleFormat("SubRip", ".srt") {
 
@@ -43,7 +44,7 @@ object SRTFormat : SubtitleFormat("SubRip", ".srt") {
   @Throws(SubtitleParseException::class)
   override fun parseText(text: String): List<Cue> {
     val cues = mutableListOf<Cue>()
-    val lines = text.lines()
+    val lines = text.trim().lines()
 
     var index = 0
     var cueNum = 0
@@ -57,9 +58,7 @@ object SRTFormat : SubtitleFormat("SubRip", ".srt") {
 
       cueNum++
       if (line.toIntOrNull() != cueNum) {
-        throw SubtitleParseException(
-          "Found number: ${line.toIntOrNull()}, expected number: $cueNum"
-        )
+        throw SubtitleParseException("Found: $line, expected number: $cueNum")
       }
 
       index++
@@ -68,19 +67,17 @@ object SRTFormat : SubtitleFormat("SubRip", ".srt") {
       index++
       val textBuilder = StringBuilder()
       while (index < lines.size && lines[index].trim().isNotEmpty()) {
-        textBuilder.append(lines[index].trim()).append("\n")
+        textBuilder.append(lines[index]).append("\n")
         index++
       }
 
       cues.add(
         Cue(
-          startTime = times[0].toLong(),
-          endTime = times[1].toLong(),
-          text = textBuilder.toString(),
+          startTime = times[0].getMilliseconds(),
+          endTime = times[1].getMilliseconds(),
+          text = textBuilder.toString().trim(),
         )
       )
-
-      index++
     }
 
     return cues

@@ -105,24 +105,25 @@ dependencies {
   implementation(libs.androidx.exoplayer)
   implementation(libs.androidx.exoplayer.dash)
   implementation(libs.androidx.exoplayer.ui)
+  kapt(libs.androidx.room.compiler)
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
 
+  // Google
   implementation(libs.google.material)
   implementation(libs.google.gson)
+  kapt(libs.google.hilt.compiler)
+  implementation(libs.google.hilt)
 
-  implementation(libs.common.utilcode)
-  implementation(libs.common.android.coroutines)
+  // Kotlin
+  implementation(libs.kotlin.coroutines.android)
 
-  val roomVersion = "2.6.1"
-  kapt("androidx.room:room-compiler:$roomVersion")
-  implementation("androidx.room:room-runtime:$roomVersion")
-  implementation("androidx.room:room-ktx:$roomVersion")
+  // Utils
+  implementation(libs.util.utilcode)
+  implementation(libs.util.aboutlibraries)
+  implementation(libs.util.aboutlibraries.core)
+  debugImplementation(libs.util.leakcanary)
 
-  val hiltVersion = "2.50"
-  kapt("com.google.dagger:hilt-compiler:$hiltVersion")
-  implementation("com.google.dagger:hilt-android:$hiltVersion")
-
-  implementation("com.mikepenz:aboutlibraries:11.2.3")
-  implementation("com.mikepenz:aboutlibraries-core:11.2.3")
-
-  debugImplementation(libs.common.leakcanary)
+  // Test
+  testImplementation(libs.tests.junit)
 }

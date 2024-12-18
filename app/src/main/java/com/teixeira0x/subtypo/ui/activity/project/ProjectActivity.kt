@@ -15,6 +15,7 @@
 
 package com.teixeira0x.subtypo.ui.activity.project
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -31,6 +32,7 @@ import com.google.android.material.R.attr
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.teixeira0x.subtypo.R
+import com.teixeira0x.subtypo.core.storage.FileManager
 import com.teixeira0x.subtypo.databinding.ActivityProjectBinding
 import com.teixeira0x.subtypo.ui.activity.BaseEdgeToEdgeActivity
 import com.teixeira0x.subtypo.ui.activity.project.adapter.CueListAdapter
@@ -41,6 +43,8 @@ import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel.Pro
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel.SubtitleState
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.VideoViewModel
+import com.teixeira0x.subtypo.ui.utils.showToastShort
+import com.teixeira0x.subtypo.ui.viewmodel.event.ViewEvent
 import com.teixeira0x.subtypo.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,6 +54,8 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
   private val projectViewModel by viewModels<ProjectViewModel>()
   private val videoViewModel by viewModels<VideoViewModel>()
   private val subtitleViewModel by viewModels<SubtitleViewModel>()
+
+  private val subtitleFileManager by lazy { FileManager(this) }
 
   private var _binding: ActivityProjectBinding? = null
 
@@ -121,6 +127,14 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
+      R.id.menu_export_subtitle -> {
+        if (subtitleViewModel.selectedSubtitleId > 0) {
+          subtitleFileManager.launchSaver(
+            subtitleViewModel.getSelectedSubtitleFullname()
+          )
+        }
+      }
+      R.id.menu_import_subtitle -> subtitleFileManager.launchPicker()
       R.id.menu_show_video ->
         videoViewModel.setPlayerVisible(!binding.playerContainer.isVisible)
       R.id.menu_open_drawer -> {
@@ -133,11 +147,6 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
       R.id.menu_close_project -> finish()
       else -> Unit
     }
-    /*when (item.itemId) {
-      R.id.menu_import -> subtitlePickerHandler.launchPicker()
-      R.id.menu_export -> subtitleExporterHandler.launchExporter()
-      else -> {}
-    }*/
 
     return super.onOptionsItemSelected(item)
   }
@@ -168,6 +177,25 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
   }
 
   private fun configureListeners() {
+    subtitleFileManager.listener =
+      object : FileManager.Listener {
+
+        override fun onFilePicked(uri: Uri?) {
+          uri?.also {
+            subtitleViewModel.importSubtitleFile(
+              projectViewModel.openedProjectId,
+              it,
+              contentResolver,
+            )
+          }
+        }
+
+        override fun onFileSaved(uri: Uri?) {
+          uri?.also {
+            subtitleViewModel.writeSelectedSubtitle(it, contentResolver)
+          }
+        }
+      }
     binding.fabAddCue.setOnClickListener {
       val subtitleId = subtitleViewModel.selectedSubtitleId
       if (subtitleId > 0) {
@@ -203,6 +231,12 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
       }
     }
 
+    subtitleViewModel.viewEventData.observe(this) { event ->
+      when (event) {
+        is ViewEvent.Toast -> showToastShort(event.message)
+      }
+    }
+
     subtitleViewModel.stateData.observe(this) { state ->
       when (state) {
         is SubtitleState.Loading -> {
@@ -210,10 +244,8 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
           binding.rvCues.isVisible = false
           binding.noCues.isVisible = false
         }
-        is SubtitleState.Loaded -> {
-          onSubtitlesLoaded(state)
-        }
-        else -> {}
+        is SubtitleState.Selected -> onSubtitlesLoaded(state)
+        else -> Unit
       }
     }
 
@@ -231,8 +263,8 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
     videoViewModel.loadVideo(project.videoUri)
   }
 
-  private fun onSubtitlesLoaded(stateLoaded: SubtitleState.Loaded) {
-    val selectedSubtitle = stateLoaded.selectedSubtitle
+  private fun onSubtitlesLoaded(stateLoaded: SubtitleState.Selected) {
+    val selectedSubtitle = stateLoaded.subtitle
     val cues = selectedSubtitle?.cues ?: emptyList()
 
     supportActionBar?.subtitle = selectedSubtitle?.name

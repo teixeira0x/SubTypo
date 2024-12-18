@@ -16,17 +16,16 @@
 package com.teixeira0x.subtypo.core.storage
 
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 
 class FileManager(private val activity: Activity) {
 
-  private lateinit var pickFileLauncher: ActivityResultLauncher<Intent>
+  private lateinit var pickFileLauncher: ActivityResultLauncher<String>
   private lateinit var saveFileLauncher: ActivityResultLauncher<String>
-  var onFilePicked: ((Uri?) -> Unit)? = null
-  var onFileSaved: ((Uri?) -> Unit)? = null
+
+  var listener: Listener? = null
 
   init {
     registerLaunchers()
@@ -35,31 +34,26 @@ class FileManager(private val activity: Activity) {
   private fun registerLaunchers() {
     pickFileLauncher =
       (activity as androidx.activity.ComponentActivity)
-        .registerForActivityResult(
-          ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-          if (result.resultCode == Activity.RESULT_OK) {
-            val uri = result.data?.data
-            onFilePicked?.invoke(uri)
-          } else {
-            onFilePicked?.invoke(null)
-          }
+        .registerForActivityResult(ActivityResultContracts.GetContent()) { uri
+          ->
+          listener?.onFilePicked(uri)
         }
 
     saveFileLauncher =
       activity.registerForActivityResult(
         ActivityResultContracts.CreateDocument("text/*")
       ) { uri ->
-        onFileSaved?.invoke(uri)
+        listener?.onFileSaved(uri)
       }
   }
 
-  fun launchSaver(fileName: String) {
-    saveFileLauncher.launch(fileName)
-  }
+  fun launchSaver(fileName: String) = saveFileLauncher.launch(fileName)
 
-  fun launchPicker() {
-    val intent = Intent(Intent.ACTION_PICK).apply { type = "*/*" }
-    pickFileLauncher.launch(intent)
+  fun launchPicker() = pickFileLauncher.launch("*/*")
+
+  interface Listener {
+    fun onFilePicked(uri: Uri?)
+
+    fun onFileSaved(uri: Uri?)
   }
 }

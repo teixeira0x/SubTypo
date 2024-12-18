@@ -13,31 +13,16 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.db.entity
+package com.teixeira0x.subtypo.data.db.migration
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import com.teixeira0x.subtypo.domain.model.Cue
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Entity(
-  tableName = "subtitles",
-  foreignKeys =
-    [
-      ForeignKey(
-        entity = ProjectEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["projectId"],
-        onDelete = ForeignKey.CASCADE,
+val MIGRATION_2_3 =
+  object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+      db.execSQL(
+        "ALTER TABLE subtitles ADD COLUMN format INTEGER NOT NULL DEFAULT 1"
       )
-    ],
-  indices = [Index(value = ["projectId"])],
-)
-data class SubtitleEntity(
-  @PrimaryKey(autoGenerate = true) val id: Long,
-  val projectId: Long,
-  val name: String,
-  val format: Int,
-  val cues: List<Cue>,
-)
+    }
+  }

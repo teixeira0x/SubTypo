@@ -101,13 +101,13 @@ class SubtitleListFragment : Fragment() {
           binding.noSubtitles.isVisible = false
           binding.progress.isVisible = true
         }
-        is SubtitleState.Loaded -> {
+        is SubtitleState.Subtitles -> {
           binding.rvSubtitles.isVisible = true
           binding.noSubtitles.isVisible = state.subtitles.isEmpty()
           binding.progress.isVisible = false
           subtitleListAdapter.submitList(
             state.subtitles,
-            state.selectedSubtitle?.id ?: 0,
+            subtitleViewModel.selectedSubtitleId,
           )
         }
         is SubtitleState.Error -> {}

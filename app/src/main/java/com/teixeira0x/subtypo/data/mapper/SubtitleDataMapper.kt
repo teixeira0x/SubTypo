@@ -17,11 +17,19 @@ package com.teixeira0x.subtypo.data.mapper
 
 import com.teixeira0x.subtypo.data.db.entity.SubtitleEntity
 import com.teixeira0x.subtypo.domain.model.Subtitle
+import com.teixeira0x.subtypo.domain.subtitle.mapper.SubtitleFormatMapper.toSubtitleFormat
+import com.teixeira0x.subtypo.domain.subtitle.mapper.SubtitleFormatMapper.toValue
 
 object SubtitleDataMapper {
 
   fun SubtitleEntity.toModel(): Subtitle {
-    return Subtitle(id = id, projectId = projectId, name = name, cues = cues)
+    return Subtitle(
+      id = id,
+      projectId = projectId,
+      name = name,
+      format = format.toSubtitleFormat(),
+      cues = cues,
+    )
   }
 
   fun Subtitle.toEntity(): SubtitleEntity {
@@ -29,6 +37,7 @@ object SubtitleDataMapper {
       id = id,
       projectId = projectId,
       name = name,
+      format = format.toValue(),
       cues = cues,
     )
   }

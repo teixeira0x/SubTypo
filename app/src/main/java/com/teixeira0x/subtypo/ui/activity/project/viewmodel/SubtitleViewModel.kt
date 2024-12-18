@@ -15,14 +15,20 @@
 
 package com.teixeira0x.subtypo.ui.activity.project.viewmodel
 
+import android.content.ContentResolver
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.UriUtils
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.domain.model.Subtitle
+import com.teixeira0x.subtypo.domain.subtitle.mapper.SubtitleFormatMapper.toSubtitleFormat
 import com.teixeira0x.subtypo.domain.usecase.subtitle.GetAllSubtitlesUseCase
+import com.teixeira0x.subtypo.domain.usecase.subtitle.InsertSubtitleUseCase
 import com.teixeira0x.subtypo.domain.usecase.subtitle.RemoveSubtitleUseCase
+import com.teixeira0x.subtypo.ui.viewmodel.event.ViewEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -32,11 +38,15 @@ class SubtitleViewModel
 @Inject
 constructor(
   private val getAllSubtitlesUseCase: GetAllSubtitlesUseCase,
+  private val insertSubtitleUseCase: InsertSubtitleUseCase,
   private val removeSubtitleUseCase: RemoveSubtitleUseCase,
 ) : ViewModel() {
 
-  private val _state = MutableLiveData<SubtitleState>(SubtitleState.Loading)
+  private val _viewEvent = MutableLiveData<ViewEvent>()
+  val viewEventData: LiveData<ViewEvent>
+    get() = _viewEvent
 
+  private val _state = MutableLiveData<SubtitleState>(SubtitleState.Loading)
   val stateData: LiveData<SubtitleState>
     get() = _state
 
@@ -44,16 +54,20 @@ constructor(
   val selectedSubtitleId: Long
     get() = _selectedSubtitleId.value!!
 
+  private val subtitles = mutableListOf<Subtitle>()
+
   fun loadSubtitles(projectId: Long) {
     viewModelScope.launch {
-      getAllSubtitlesUseCase(projectId).collect { subtitles ->
-        val selectedSubtitle =
-          if (selectedSubtitleId > 0) {
-            subtitles.firstOrNull { it.id == selectedSubtitleId }
-          } else subtitles.firstOrNull()
+      getAllSubtitlesUseCase(projectId).collect { subtitleList ->
+        subtitles.clear()
+        subtitles.addAll(subtitleList)
 
-        _selectedSubtitleId.value = selectedSubtitle?.id ?: 0
-        _state.postValue(SubtitleState.Loaded(subtitles, selectedSubtitle))
+        val selectedSubtitle =
+          subtitles.find { it.id == selectedSubtitleId }
+            ?: subtitles.firstOrNull()
+        setSelectedSubtitle(selectedSubtitle?.id ?: 0)
+
+        _state.value = SubtitleState.Subtitles(subtitles)
       }
     }
   }
@@ -61,44 +75,109 @@ constructor(
   fun removeSubtitle(subtitleId: Long) {
     viewModelScope.launch {
       val deletedRows = removeSubtitleUseCase(subtitleId)
+      if (deletedRows > 0 && subtitleId == selectedSubtitleId) {
+        setSelectedSubtitle(1)
+      }
 
-      _state.postValue(
+      _state.value =
         if (deletedRows > 0) {
           SubtitleState.Removed
-        } else SubtitleState.Error(R.string.subtitle_error_remove)
-      )
+        } else {
+          SubtitleState.Error(R.string.subtitle_error_remove)
+        }
     }
   }
 
   fun setSelectedSubtitle(newSelectedSubtitleId: Long) {
     viewModelScope.launch {
-      val currentState = _state.value
-      if (currentState is SubtitleState.Loaded) {
-        val newSelectedSubtitle =
-          currentState.subtitles.firstOrNull { it.id == newSelectedSubtitleId }
-        if (newSelectedSubtitle != null) {
-          _selectedSubtitleId.value = newSelectedSubtitleId
-          _state.postValue(
-            SubtitleState.Loaded(
-              subtitles = currentState.subtitles,
-              selectedSubtitle = newSelectedSubtitle,
-            )
-          )
-        }
+      val newSelectedSubtitle =
+        subtitles.find { it.id == newSelectedSubtitleId }
+
+      newSelectedSubtitle?.let {
+        _selectedSubtitleId.value = newSelectedSubtitleId
+        _state.value = SubtitleState.Selected(newSelectedSubtitle)
       }
     }
   }
 
+  fun getSelectedSubtitleFullname(): String {
+    return subtitles
+      .find { it.id == selectedSubtitleId }
+      ?.let { it.name + it.format.extension } ?: ""
+  }
+
+  fun writeSelectedSubtitle(uri: Uri, contentResolver: ContentResolver) {
+    viewModelScope.launch {
+      val subtitle =
+        subtitles.find { it.id == selectedSubtitleId } ?: return@launch
+      contentResolver.openOutputStream(uri)?.use { outputStream ->
+        ViewEvent.Toast(
+            try {
+              outputStream.write(
+                subtitle.format.toText(subtitle.cues).toByteArray()
+              )
+
+              R.string.proj_export_subtitle_saved
+            } catch (e: Exception) {
+              R.string.proj_export_subtitle_error
+            }
+          )
+          .also { _viewEvent.value = it }
+      }
+    }
+  }
+
+  fun importSubtitleFile(
+    projectId: Long,
+    uri: Uri,
+    contentResolver: ContentResolver,
+  ) {
+    viewModelScope.launch {
+      ViewEvent.Toast(
+          try {
+            val file = UriUtils.uri2File(uri)
+            val fileName = file.name
+
+            val fileContent =
+              contentResolver.openInputStream(uri)?.bufferedReader().use {
+                reader ->
+                reader?.readText()
+              }
+
+            if (fileContent != null) {
+              val format = fileName.substringBeforeLast(".").toSubtitleFormat()
+              val cues = format.parseText(fileContent)
+
+              insertSubtitleUseCase(
+                Subtitle(
+                  projectId = projectId,
+                  name = fileName,
+                  format = format,
+                  cues = cues,
+                )
+              )
+
+              R.string.proj_import_subtitle_success
+            } else {
+              R.string.proj_import_subtitle_error
+            }
+          } catch (e: Exception) {
+            R.string.proj_import_subtitle_error
+          }
+        )
+        .also { _viewEvent.value = it }
+    }
+  }
+
   sealed interface SubtitleState {
-    object Loading : SubtitleState
+    data object Loading : SubtitleState
 
-    data class Loaded(
-      val subtitles: List<Subtitle>,
-      val selectedSubtitle: Subtitle?,
-    ) : SubtitleState
+    data class Subtitles(val subtitles: List<Subtitle>) : SubtitleState
 
-    object Removed : SubtitleState
+    data class Selected(val subtitle: Subtitle?) : SubtitleState
 
-    class Error(val message: Int) : SubtitleState
+    data object Removed : SubtitleState
+
+    data class Error(val message: Int) : SubtitleState
   }
 }

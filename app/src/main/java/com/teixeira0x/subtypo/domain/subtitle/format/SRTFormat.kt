@@ -13,15 +13,14 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.subtitle.format
+package com.teixeira0x.subtypo.domain.subtitle.format
 
 import com.teixeira0x.subtypo.domain.model.Cue
 import com.teixeira0x.subtypo.domain.subtitle.exception.SubtitleParseException
-import com.teixeira0x.subtypo.domain.subtitle.format.SubtitleFormat
 import com.teixeira0x.subtypo.utils.TimeUtils
 import com.teixeira0x.subtypo.utils.TimeUtils.getFormattedTime
 
-class SRTFormat : SubtitleFormat("SubRip", ".srt") {
+object SRTFormat : SubtitleFormat("SubRip", ".srt") {
 
   override fun toText(cues: List<Cue>): String {
     val sb = StringBuilder()

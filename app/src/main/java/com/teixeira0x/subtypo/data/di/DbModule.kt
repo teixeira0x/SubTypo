@@ -39,6 +39,7 @@ object DbModule {
         klass = SubTypoDatabase::class.java,
         name = "subtypo-db",
       )
+      .addMigrations(*SubTypoDatabase.MIGRATIONS)
       .build()
   }
 }

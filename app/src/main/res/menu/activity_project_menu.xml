@@ -4,13 +4,12 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
-    android:id="@+id/menu_export"
+    android:id="@+id/menu_export_subtitle"
     android:icon="@drawable/ic_export_variant"
-    android:title="@string/proj_export_subtitle"
-    app:showAsAction="always" />
+    android:title="@string/proj_export_subtitle" />
 
   <item
-    android:id="@+id/menu_import"
+    android:id="@+id/menu_import_subtitle"
     android:icon="@drawable/ic_import"
     android:title="@string/proj_import_subtitle" />
 

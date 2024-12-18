@@ -80,13 +80,13 @@
   <string name="proj_error_unable_to_load">Unable to load this project.</string>
 
   <string name="proj_export_subtitle">Export Subtitle</string>
-  <string name="proj_export_subtitle_saved">Saved on path:  %1$s</string>
-  <string name="proj_export_subtitle_error">Failed to export subtitle</string>
+  <string name="proj_export_subtitle_saved">Exported successfully</string>
+  <string name="proj_export_subtitle_error">Export error</string>
   <string name="proj_export_subtitle_error_no_subtitles">Add subtitles to be able to export.</string>
 
   <string name="proj_import_subtitle">Import Subtitle</string>
   <string name="proj_import_subtitle_success">Imported successfully</string>
-  <string name="proj_import_subtitle_error">Unable to import this subtitle</string>
+  <string name="proj_import_subtitle_error">Import error</string>
   <!-- Subtitles -->
   <string name="subtitles">Subtitles</string>
   <string name="subtitle_loading">Loading subtitles.</string>

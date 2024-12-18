@@ -23,14 +23,19 @@ import com.teixeira0x.subtypo.data.db.dao.ProjectDao
 import com.teixeira0x.subtypo.data.db.dao.SubtitleDao
 import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
 import com.teixeira0x.subtypo.data.db.entity.SubtitleEntity
+import com.teixeira0x.subtypo.data.db.migration.MIGRATION_2_3
 
 @Database(
   entities = [ProjectEntity::class, SubtitleEntity::class],
-  version = 2,
+  version = 3,
   exportSchema = true,
 )
 @TypeConverters(CueConverter::class)
 abstract class SubTypoDatabase : RoomDatabase() {
+  companion object {
+    val MIGRATIONS = arrayOf(MIGRATION_2_3)
+  }
+
   abstract val projectDao: ProjectDao
   abstract val subtitleDao: SubtitleDao
 }

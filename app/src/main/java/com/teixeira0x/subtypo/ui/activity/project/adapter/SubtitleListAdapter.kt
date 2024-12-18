@@ -53,6 +53,7 @@ class SubtitleListAdapter(
       val subtitle = subtitles[position]
 
       tvName.text = subtitle.name
+      tvFormatName.text = subtitle.format.name
       imgSelected.isVisible = subtitle.id == selectedId
 
       options.editOption.setOnClickListener { editSubtitle(subtitle) }

@@ -42,36 +42,18 @@
       android:layout_height="20dp"
       android:layout_marginEnd="@dimen/margin_small"
       android:layout_centerVertical="true"
-      android:layout_toLeftOf="@id/img_chevron"
+      android:layout_toLeftOf="@id/img_edit"
       android:tint="@color/green_500"
       android:src="@drawable/ic_check"/>
 
     <ImageView
-      android:id="@+id/img_chevron"
+      android:id="@+id/img_edit"
       android:layout_width="24dp"
       android:layout_height="24dp"
       android:layout_centerVertical="true"
       android:layout_alignParentEnd="true"
-      android:src="@drawable/ic_chevron_down"
-      android:rotation="-90"/>
+      android:src="@drawable/ic_pencil"/>
 
   </RelativeLayout>
-
-  <FrameLayout
-    android:id="@+id/options_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:visibility="gone">
-
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/divider_size"
-      android:background="?attr/colorOutlineVariant" />
-
-    <include
-      android:id="@+id/options"
-      layout="@layout/layout_project_item_options" />
-
-  </FrameLayout>
 
 </LinearLayout>

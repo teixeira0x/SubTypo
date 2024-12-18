@@ -50,7 +50,7 @@ constructor(
   val stateData: LiveData<SubtitleState>
     get() = _state
 
-  private val _selectedSubtitleId = MutableLiveData<Long>(0)
+  private val _selectedSubtitleId = MutableLiveData<Long>(-1)
   val selectedSubtitleId: Long
     get() = _selectedSubtitleId.value!!
 
@@ -65,38 +65,20 @@ constructor(
         val selectedSubtitle =
           subtitles.find { it.id == selectedSubtitleId }
             ?: subtitles.firstOrNull()
-        setSelectedSubtitle(selectedSubtitle?.id ?: 0)
 
-        _state.value = SubtitleState.Subtitles(subtitles)
+        _selectedSubtitleId.value = selectedSubtitle?.id ?: -1
+        _state.value = SubtitleState.Loaded(subtitleList, selectedSubtitle)
       }
     }
   }
 
-  fun removeSubtitle(subtitleId: Long) {
-    viewModelScope.launch {
-      val deletedRows = removeSubtitleUseCase(subtitleId)
-      if (deletedRows > 0 && subtitleId == selectedSubtitleId) {
-        setSelectedSubtitle(1)
-      }
-
-      _state.value =
-        if (deletedRows > 0) {
-          SubtitleState.Removed
-        } else {
-          SubtitleState.Error(R.string.subtitle_error_remove)
-        }
-    }
-  }
-
-  fun setSelectedSubtitle(newSelectedSubtitleId: Long) {
+  fun selectSubtitle(newSelectedSubtitleId: Long) {
     viewModelScope.launch {
       val newSelectedSubtitle =
         subtitles.find { it.id == newSelectedSubtitleId }
 
-      newSelectedSubtitle?.let {
-        _selectedSubtitleId.value = newSelectedSubtitleId
-        _state.value = SubtitleState.Selected(newSelectedSubtitle)
-      }
+      _selectedSubtitleId.value = newSelectedSubtitle?.id ?: -1
+      _state.value = SubtitleState.Loaded(subtitles, newSelectedSubtitle)
     }
   }
 
@@ -133,48 +115,49 @@ constructor(
     contentResolver: ContentResolver,
   ) {
     viewModelScope.launch {
-      ViewEvent.Toast(
-          try {
-            val file = UriUtils.uri2File(uri)
-            val fileName = file.name
+      val resultMessage =
+        try {
+          val file = UriUtils.uri2File(uri)
+          val fileContent =
+            contentResolver.openInputStream(uri)?.bufferedReader()?.use {
+              it.readText()
+            } ?: ""
 
-            val fileContent =
-              contentResolver.openInputStream(uri)?.bufferedReader().use {
-                reader ->
-                reader?.readText()
-              }
+          val format = ".${file.extension}".toSubtitleFormat()
+          val cues = format.parseText(fileContent)
 
-            if (fileContent != null) {
-              val format = ".${file.extension}".toSubtitleFormat()
-              val cues = format.parseText(fileContent)
-
-              insertSubtitleUseCase(
-                Subtitle(
-                  projectId = projectId,
-                  name = fileName,
-                  format = format,
-                  cues = cues,
-                )
+          val id =
+            insertSubtitleUseCase(
+              Subtitle(
+                projectId = projectId,
+                name = file.name,
+                format = format,
+                cues = cues,
               )
+            )
 
-              R.string.proj_import_subtitle_success
-            } else {
-              R.string.proj_import_subtitle_error
-            }
-          } catch (e: Exception) {
+          if (id > 0) {
+            selectSubtitle(id)
+
+            R.string.proj_import_subtitle_success
+          } else {
             R.string.proj_import_subtitle_error
           }
-        )
-        .also { _viewEvent.value = it }
+        } catch (e: Exception) {
+          R.string.proj_import_subtitle_error
+        }
+
+      _viewEvent.value = ViewEvent.Toast(resultMessage)
     }
   }
 
   sealed interface SubtitleState {
     data object Loading : SubtitleState
 
-    data class Subtitles(val subtitles: List<Subtitle>) : SubtitleState
-
-    data class Selected(val subtitle: Subtitle?) : SubtitleState
+    data class Loaded(
+      val subtitles: List<Subtitle>,
+      val selectedSubtitle: Subtitle?,
+    ) : SubtitleState
 
     data object Removed : SubtitleState
 

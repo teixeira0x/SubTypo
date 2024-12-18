@@ -18,7 +18,7 @@ package com.teixeira0x.subtypo.ui.activity.project.adapter
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.teixeira0x.subtypo.databinding.LayoutSubtitleItemBinding
 import com.teixeira0x.subtypo.domain.model.Subtitle
 import com.teixeira0x.subtypo.ui.adapter.holder.BindingViewHolder
@@ -29,11 +29,9 @@ typealias SubtitleViewHolder = BindingViewHolder<LayoutSubtitleItemBinding>
 class SubtitleListAdapter(
   private val onSubtitleClick: (Subtitle) -> Unit,
   private val editSubtitle: (Subtitle) -> Unit,
-  private val deleteSubtitle: (Subtitle) -> Unit,
-) : RecyclerView.Adapter<SubtitleViewHolder>() {
+) : ListAdapter<Subtitle, SubtitleViewHolder>(SubtitleDiffCallback()) {
 
-  private var subtitles: List<Subtitle> = emptyList()
-  private var selectedId: Long = 0
+  private var selectedId: Long = -1
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -49,74 +47,55 @@ class SubtitleListAdapter(
   }
 
   override fun onBindViewHolder(holder: SubtitleViewHolder, position: Int) {
-    holder.binding.apply {
-      val subtitle = subtitles[position]
+    val subtitle = getItem(position)
 
+    holder.binding.apply {
       tvName.text = subtitle.name
       tvFormatName.text = subtitle.format.name
       imgSelected.isVisible = subtitle.id == selectedId
 
-      options.editOption.setOnClickListener { editSubtitle(subtitle) }
-      options.deleteOption.setOnClickListener { deleteSubtitle(subtitle) }
-
-      root.setOnClickListener { onSubtitleClick(subtitle) }
-      root.setOnLongClickListener { toggleItemOptionsVisibility() }
-      imgChevron.setOnClickListener { toggleItemOptionsVisibility() }
+      root.setOnClickListener {
+        onSubtitleClick(subtitle)
+        select(subtitle.id)
+      }
+      imgEdit.setOnClickListener { editSubtitle(subtitle) }
     }
   }
 
-  override fun getItemCount() = subtitles.size
-
-  private fun LayoutSubtitleItemBinding.toggleItemOptionsVisibility(): Boolean {
-    optionsContainer.isVisible = !optionsContainer.isVisible
-    imgChevron
-      .animate()
-      .rotation(if (optionsContainer.isVisible) 0f else -90f)
-      .start()
-
-    return true
+  fun submitList(subtitles: List<Subtitle>, selectId: Long) {
+    submitList(subtitles)
+    select(selectId)
   }
 
-  fun submitList(subtitles: List<Subtitle>, selectedId: Long = 0) {
-    val result =
-      DiffUtil.calculateDiff(
-        SubtitleDiffCallback(
-          this.selectedId,
-          selectedId,
-          this.subtitles,
-          subtitles,
-        )
-      )
-    this.subtitles = subtitles
-    this.selectedId = selectedId
-    result.dispatchUpdatesTo(this)
+  private fun select(selectId: Long) {
+    if (selectId != selectedId) {
+      val previousPosition = currentList.indexOfFirst { it.id == selectedId }
+      val newPosition = currentList.indexOfFirst { it.id == selectId }
+
+      selectedId = selectId
+
+      if (previousPosition > -1 && previousPosition < currentList.size) {
+        notifyItemChanged(previousPosition) // Update previous selected item
+      }
+      if (newPosition > -1) {
+        notifyItemChanged(newPosition) // Update new selected item
+      }
+    }
   }
 
-  class SubtitleDiffCallback(
-    val oldSelectedId: Long,
-    val newSelectedId: Long,
-    val oldList: List<Subtitle>,
-    val newList: List<Subtitle>,
-  ) : DiffUtil.Callback() {
-
-    override fun getOldListSize(): Int = oldList.size
-
-    override fun getNewListSize(): Int = newList.size
-
-    override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-      return oldList[oldPosition] == newList[newPosition]
+  class SubtitleDiffCallback : DiffUtil.ItemCallback<Subtitle>() {
+    override fun areItemsTheSame(
+      oldItem: Subtitle,
+      newItem: Subtitle,
+    ): Boolean {
+      return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-      oldPosition: Int,
-      newPosition: Int,
+      oldItem: Subtitle,
+      newItem: Subtitle,
     ): Boolean {
-      val oldSubtitle = oldList[oldPosition]
-      val newSubtitle = newList[newPosition]
-
-      return oldSubtitle.id == newSubtitle.id &&
-        oldSubtitle.name == newSubtitle.name &&
-        oldSelectedId == newSelectedId
+      return oldItem == newItem
     }
   }
 }

@@ -34,7 +34,6 @@ import com.teixeira0x.subtypo.ui.activity.project.fragment.sheet.SubtitleEditorS
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.ProjectViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel
 import com.teixeira0x.subtypo.ui.activity.project.viewmodel.SubtitleViewModel.SubtitleState
-import com.teixeira0x.subtypo.ui.utils.showConfirmDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,19 +53,11 @@ class SubtitleListFragment : Fragment() {
   private val subtitleListAdapter by lazy {
     SubtitleListAdapter(
       onSubtitleClick = { subtitle ->
-        subtitleViewModel.setSelectedSubtitle(subtitle.id)
+        subtitleViewModel.selectSubtitle(subtitle.id)
       },
       editSubtitle = { subtitle ->
         SubtitleEditorSheetFragment.newInstance(subtitle.id)
           .show(childFragmentManager, null)
-      },
-      deleteSubtitle = { subtitle ->
-        requireContext().showConfirmDialog(
-          title = R.string.delete,
-          message = R.string.subtitle_remove_msg,
-        ) { _, _ ->
-          subtitleViewModel.removeSubtitle(subtitle.id)
-        }
       },
     )
   }
@@ -101,13 +92,13 @@ class SubtitleListFragment : Fragment() {
           binding.noSubtitles.isVisible = false
           binding.progress.isVisible = true
         }
-        is SubtitleState.Subtitles -> {
+        is SubtitleState.Loaded -> {
           binding.rvSubtitles.isVisible = true
           binding.noSubtitles.isVisible = state.subtitles.isEmpty()
           binding.progress.isVisible = false
           subtitleListAdapter.submitList(
             state.subtitles,
-            subtitleViewModel.selectedSubtitleId,
+            state.selectedSubtitle?.id ?: -1,
           )
         }
         is SubtitleState.Error -> {}

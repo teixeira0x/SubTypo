@@ -244,7 +244,7 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
           binding.rvCues.isVisible = false
           binding.noCues.isVisible = false
         }
-        is SubtitleState.Selected -> onSubtitlesLoaded(state)
+        is SubtitleState.Loaded -> onSubtitlesLoaded(state)
         else -> Unit
       }
     }
@@ -263,11 +263,12 @@ class ProjectActivity : BaseEdgeToEdgeActivity() {
     videoViewModel.loadVideo(project.videoUri)
   }
 
-  private fun onSubtitlesLoaded(stateLoaded: SubtitleState.Selected) {
-    val selectedSubtitle = stateLoaded.subtitle
+  private fun onSubtitlesLoaded(stateLoaded: SubtitleState.Loaded) {
+    val selectedSubtitle = stateLoaded.selectedSubtitle
     val cues = selectedSubtitle?.cues ?: emptyList()
 
-    supportActionBar?.subtitle = selectedSubtitle?.name
+    supportActionBar?.subtitle =
+      selectedSubtitle?.let { it.name + it.format.extension }
     cueListAdapter.submitList(cues)
     videoViewModel.updateCues(cues)
 

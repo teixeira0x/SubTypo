@@ -69,12 +69,12 @@
   <string name="proj_error_enter_name">Por favor, insira um nome</string>
   <string name="proj_error_unable_to_load">Não foi possível carregar este projeto.</string>
   <string name="proj_export_subtitle">Exportar Legenda</string>
-  <string name="proj_export_subtitle_saved">Salvo no caminho:  %1$s</string>
-  <string name="proj_export_subtitle_error">Falha ao exportar a legenda</string>
+  <string name="proj_export_subtitle_saved">Exportado com sucesso</string>
+  <string name="proj_export_subtitle_error">Erro de exportação</string>
   <string name="proj_export_subtitle_error_no_subtitles">Adicione legendas para poder exportar.</string>
   <string name="proj_import_subtitle">Importar Legenda</string>
   <string name="proj_import_subtitle_success">Importado com sucesso</string>
-  <string name="proj_import_subtitle_error">Não é possível importar esta legenda</string>
+  <string name="proj_import_subtitle_error">Erro de importação</string>
   <!-- Subtitles -->
   <string name="subtitles">Legendas</string>
   <string name="subtitle_loading">Carregando legendas.</string>

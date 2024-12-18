@@ -145,7 +145,7 @@ constructor(
               }
 
             if (fileContent != null) {
-              val format = fileName.substringBeforeLast(".").toSubtitleFormat()
+              val format = ".${file.extension}".toSubtitleFormat()
               val cues = format.parseText(fileContent)
 
               insertSubtitleUseCase(

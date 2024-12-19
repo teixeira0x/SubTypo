@@ -17,8 +17,8 @@ package com.teixeira0x.subtypo.build
 
 @SuppressWarnings("unused")
 object VersionUtils {
-  const val versionCode = 3
-  const val version = "1.2.0"
+  const val versionCode = 4
+  const val version = "2.0.0"
 
   val versionName by lazy {
     if (CI.isCiBuild && CI.branchName != "main") {

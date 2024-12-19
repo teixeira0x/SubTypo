@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_export"
-        android:icon="@drawable/ic_export_variant"
-        android:title="@string/proj_export_subtitles"
-        app:showAsAction="always" />
+  <item
+    android:id="@+id/menu_export_subtitle"
+    android:icon="@drawable/ic_export_variant"
+    android:title="@string/proj_export_subtitle" />
 
-    <item
-        android:id="@+id/menu_import"
-        android:icon="@drawable/ic_export_variant"
-        android:title="@string/proj_import_subtitle" />
+  <item
+    android:id="@+id/menu_import_subtitle"
+    android:icon="@drawable/ic_import"
+    android:title="@string/proj_import_subtitle" />
 
+  <item
+    android:id="@+id/menu_show_video"
+    android:icon="@drawable/ic_video_off"
+    android:title="@string/video_player_hide"
+    android:visible="false" />
+
+  <item
+    android:id="@+id/menu_open_drawer"
+    android:icon="@drawable/ic_subtitle"
+    android:title="@string/subtitles" />
+
+  <item
+    android:id="@+id/menu_close_project"
+    android:icon="@drawable/ic_close"
+    android:title="@string/proj_close" />
+    
 </menu>

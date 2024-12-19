@@ -1,3 +1,5 @@
+signing-key.jks
+
 # Built application files
 *.apk
 *.aar
@@ -86,3 +88,4 @@ lint/tmp/
 
 .uuid
 .androidide/
+.kotlin/

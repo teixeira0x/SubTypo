@@ -5,9 +5,15 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  # Signing info
+  SIGNING_KEY_BASE64: ${{ secrets.SIGNING_KEY_BASE64 }}
+  SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+  SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+
 jobs:
   build:
-    name: Build Release APK
+    name: Build Release APK and AAB
     runs-on: ubuntu-latest
     steps:
       - name: Set up JDK 17
@@ -24,11 +30,19 @@ jobs:
       - name: Give permission to executable
         run: chmod +x gradlew
 
-      - name: Generate APK
-        run: ./gradlew assembleRelease
+      - name: Generate APK and AAB
+        run: |
+          ./gradlew assembleRelease
+          ./gradlew bundleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
+          name: app-release-apk
           path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab

@@ -60,9 +60,21 @@
     <item name="android:widgetLayout">@layout/layout_material_switch_style</item>
   </style>
 
-  <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox" />
+  <style name="AppTheme.TextInputLayout.FilledBox" parent="Widget.Material3.TextInputLayout.FilledBox">
+    <item name="hintAnimationEnabled">true</item>
+    <item name="boxCornerRadiusTopStart">10dp</item>
+    <item name="boxCornerRadiusTopEnd">10dp</item>
+  </style>
+  
+  <style name="AppTheme.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+    <item name="hintAnimationEnabled">true</item>
+    <item name="boxCornerRadiusTopStart">10dp</item>
+    <item name="boxCornerRadiusTopEnd">10dp</item>
+    <item name="boxCornerRadiusBottomStart">10dp</item>
+    <item name="boxCornerRadiusBottomEnd">10dp</item>
+  </style>
 
-  <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu" />
+  <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu" />
 
   <style name="ControllerImageStyle">
     <item name="android:layout_width">35dp</item>

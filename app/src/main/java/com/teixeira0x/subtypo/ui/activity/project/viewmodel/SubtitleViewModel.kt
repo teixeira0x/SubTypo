@@ -78,7 +78,8 @@ constructor(
         subtitles.find { it.id == newSelectedSubtitleId }
 
       _selectedSubtitleId.value = newSelectedSubtitle?.id ?: -1
-      _state.value = SubtitleState.Loaded(subtitles, newSelectedSubtitle)
+      _state.value =
+        SubtitleState.Loaded(subtitles.toList(), newSelectedSubtitle)
     }
   }
 

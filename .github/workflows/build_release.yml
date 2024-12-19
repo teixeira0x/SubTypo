@@ -46,12 +46,3 @@ jobs:
         with:
           name: app-release-aab
           path: app/build/outputs/bundle/release/app-release.aab
-
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: |
-            app/build/outputs/apk/release/app-release.apk
-            app/build/outputs/bundle/release/app-release.aab
-          draft: true
-          token: ${{ secrets.GITHUB_TOKEN }}

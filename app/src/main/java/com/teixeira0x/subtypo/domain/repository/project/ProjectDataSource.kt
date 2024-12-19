@@ -11,7 +11,7 @@ interface ProjectDataSource {
 
   suspend fun insertProject(project: Project): Long
 
-  suspend fun updateProject(project: Project)
+  suspend fun updateProject(project: Project): Int
 
   suspend fun removeProject(id: Long): Int
 }

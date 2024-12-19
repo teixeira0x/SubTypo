@@ -7,18 +7,17 @@
   android:orientation="vertical">
 
   <TextView
-    android:id="@+id/title"
+    android:id="@+id/tv_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-    android:text="@string/proj_new" />
+    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
   <com.google.android.material.card.MaterialCardView
-    android:id="@+id/choose_video"
+    android:id="@+id/card_select_video"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/dialog_padding"
     android:foreground="@drawable/ripple_effect">
 
     <RelativeLayout
@@ -26,34 +25,49 @@
       android:layout_height="wrap_content">
 
       <ImageView
-        android:id="@+id/video_thumbnail"
+        android:id="@+id/img_video_thumbnail"
         android:layout_width="160dp"
         android:layout_height="80dp"
-        android:scaleType="fitCenter"
         android:background="@android:color/black"
+        android:contentDescription="@string/description_video_thumbnail"
         android:clickable="false" />
 
       <TextView
-        android:id="@+id/video_name"
+        android:id="@+id/tv_video_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_toEndOf="@id/video_thumbnail"
-        android:clickable="false"
-        android:textSize="12sp"
-        android:text="@string/msg_video_not_chosen" />
+        android:layout_toEndOf="@id/img_video_thumbnail"
+        android:layout_toStartOf="@id/img_remove_video"
+        android:text="@string/proj_editor_video_no_select"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSurface" />
+
+      <ImageView
+        android:id="@+id/img_remove_video"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="@dimen/padding_small"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_close"
+        android:contentDescription="@string/description_remove_video"
+        android:clickable="false" />
 
       <TextView
-        android:id="@+id/choose_video_text"
+        android:id="@+id/tv_select_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
-        android:alpha="0.5"
         android:layout_centerHorizontal="true"
-        android:textSize="12sp"
-        android:layout_alignBottom="@id/video_thumbnail"
-        android:text="@string/proj_video_choose_click" />
+        android:layout_alignBottom="@id/img_video_thumbnail"
+        android:alpha="0.7"
+        android:text="@string/proj_editor_video_tap_to_select"
+        android:textSize="13sp"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
 
     </RelativeLayout>
 
@@ -64,14 +78,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/margin_medium"
-    android:hint="@string/proj_enter_name"
+    android:hint="@string/proj_editor_enter_name"
     style="@style/AppTheme.TextInputLayout">
 
     <com.google.android.material.textfield.TextInputEditText
       android:id="@+id/tie_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:singleLine="true" />
+      android:singleLine="true"
+      android:textColor="?attr/colorOnSurface"
+      android:textSize="16sp" />
 
   </com.google.android.material.textfield.TextInputLayout>
 

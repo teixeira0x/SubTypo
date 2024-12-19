@@ -49,6 +49,7 @@ util-aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref = "u
 util-aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "util-aboutlibraries" }
 
 # Kotlin
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlin-coroutines" }
 
 # Tests

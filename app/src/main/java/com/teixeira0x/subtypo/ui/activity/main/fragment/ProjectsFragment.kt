@@ -14,10 +14,10 @@ import com.teixeira0x.subtypo.databinding.FragmentProjectsBinding
 import com.teixeira0x.subtypo.domain.model.Project
 import com.teixeira0x.subtypo.ui.activity.Navigator.navigateToProjectActivity
 import com.teixeira0x.subtypo.ui.activity.main.adapter.ProjectListAdapter
-import com.teixeira0x.subtypo.ui.activity.main.fragment.sheet.ProjectEditorSheetFragment
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel.ProjectsState.Loaded
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.ProjectsViewModel.ProjectsState.Loading
+import com.teixeira0x.subtypo.ui.projecteditor.fragment.ProjectEditorSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -23,7 +23,7 @@ class UpdateProjectUseCase
 @Inject
 constructor(private val repository: ProjectRepository) {
 
-  operator suspend fun invoke(project: Project) {
+  operator suspend fun invoke(project: Project): Int {
     return repository.updateProject(project)
   }
 }

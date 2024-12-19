@@ -22,6 +22,7 @@
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:scaleType="fitCenter"
+        android:contentDescription="@string/description_video_thumbnail"
         android:background="@android:color/black" />
 
       <TextView

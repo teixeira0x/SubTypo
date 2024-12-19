@@ -9,9 +9,9 @@ import com.google.android.material.color.MaterialColors
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.databinding.ActivityMainBinding
 import com.teixeira0x.subtypo.ui.activity.BaseActivity
-import com.teixeira0x.subtypo.ui.activity.main.fragment.sheet.ProjectEditorSheetFragment
 import com.teixeira0x.subtypo.ui.activity.main.permission.PermissionsHandler
 import com.teixeira0x.subtypo.ui.activity.main.viewmodel.MainViewModel
+import com.teixeira0x.subtypo.ui.projecteditor.fragment.ProjectEditorSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

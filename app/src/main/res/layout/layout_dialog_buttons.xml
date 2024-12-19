@@ -6,21 +6,21 @@
   android:layout_height="wrap_content"
   android:orientation="horizontal">
 
-  <Button
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/cancel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="12sp"
+    android:textSize="13sp"
     android:layout_weight="1.0"
     android:text="@string/cancel"
     style="@style/Widget.Material3.Button.OutlinedButton" />
 
-  <Button
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/save"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/margin_small"
-    android:textSize="12sp"
+    android:textSize="13sp"
     android:layout_weight="1.0"
     android:text="@string/save"
     style="@style/Widget.Material3.Button" />

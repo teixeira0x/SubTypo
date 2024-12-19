@@ -37,8 +37,8 @@ constructor(private val localDataSource: LocalProjectDataSource) :
     return localDataSource.insertProject(project)
   }
 
-  override suspend fun updateProject(project: Project) {
-    localDataSource.updateProject(project)
+  override suspend fun updateProject(project: Project): Int {
+    return localDataSource.updateProject(project)
   }
 
   override suspend fun removeProject(id: Long): Int {

@@ -116,6 +116,7 @@ dependencies {
   implementation(libs.google.hilt)
 
   // Kotlin
+  implementation(libs.kotlin.coroutines.core)
   implementation(libs.kotlin.coroutines.android)
 
   // Utils

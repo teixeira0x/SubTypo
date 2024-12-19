@@ -13,26 +13,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.teixeira0x.subtypo.data.db.dao
+package com.teixeira0x.subtypo.ui.projecteditor.mvi
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
-import com.teixeira0x.subtypo.data.db.entity.ProjectEntity
-import kotlinx.coroutines.flow.Flow
+import com.teixeira0x.subtypo.domain.model.Project
 
-@Dao
-interface ProjectDao {
-  @Query("SELECT * FROM projects") fun getAll(): Flow<List<ProjectEntity>>
+sealed class ProjectEditorViewState {
+  data object Loading : ProjectEditorViewState()
 
-  @Query("SELECT * FROM projects WHERE id = :id")
-  fun findById(id: Long): Flow<ProjectEntity?>
-
-  @Insert suspend fun insert(project: ProjectEntity): Long
-
-  @Update suspend fun update(project: ProjectEntity): Int
-
-  @Query("DELETE FROM projects WHERE id = :id")
-  suspend fun remove(id: Long): Int
+  data class Loaded(val project: Project?) : ProjectEditorViewState()
 }

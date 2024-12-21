@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.UriUtils
+import org.slf4j.LoggerFactory;
 import com.teixeira0x.subtypo.R
 import com.teixeira0x.subtypo.domain.model.Subtitle
 import com.teixeira0x.subtypo.domain.subtitle.mapper.SubtitleFormatMapper.toSubtitleFormat
@@ -41,6 +42,10 @@ constructor(
   private val insertSubtitleUseCase: InsertSubtitleUseCase,
   private val removeSubtitleUseCase: RemoveSubtitleUseCase,
 ) : ViewModel() {
+
+  companion object {
+    private val log = LoggerFactory.getLogger(SubtitleViewModel::class.java)
+  }
 
   private val _viewEvent = MutableLiveData<ViewEvent>()
   val viewEventData: LiveData<ViewEvent>
@@ -102,6 +107,7 @@ constructor(
 
               R.string.proj_export_subtitle_saved
             } catch (e: Exception) {
+              log.error("Export subtitle error", e)
               R.string.proj_export_subtitle_error
             }
           )
@@ -124,7 +130,7 @@ constructor(
               it.readText()
             } ?: ""
 
-          val format = ".${file.extension}".toSubtitleFormat()
+          val format = ".srt".toSubtitleFormat()
           val cues = format.parseText(fileContent)
 
           val id =
@@ -145,6 +151,7 @@ constructor(
             R.string.proj_import_subtitle_error
           }
         } catch (e: Exception) {
+          log.error("Import subtitle error", e)
           R.string.proj_import_subtitle_error
         }
 

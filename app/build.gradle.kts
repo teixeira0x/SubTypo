@@ -125,6 +125,9 @@ dependencies {
   implementation(libs.util.aboutlibraries.core)
   debugImplementation(libs.util.leakcanary)
 
+  implementation("org.slf4j:slf4j-api:2.0.7")
+  implementation("com.github.tony19:logback-android:3.0.0")
+
   // Test
   testImplementation(libs.tests.junit)
 }

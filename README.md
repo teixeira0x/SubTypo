@@ -45,6 +45,7 @@ You can contribute by translating SubTypo using Crowdin:
 
 ## Thanks to
 - [SUSE](https://github.com/SUSE) for the [suse-font](https://github.com/SUSE/suse-font)
+- [tony19](https://github.com/tony19) for the [logback-android](https://github.com/tony19/logback-android)
 - [Akash Yadav](https://github.com/itsaky) for the awesome [AndroidIDE](https://github.com/AndroidIDEOfficial/AndroidIDE)
 
 <hr/>
